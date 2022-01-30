@@ -1,0 +1,2 @@
+module lojofundraising2 {
+}

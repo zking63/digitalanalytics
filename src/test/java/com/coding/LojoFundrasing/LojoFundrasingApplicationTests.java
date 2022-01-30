@@ -1,0 +1,13 @@
+package com.coding.LojoFundrasing;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class LojoFundrasingApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
