@@ -158,7 +158,7 @@ public class EmailService {
     				List<Emails> emailCommittee = new ArrayList<Emails>();
     				emailCommittee.add(email);
     				committee.setEmails(emailCommittee);
-    				cservice.createCommittee(committee);
+    				cservice.updateCommittee(committee);
     				committeeSetList = true;
     			}
     			else {
@@ -166,7 +166,7 @@ public class EmailService {
     				List<Emails> emailCommittee = committee.getEmails();
     				emailCommittee.add(email);
     				committee.setEmails(emailCommittee);
-    				cservice.createCommittee(committee);
+    				cservice.updateCommittee(committee);
     				committeeSetList = true;
     			}
         	}
@@ -294,7 +294,7 @@ public class EmailService {
     				List<Emails> emailCommittee = new ArrayList<Emails>();
     				emailCommittee.add(email);
     				committee.setEmails(emailCommittee);
-    				cservice.createCommittee(committee);
+    				cservice.updateCommittee(committee);
     				committeeSetList = true;
     			}
     			else {
@@ -370,7 +370,9 @@ public class EmailService {
     			}
     		}
     	}
-    	//findemailgroup
+    	if (email.getEmailgroup() == null) {
+    		egservice.findorCreateEmailGroup(email, committee.getId());
+    	}
 		CalculateEmailData(email, committee.getId());
 		System.out.println("Id: " + email.getId() + " Email: " + email.getEmailName());
 		return;

@@ -144,12 +144,10 @@ public class EmailGroupService {
 		Long groupBounces = egrepo.GroupBounces(emailGroupId, committee_id);
 		Long groupUnsubscribers = egrepo.GroupUnsubscribers(emailGroupId, committee_id);
 		//donation info
-		Double groupaverage = egrepo.GroupAveragePerDonation(emailGroupId, committee_id);
 		Double groupsum = egrepo.GroupRevenue(emailGroupId, committee_id);
 		Integer groupdonationcount = egrepo.GroupDonations(emailGroupId, committee_id);
-		Integer groupdonorcount = egrepo.GroupDonors(emailGroupId, committee_id);
+		Double groupaverage = (double) groupsum/groupdonationcount;
 		//recurring
-		Integer groupRecurringDonorCount = egrepo.GroupRecurringDonors(emailGroupId, committee_id);
 		Integer groupRecurringDonationCount = egrepo.GroupRecurringDonations(emailGroupId, committee_id);
 		Double groupRecurringRevenue = egrepo.GroupRecurringRevenue(emailGroupId, committee_id);
 		//rates
@@ -195,8 +193,6 @@ public class EmailGroupService {
 		emailgroup.setGroupRecurringDonationCount(groupRecurringDonationCount);
 		emailgroup.setGroupRecurringRevenue(groupRecurringRevenue);
 		emailgroup.setGroupaverage(groupaverage);
-		emailgroup.setGroupdonorcount(groupdonorcount);
-		emailgroup.setGroupRecurringDonorCount(groupRecurringDonorCount);
 		
 		//calculate email performance + fundraising stats
 		if (groupOpeners != null && groupOpeners != 0) {
@@ -205,17 +201,12 @@ public class EmailGroupService {
 			System.out.println("groupclicksOpens " + groupclicksOpens);
 			groupdonationsOpens = (double) groupdonationcount/groupOpeners;
 			System.out.println("groupdonationsOpens " + groupdonationsOpens);
-			groupdonorsOpens = (double) groupdonorcount/groupOpeners;
-			System.out.println("groupdonorsOpens " +  groupdonorsOpens);
 		}
 		if (groupClicks != null && groupClicks != 0) {
 			System.out.println("groupClicks is NOT 0 " + groupClicks);
 			System.out.println("groupdonationcount " + groupdonationcount);
 			groupdonationsClicks = (double) groupdonationcount/groupClicks;
 			System.out.println("groupdonationsClicks " + groupdonationsClicks);
-			groupdonorsClicks = (double) groupdonorcount/groupClicks;
-			System.out.println("groupdonorcount " + groupdonorcount);
-			System.out.println("groupdonorsClicks " + groupdonorsClicks);
 		}
 		
 		//calculate email performance stats
@@ -234,6 +225,18 @@ public class EmailGroupService {
 				groupopenRate = (double) groupOpeners/groupRecipients;
 			}
 		}
+		emailgroup.setGroupopenRate(groupopenRate);
+		emailgroup.setGroupdonationsOpens(groupdonationsOpens);
+		emailgroup.setGroupdonorsOpens(groupdonorsOpens);
+		emailgroup.setGroupclickRate(groupclickRate);
+		emailgroup.setGroupclicksOpens(groupclicksOpens);
+		emailgroup.setGroupdonationsClicks(groupdonationsClicks);
+		emailgroup.setGroupdonorsClicks(groupdonorsClicks);
+		emailgroup.setGroupunsubscribeRate(groupunsubscribeRate);
+		emailgroup.setGroupbounceRate(groupbounceRate);
+		updateEmailGroup(emailgroup);
+		
+		//testing info
 		if (variantA == null || variantA.isEmpty() || variantA == " " ) {
 			variantASet = false;
 			System.out.println("variant A is null " + variantA);
@@ -306,15 +309,6 @@ public class EmailGroupService {
 				variantBSet = true;
 		}
 		emailgroup.setGroupTest(test);
-		emailgroup.setGroupopenRate(groupopenRate);
-		emailgroup.setGroupdonationsOpens(groupdonationsOpens);
-		emailgroup.setGroupdonorsOpens(groupdonorsOpens);
-		emailgroup.setGroupclickRate(groupclickRate);
-		emailgroup.setGroupclicksOpens(groupclicksOpens);
-		emailgroup.setGroupdonationsClicks(groupdonationsClicks);
-		emailgroup.setGroupdonorsClicks(groupdonorsClicks);
-		emailgroup.setGroupunsubscribeRate(groupunsubscribeRate);
-		emailgroup.setGroupbounceRate(groupbounceRate);
 		updateEmailGroup(emailgroup);
 		if (emailgroup.getGroupTest() == null || emailgroup.getGroupTest().isEmpty() 
 				|| emailgroup.getGroupTest() == " ") {
@@ -345,22 +339,6 @@ public class EmailGroupService {
     			}
         	}
 		}
-    	while (committeeListSet == false) {
-			if (committee.getEmailgroups() == null || committee.getEmailgroups().size() == 0) {
-				List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
-				emailgroups.add(emailgroup);
-				committee.setEmailgroups(emailgroups);
-				cservice.createCommittee(committee);
-				committeeListSet = true;
-			}
-			else {
-				List<EmailGroup> emailgroups = committee.getEmailgroups();
-				emailgroups.add(emailgroup);
-				committee.setEmailgroups(emailgroups);
-				cservice.createCommittee(committee);
-				committeeListSet = true;
-			}
-    	}
     	updateEmailGroup(emailgroup);
     	if (overallTest != null) {
         	System.out.println("OVERALL TEST " + overallTest.getTestcategory());
