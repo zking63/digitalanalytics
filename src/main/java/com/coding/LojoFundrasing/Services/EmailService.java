@@ -190,8 +190,8 @@ public class EmailService {
 			Integer donations, Integer recurringdonations, Integer rowNumber) {
 		System.out.println("email set up found");
 		System.out.println("*****NAME " + nameValue);
-		System.out.println("*****refcode " + refcode);
-		System.out.println("*****refcode2 " + refcode2);
+		System.out.println("*****rev " + revenue);
+		System.out.println("*****donations " + donations);
 		Emails email = null;
 		Boolean refcodesFiled = false;
 		Boolean committeeSetList = false;
@@ -397,7 +397,7 @@ public class EmailService {
 		Double donorsClicks = 0.00;
 		Double clicksOpens = 0.00;
 		
-			if (erepo.donationscount(id, committee_id) != null && erepo.donationscount(id, committee_id) != 0.0) {
+			if (email.getEmaildonationcount() != null && email.getEmaildonationcount() != 0.0) {
 				esum = email.getEmaildonationsum();
 				System.out.println("esum in calculate:" + esum);
 				donationscount = email.getEmaildonationcount();

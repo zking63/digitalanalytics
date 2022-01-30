@@ -71,21 +71,21 @@ public class EmailGroupService {
 				emailgroup = new EmailGroup();
 				
 				//setting up email group name by using email name
-				String emailname = emails.get(0).getEmailName(); 
+				String emailname = email.getEmailName();
 				System.out.println("name: " + emailname);
 				System.out.println("name size: " + emailname.length());
 				int index = emailname.indexOf("M.");
 				System.out.println("index: " + index);
-				String subString = null;
+				String subString = emailname;
 				if (index != -1) 
 				{
 					subString = emailname.substring(index, emailname.length());
 					System.out.println("subString 1: " + subString);
-				}
-				index = subString.indexOf("(1)");
-				if (index != -1) 
-				{
-					subString = subString.substring(0, index);
+					index = subString.indexOf("(1)");
+					if (index != -1) 
+					{
+						subString = subString.substring(0, index);
+					}
 				}
 				System.out.println("subString 2: " + subString);
 				emailgroup.setEmailgroupName(subString);
@@ -145,8 +145,11 @@ public class EmailGroupService {
 		Long groupUnsubscribers = egrepo.GroupUnsubscribers(emailGroupId, committee_id);
 		//donation info
 		Double groupsum = egrepo.GroupRevenue(emailGroupId, committee_id);
+		System.out.println(groupsum);
 		Integer groupdonationcount = egrepo.GroupDonations(emailGroupId, committee_id);
-		Double groupaverage = (double) groupsum/groupdonationcount;
+		System.out.println(groupdonationcount);
+		Double groupaverage = 0.0;
+		System.out.println(groupaverage);
 		//recurring
 		Integer groupRecurringDonationCount = egrepo.GroupRecurringDonations(emailGroupId, committee_id);
 		Double groupRecurringRevenue = egrepo.GroupRecurringRevenue(emailGroupId, committee_id);
@@ -192,8 +195,11 @@ public class EmailGroupService {
 		emailgroup.setGroupdonationcount(groupdonationcount);
 		emailgroup.setGroupRecurringDonationCount(groupRecurringDonationCount);
 		emailgroup.setGroupRecurringRevenue(groupRecurringRevenue);
-		emailgroup.setGroupaverage(groupaverage);
+		updateEmailGroup(emailgroup);
 		
+		if (groupsum != 0 && groupsum != null) {
+			groupaverage = (double) groupsum/groupdonationcount;
+		}
 		//calculate email performance + fundraising stats
 		if (groupOpeners != null && groupOpeners != 0) {
 			System.out.println("groupOpeners is 0 " + groupOpeners);
@@ -211,7 +217,7 @@ public class EmailGroupService {
 		
 		//calculate email performance stats
 		if (groupRecipients != null && groupRecipients != 0) {
-			System.out.println("groupRecipients is 0 " + groupRecipients);
+			System.out.println("groupRecipients is " + groupRecipients);
 			if (groupUnsubscribers != null && groupUnsubscribers != 0) {
 				groupunsubscribeRate = (double) groupUnsubscribers/groupRecipients;
 			}
@@ -223,9 +229,12 @@ public class EmailGroupService {
 			}
 			if (groupOpeners != null && groupOpeners != 0) {
 				groupopenRate = (double) groupOpeners/groupRecipients;
+				System.out.println("groupopenrate is " + groupopenRate);
 			}
 		}
 		emailgroup.setGroupopenRate(groupopenRate);
+		emailgroup.setGroupdonationsOpens(groupdonationsOpens);
+		emailgroup.setGroupaverage(groupaverage);
 		emailgroup.setGroupdonationsOpens(groupdonationsOpens);
 		emailgroup.setGroupdonorsOpens(groupdonorsOpens);
 		emailgroup.setGroupclickRate(groupclickRate);

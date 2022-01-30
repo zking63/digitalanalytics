@@ -56,7 +56,7 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	//Integer GroupDonors(@Param("groupid") Long groupid, Long committee_id);
 	
 	//group donation count
-	@Query(value = "Select sum(donations) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
+	@Query(value = "Select sum(emaildonationcount) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Integer GroupDonations(@Param("groupid") Long groupid, Long committee_id);
 	
 	//group average revenue (per donation)
