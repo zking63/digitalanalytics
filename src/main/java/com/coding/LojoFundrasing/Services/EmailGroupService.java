@@ -1,6 +1,7 @@
 package com.coding.LojoFundrasing.Services;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import com.coding.LojoFundrasing.Models.Emails;
 import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Repos.DonationRepo;
 import com.coding.LojoFundrasing.Repos.EmailGroupRepo;
+import com.coding.LojoFundrasing.Repos.EmailRepo;
 
 @Service
 public class EmailGroupService {
@@ -29,10 +31,17 @@ public class EmailGroupService {
 	@Autowired
 	private CommitteeService cservice;
 	
+	@Autowired
+	private EmailRepo erepo;
+	
+	Date date = new Date();
+	
 	public EmailGroup createEmailGroup(EmailGroup emailgroup) {
+		emailgroup.setCreatedAt(date);
 		return egrepo.save(emailgroup);
 	}
 	public EmailGroup updateEmailGroup(EmailGroup emailgroup) {
+		emailgroup.setUpdatedAt(date);
 		return egrepo.save(emailgroup);
 	}
 	public EmailGroup findEmailGroupbyName(String emailGroupname, Long committee_id) {
@@ -42,6 +51,86 @@ public class EmailGroupService {
 	public EmailGroup findEmailGroupbyId(Long id, Long committee_id) {
 		EmailGroup group = egrepo.findbyIdandCommittee(id, committee_id);
 		return group;
+	}
+	public void findorCreateEmailGroup(Emails email, Long committee_id) {
+		List<Emails> emails = new ArrayList<Emails>();
+		//see if email group with same refcode2 already exists
+		EmailGroup emailgroup = egrepo.findGroupByRefcode2(email.getEmailRefcode2(), committee_id);
+		Boolean committeeSetList = false;
+		Boolean emailgroupSetList = false;
+		Committees committee = cservice.findbyId(committee_id);
+		
+		if (emailgroup == null) {
+			//see if there are emails with same refcode2 and different refcode1
+			emails = erepo.findByemailRefcode2andCommitteeDifferentRefcode1(email.getEmailRefcode1(), email.getEmailRefcode2(), committee_id);
+			if (emails == null) {
+				return;
+			}
+			//other emails with same refcode2 exist but haven't been grouped yet
+			else {
+				emailgroup = new EmailGroup();
+				
+				//setting up email group name by using email name
+				String emailname = emails.get(0).getEmailName(); 
+				System.out.println("name: " + emailname);
+				System.out.println("name size: " + emailname.length());
+				int index = emailname.indexOf("M.");
+				System.out.println("index: " + index);
+				String subString = null;
+				if (index != -1) 
+				{
+					subString = emailname.substring(index, emailname.length());
+					System.out.println("subString 1: " + subString);
+				}
+				index = subString.indexOf("(1)");
+				if (index != -1) 
+				{
+					subString = subString.substring(0, index);
+				}
+				System.out.println("subString 2: " + subString);
+				emailgroup.setEmailgroupName(subString);
+				emailgroup.setCreatedAt(date);
+				emailgroup.setGroup_creator(email.getEmail_uploader());
+				createEmailGroup(emailgroup);
+				
+				emails = erepo.findByemailRefcode2andCommittee(email.getEmailRefcode2(), committee_id);
+				emailgroup.setEmails(emails);
+				
+	        	while (committeeSetList == false) {
+	    			if (committee.getEmailgroups() == null || committee.getEmailgroups().size() == 0) {
+	    				emailgroup.setCommittee(committee);
+	    				List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
+	    				emailgroups.add(emailgroup);
+	    				committee.setEmailgroups(emailgroups);
+	    				cservice.updateCommittee(committee);
+	    				committeeSetList = true;
+	    			}
+	    			else {
+	    				emailgroup.setCommittee(committee);
+	    				List<EmailGroup> emailgroups = committee.getEmailgroups();
+	    				emailgroups.add(emailgroup);
+	    				committee.setEmailgroups(emailgroups);
+	    				cservice.updateCommittee(committee);
+	    				committeeSetList = true;
+	    			}
+	        	}
+			
+	        	updateEmailGroup(emailgroup);
+	        	for (int i = 0; i < emails.size(); i++) {
+	        		emails.get(i).setEmailgroup(emailgroup);
+	        		erepo.save(email);
+	        	}
+				return;
+			}
+		}
+		else {
+			emails = emailgroup.getEmails();
+			emails.add(email);
+			emailgroup.setEmails(emails);
+			updateEmailGroup(emailgroup);
+			email.setEmailgroup(emailgroup);
+			return;
+		}
 	}
 	public void getEmailGroupData(Long emailGroupId, Long committee_id) {
 		EmailGroup emailgroup = egrepo.findbyIdandCommittee(emailGroupId, committee_id);

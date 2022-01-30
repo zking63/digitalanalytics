@@ -20,6 +20,9 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	List<Long> findGroupByOrderByDesc(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
+	@Query(value = "SELECT * FROM emailgroups LEFT JOIN emails ON emails.emailgroup_id = emailgroups.id WHERE emailgroups.committees_id = :committee_id AND emails.email_refcode2 = :refcode2", nativeQuery = true)
+	EmailGroup findGroupByRefcode2(String refcode2, Long committee_id);
+	
 	//find number of emails in email group
 	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :groupid", nativeQuery = true)
 	Integer countEmailsinEmailGroup(Long groupid, Long committee_id);
@@ -49,32 +52,32 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	Long GroupUnsubscribers(@Param("groupid") Long groupid, Long committee_id);
 	
 	//group donor count
-	@Query(value = "Select COUNT(DISTINCT donations.donor_id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id", nativeQuery = true)
-	Integer GroupDonors(@Param("groupid") Long groupid, Long committee_id);
+	//@Query(value = "Select COUNT(DISTINCT donations.donor_id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id", nativeQuery = true)
+	//Integer GroupDonors(@Param("groupid") Long groupid, Long committee_id);
 	
 	//group donation count
-	@Query(value = "Select COUNT(DISTINCT donations.id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id", nativeQuery = true)
+	@Query(value = "Select sum(donations) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Integer GroupDonations(@Param("groupid") Long groupid, Long committee_id);
 	
 	//group average revenue (per donation)
-	@Query(value = "Select AVG(donations.amount) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id", nativeQuery = true)
-	Double GroupAveragePerDonation(@Param("groupid") Long groupid, Long committee_id);
+	//@Query(value = "Select AVG(donations.amount) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id", nativeQuery = true)
+	//Double GroupAveragePerDonation(@Param("groupid") Long groupid, Long committee_id);
 	
 	//group sum
-	@Query(value = "Select SUM(donations.amount) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id", nativeQuery = true)
+	@Query(value = "Select sum(emaildonationsum) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Double GroupRevenue(@Param("groupid") Long groupid, Long committee_id);
 	
 	//recurring functions
-	@Query(value = "Select COUNT(DISTINCT donations.donor_id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
-	Integer GroupRecurringDonors(@Param("groupid") Long groupid, Long committee_id);
+	//@Query(value = "Select COUNT(DISTINCT donations.donor_id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
+	//Integer GroupRecurringDonors(@Param("groupid") Long groupid, Long committee_id);
 	
-	@Query(value = "Select COUNT(DISTINCT donations.id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
+	@Query(value = "Select sum(recurring_donation_count) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Integer GroupRecurringDonations(@Param("groupid") Long groupid, Long committee_id);
 	
-	@Query(value = "Select SUM(donations.amount) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
+	@Query(value = "Select sum(recurring_revenue) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Double GroupRecurringRevenue(@Param("groupid") Long groupid, Long committee_id);
 	
 	//find an email in the list with recipients
-	@Query(value = "Select * from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id AND recipients IS NOT NULL LIMIT 1", nativeQuery = true)
-	Emails findEmailinGroupWithRecipients(@Param("groupid") Long groupid, Long committee_id);
+	//@Query(value = "Select * from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id AND recipients IS NOT NULL LIMIT 1", nativeQuery = true)
+	//Emails findEmailinGroupWithRecipients(@Param("groupid") Long groupid, Long committee_id);
 }

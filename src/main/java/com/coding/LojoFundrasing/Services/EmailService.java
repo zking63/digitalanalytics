@@ -302,7 +302,7 @@ public class EmailService {
     				List<Emails> emailCommittee = committee.getEmails();
     				emailCommittee.add(email);
     				committee.setEmails(emailCommittee);
-    				cservice.createCommittee(committee);
+    				cservice.updateCommittee(committee);
     				committeeSetList = true;
     			}
         	}

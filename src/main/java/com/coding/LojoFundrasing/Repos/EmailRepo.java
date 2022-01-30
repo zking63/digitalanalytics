@@ -25,6 +25,15 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	List <Emails> findemailswithoutGroup(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
+	//see if there are emails with same refcode2 but not refcode1 - for email group
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode1 != :emailRefcode AND email_refcode2 = :emailRefcode2", nativeQuery = true)
+	List <Emails> findByemailRefcode2andCommitteeDifferentRefcode1(String emailRefcode, String emailRefcode2, Long committee_id);
+	
+	
+	//find list of emails with same refcode2
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode2 = :emailRefcode2", nativeQuery = true)
+	List <Emails> findByemailRefcode2andCommittee(String emailRefcode2, Long committee_id);
+	
 	//find emails by refcodes and commitee
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode1 = :emailRefcode AND email_refcode2 = :emailRefcode2", nativeQuery = true)
 	Emails findByemailRefcodeandCommittee(String emailRefcode, String emailRefcode2, Long committee_id);
