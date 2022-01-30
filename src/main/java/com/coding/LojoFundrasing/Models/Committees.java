@@ -1,7 +1,9 @@
 package com.coding.LojoFundrasing.Models;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -48,6 +50,10 @@ public class Committees {
 	
     @OneToMany(fetch=FetchType.LAZY, mappedBy="committee")
 	private List<Link> links;
+    
+	@Column(updatable=false)
+	private Date createdAt;
+	private Date updatedAt;
 	
 	public Committees() {
 		
@@ -111,6 +117,18 @@ public class Committees {
 	}
 	public void setLinks(List<Link> links) {
 		this.links = links;
+	}
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 	
 	

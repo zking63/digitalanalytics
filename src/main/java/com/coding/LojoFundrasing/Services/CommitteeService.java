@@ -1,5 +1,6 @@
 package com.coding.LojoFundrasing.Services;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,15 @@ public class CommitteeService {
 	private CommitteesRepo crepo;
 	@Autowired UserRepo urepo;
 	
+	Date date = new Date();
+	
 	public Committees createCommittee(Committees committee) {
+		committee.setCreatedAt(date);
+		return crepo.save(committee);
+	}
+	
+	public Committees updateCommittee(Committees committee) {
+		committee.setUpdatedAt(date);
 		return crepo.save(committee);
 	}
 	

@@ -797,23 +797,30 @@ public class ExcelUtil {
 
 			// Create a DataFormatter to format and get each cell's value as String
 			DataFormatter dataFormatter = new DataFormatter();
-			int NameColumn = 0;
-			int RefcodeColumn = 0;
-			int Refcode2Column = 0;
-			int DateColumn = 0;
-			int listColumn = 0;
-			int excludeColumn = 0;
-			int openersColumn = 0;
-			int bouncesColumn = 0;
-			int unsubscribersColumn = 0;
-			int clicksColumn = 0;
-			int recipientsColumn = 0;
-			int senderColumn = 0;
-			int subjectColumn = 0;
-			int testingColumn = 0;
-			int linkColumn = 0;
-			int variantColumn = 0; 
-			int categoryColumn = 0;
+			int NameColumn = -1;
+			int RefcodeColumn = -1;
+			int Refcode2Column = -1;
+			int DateColumn = -1;
+			int listColumn = -1;
+			int excludeColumn = -1;
+			int openersColumn = -1;
+			int bouncesColumn = -1;
+			int unsubscribersColumn = -1;
+			int clicksColumn = -1;
+			int recipientsColumn = -1;
+			int senderColumn = -1;
+			int subjectColumn = -1;
+			int testingColumn = -1;
+			int linkColumn = -1;
+			int variantColumn = -1;
+			int categoryColumn = -1;
+			
+			int revenueColumn = -1;
+			int donationsColumn = -1;
+			int recurringrevColumn = -1;
+			int recurringdonationsColumn = -1;
+			
+			
 			String sender = null;
 			String subject = null;
 			String testing = null;
@@ -831,6 +838,11 @@ public class ExcelUtil {
 			String nameValue = null;
 			String refcode = null;
 			String refcode2 = null;
+			Double revenue = null;
+			Double recurringrev = null;
+			Integer donations = null;
+			Integer recurringdonations = null;
+			
 			Date date = null;
 			System.out.println("The sheet number is " + i + 1);
 			// 2. Or you can use a for-each loop to iterate over the rows and columns
@@ -851,24 +863,19 @@ public class ExcelUtil {
 							//System.out.println("Header column: " + header.getColumn());
 							
 							String headerValue = dataFormatter.formatCellValue(header).toUpperCase();
-							if (headerValue.contains("NAME")) {
+							if (headerValue.contains("LIST NAME")) {
 								NameColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
-							if (headerValue.contains("DATE")) {
+							if (headerValue.contains("SENT DATE")) {
 								DateColumn = header.getColumnIndex();
-								//System.out.println(headerValue);
+								System.out.println("dateColumn: " + DateColumn);
 							}
-							if (headerValue.contains("REFERENCE CODE")) {
+							if (headerValue.contains("MAIL ID (VENDOR)")) {
+								RefcodeColumn = header.getColumnIndex();
 								System.out.println("refcode: " + headerValue);
-								if (headerValue.contains("REFERENCE CODE 2")) {
-									Refcode2Column = header.getColumnIndex();
-								}
-								else {
-									RefcodeColumn = header.getColumnIndex();
-								}
 							}
-							if (headerValue.contains("RECIPIENT LIST")) {
+							if (headerValue.contains("SEGMENT")) {
 								listColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
@@ -876,7 +883,7 @@ public class ExcelUtil {
 								excludeColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
-							if (headerValue.contains("OPEN")) {
+							if (headerValue.contains("OPENS")) {
 								openersColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
@@ -884,23 +891,23 @@ public class ExcelUtil {
 								unsubscribersColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
-							if (headerValue.contains("CLICK")) {
+							if (headerValue.contains("CLICKS")) {
 								clicksColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
-							if (headerValue.contains("RECIPIENTS")) {
+							if (headerValue.contains("RECEIVED")) {
 								recipientsColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
 							if (headerValue.contains("BOUNCE")) {
 								bouncesColumn = header.getColumnIndex();
-								//System.out.println(headerValue);
+								System.out.println("bounces: " + headerValue);
 							}
 							if (headerValue.contains("LINK")) {
 								linkColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
-							if (headerValue.contains("SENDER")) {
+							if (headerValue.contains("FROM NAME")) {
 								senderColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
@@ -920,16 +927,53 @@ public class ExcelUtil {
 								categoryColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
+							if (headerValue.contains("RECURRING DONATIONS")) {
+								recurringdonationsColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("RECURRING REVENUE")) {
+								recurringrevColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("REVENUE")) {
+								revenueColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("DONATIONS")) {
+								donationsColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
 						}
 						else if (row.getRowNum() > 0) {
 									//Cell value = cell;
 									//value = cell;
+							System.out.println("cell col: " + cell.getColumnIndex());
 							if (cell.getColumnIndex() == NameColumn) {
 								//System.out.println("Values: " + values);
 								//userMap.put(headerValue, valValue);
 								//System.out.println("NameColumn TWO: " + NameColumn);
 								nameValue = dataFormatter.formatCellValue(cell);
-								System.out.println(nameValue);
+								System.out.println("nameval: " + nameValue);
+								String jtksearch = nameValue;    
+								System.out.println("jtksearch: " + jtksearch);
+								System.out.println("jtksearch size: " + jtksearch.length());
+								int jtkindex = jtksearch.indexOf("jtk");
+								System.out.println("jtkindex: " + jtkindex);
+								int finalindex = 7;
+								String subString = jtksearch.substring(jtkindex, jtksearch.length());
+								System.out.println("subString 1: " + subString);
+								subString = jtksearch.substring(jtkindex, jtksearch.length() - 4);
+								System.out.println("subString 2: " + subString);
+								if (nameValue.contains("RS")) {
+									finalindex = 8;
+								}
+								System.out.println("finalindex: " + finalindex);
+								if (jtkindex != -1) 
+								{
+								    subString = subString.substring(0, finalindex);
+								}
+								System.out.println("subString: " + subString + ".");
+								refcode2 = subString;
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -1069,6 +1113,7 @@ public class ExcelUtil {
 							}
 							else if (cell.getColumnIndex() == bouncesColumn) {
 								String amount1 = dataFormatter.formatCellValue(cell);
+								System.out.println("bounces amount1: " + amount1);
 								bounces = Long.parseLong(amount1); 
 								System.out.println("bounces col: " + bounces);
 								//System.out.println(bounces);
@@ -1309,6 +1354,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == DateColumn) {
+								System.out.println("cell type: " +  cell.getDateCellValue());
 								String dateValue1 = dataFormatter.formatCellValue(cell);
 								System.out.println("dateValue1: " + dateValue1);
 								if (dateValue1.isEmpty()) {
@@ -1319,7 +1365,7 @@ public class ExcelUtil {
 								}
 								if (dateValue1 != null) {
 									System.out.println("dateValue1 not null: " + dateValue1);
-									date = new SimpleDateFormat("MM/dd/yy").parse(dateValue1);
+									date = new SimpleDateFormat("MM/dd/yy hh:mm").parse(dateValue1);
 									System.out.println("date: " + date);
 								}
 								//System.out.println("Simple date: " + date);
@@ -1379,6 +1425,116 @@ public class ExcelUtil {
 							else if (cell.getColumnIndex() == Refcode2Column) {
 								refcode2 = dataFormatter.formatCellValue(cell);
 								System.out.println("refcode2 in reader " + refcode2);
+								if (cell.getColumnIndex() == noOfColumns - 1) {
+									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
+											clicks, recipients, uploader, nameValue, refcode, refcode2, 
+											date, committee, sender, subject, category, 
+											testing, variant, link, row.getRowNum());
+									recipientList = null;
+									excludedList = null;
+									openers = null;
+									bounces = null;
+									unsubscribers = null;
+									clicks = null;
+									recipients = null;
+									nameValue = null;
+									refcode = null;
+									refcode2 = null;
+									date = null;
+									sender = null;
+									subject = null;
+									category = null;
+									testing = null;
+									variant =  null;
+									link = null;
+								}
+					}
+							
+							else if (cell.getColumnIndex() == revenueColumn) {
+								String amount1 = dataFormatter.formatCellValue(cell);
+								revenue = Double.parseDouble(amount1); 
+								System.out.println("refcode2 in reader " + refcode2);
+								if (cell.getColumnIndex() == noOfColumns - 1) {
+									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
+											clicks, recipients, uploader, nameValue, refcode, refcode2, 
+											date, committee, sender, subject, category, 
+											testing, variant, link, row.getRowNum());
+									recipientList = null;
+									excludedList = null;
+									openers = null;
+									bounces = null;
+									unsubscribers = null;
+									clicks = null;
+									recipients = null;
+									nameValue = null;
+									refcode = null;
+									refcode2 = null;
+									date = null;
+									sender = null;
+									subject = null;
+									category = null;
+									testing = null;
+									variant =  null;
+									link = null;
+								}
+					}
+							else if (cell.getColumnIndex() == recurringrevColumn) {
+								String amount1 = dataFormatter.formatCellValue(cell);
+								recurringrev = Double.parseDouble(amount1); 
+								if (cell.getColumnIndex() == noOfColumns - 1) {
+									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
+											clicks, recipients, uploader, nameValue, refcode, refcode2, 
+											date, committee, sender, subject, category, 
+											testing, variant, link, row.getRowNum());
+									recipientList = null;
+									excludedList = null;
+									openers = null;
+									bounces = null;
+									unsubscribers = null;
+									clicks = null;
+									recipients = null;
+									nameValue = null;
+									refcode = null;
+									refcode2 = null;
+									date = null;
+									sender = null;
+									subject = null;
+									category = null;
+									testing = null;
+									variant =  null;
+									link = null;
+								}
+					}
+							else if (cell.getColumnIndex() == recurringdonationsColumn) {
+								String amount1 = dataFormatter.formatCellValue(cell);
+								recurringdonations = Integer.parseInt(amount1); 
+								if (cell.getColumnIndex() == noOfColumns - 1) {
+									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
+											clicks, recipients, uploader, nameValue, refcode, refcode2, 
+											date, committee, sender, subject, category, 
+											testing, variant, link, row.getRowNum());
+									recipientList = null;
+									excludedList = null;
+									openers = null;
+									bounces = null;
+									unsubscribers = null;
+									clicks = null;
+									recipients = null;
+									nameValue = null;
+									refcode = null;
+									refcode2 = null;
+									date = null;
+									sender = null;
+									subject = null;
+									category = null;
+									testing = null;
+									variant =  null;
+									link = null;
+								}
+					}
+							else if (cell.getColumnIndex() == donationsColumn) {
+								String amount1 = dataFormatter.formatCellValue(cell);
+								donations = Integer.parseInt(amount1); 
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 

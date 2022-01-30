@@ -186,7 +186,8 @@ public class EmailService {
 	public void setUpEmailsfromUpload(String recipientList, String excludedList, Long openers, Long bounces, Long unsubscribers, 
 			Long clicks, Long recipients, User uploader, String nameValue, String refcode, String refcode2,  
 			Date date, Committees committee, String sender, String subject, String category, 
-			String testing, String variant, String link, Integer rowNumber) {
+			String testing, String variant, String link, Double revenue, Double recurringrev, 
+			Integer donations, Integer recurringdonations, Integer rowNumber) {
 		System.out.println("email set up found");
 		System.out.println("*****NAME " + nameValue);
 		System.out.println("*****refcode " + refcode);
@@ -282,6 +283,10 @@ public class EmailService {
         	email.setVariant(variant);
         	email.setLink(link);
         	email.setOveralllink(overalllink);
+        	email.setRecurringDonationCount(recurringdonations);
+        	email.setRecurringRevenue(recurringrev);
+        	email.setEmaildonationsum(revenue);
+        	email.setEmaildonationcount(donations);
         	createEmail(email);
         	while (committeeSetList == false) {
     			if (committee.getBigtest() == null || committee.getEmails().size() == 0) {
@@ -338,6 +343,10 @@ public class EmailService {
         	email.setVariant(variant);
         	email.setLink(link);
         	email.setOveralllink(overalllink);
+        	email.setRecurringDonationCount(recurringdonations);
+        	email.setRecurringRevenue(recurringrev);
+        	email.setEmaildonationsum(revenue);
+        	email.setEmaildonationcount(donations);
         	updateEmail(email);
 		}
     	while (LinkSetList == false) {
@@ -361,7 +370,7 @@ public class EmailService {
     			}
     		}
     	}
-    	//findorcreateSLSubjectTest
+    	//findemailgroup
 		CalculateEmailData(email, committee.getId());
 		System.out.println("Id: " + email.getId() + " Email: " + email.getEmailName());
 		return;
@@ -387,11 +396,10 @@ public class EmailService {
 		Double clicksOpens = 0.00;
 		
 			if (erepo.donationscount(id, committee_id) != null && erepo.donationscount(id, committee_id) != 0.0) {
-				esum = erepo.sums(id, committee_id);
+				esum = email.getEmaildonationsum();
 				System.out.println("esum in calculate:" + esum);
-				eaverage = erepo.averages(id, committee_id);
-				donationscount = erepo.donationscount(id, committee_id);
-				donorscount = erepo.donorscount(id, committee_id);
+				donationscount = email.getEmaildonationcount();
+				eaverage = esum/donationscount;
 			}
 			//aggregate functions
 			if (email.getBounces() != null) {
@@ -414,9 +422,8 @@ public class EmailService {
 				donorsClicks = donorscount/clicks;
 			}
 			//recurring functions
-			recurringDonorCount = erepo.RecurringDonorCount(id, committee_id);
-			recurringDonationCount = erepo.RecurringDonationCount(id, committee_id);
-			recurringRevenue = erepo.RecurringDonationSum(id, committee_id);
+			recurringDonationCount = email.getRecurringDonationCount();
+			recurringRevenue = email.getRecurringRevenue();
 			//set recurring functions
 			if (recurringRevenue == null) {
 				System.out.println("recurringRevenue: " + "null");
