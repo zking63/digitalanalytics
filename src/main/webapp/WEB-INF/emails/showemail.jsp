@@ -51,31 +51,10 @@
 					</tr>
 				</tbody>
 			</table>
-			<h2>Donations</h2>
-			<table class="table table-hover">
-			    <thead>
-			        <tr>
-			            <th>Donor</th>
-			            <th>Date</th>
-			            <th>Amount</th>
-			            <th>Action</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					<c:forEach items="${emails.getEmaildonations()}" var="c">
-						<tr>
-						<td><a href="/donors/${c.donor.id}">${ c.donor.donorFirstName } ${c.donor.donorLastName}</a></td>
-						<td>${ c.getDonationDateFormatted() }</td>
-						<td>$${ c.amount }</td>
-						<td>
-							<p><a href="/donations/edit/${c.id}">Edit</a></p>
-							<p><a href="/donations/delete/${c.id}">Delete</a></p>
-						</td>
-						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
 		</div>
+					<table><tbody><tr><td> 
+			${emails.content} 
+			</td></tr></tbody></table>
 	</div> 
 </body>
 </html>

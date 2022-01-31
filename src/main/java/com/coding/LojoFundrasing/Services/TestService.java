@@ -40,6 +40,50 @@ public class TestService {
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id){
 		return trepo.findTestswithinRangeOrderByDesc(startdateE, enddateE, committee_id);
 	}
+	public List<test> TestExporter (@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
+			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id, 
+			String type, String operator, String operand){
+		if (type.contentEquals("Testing category")) {
+			System.out.println("type registered in ref " + type);
+			if (operator.contentEquals("Equals")) {
+				System.out.println("operator " + operator);
+				return trepo.categoryEquals(startdateE, enddateE, committee_id, operand);
+			}
+			if (operator.contentEquals("Contains")) {
+				System.out.println("operator after equals " + operator);
+				return trepo.categoryContains(startdateE, enddateE, committee_id, operand);
+			}
+			if (operator.contentEquals("Is blank")) {
+				System.out.println("operator after equals " + operator);
+				return trepo.categoryisBlank(startdateE, enddateE, committee_id);
+			}
+			else {
+				return trepo.findTestswithinRangeOrderByDesc(startdateE, enddateE, committee_id);
+			}
+		}
+		if (type.contentEquals("Specific test")) {
+			System.out.println("type registered in ref " + type);
+			if (operator.contentEquals("Equals")) {
+				System.out.println("operator " + operator);
+				return trepo.testEquals(startdateE, enddateE, committee_id, operand);
+			}
+			if (operator.contentEquals("Contains")) {
+				System.out.println("operator after equals " + operator);
+				return trepo.testContains(startdateE, enddateE, committee_id, operand);
+			}
+			if (operator.contentEquals("Is blank")) {
+				System.out.println("operator after equals " + operator);
+				return trepo.testisBlank(startdateE, enddateE, committee_id);
+			}
+			else {
+				return trepo.findTestswithinRangeOrderByDesc(startdateE, enddateE, committee_id);
+			}
+		}
+		if (type.contentEquals("All Tests")) {
+			System.out.println("type registered in ref " + type);
+		}
+		return trepo.findTestswithinRangeOrderByDesc(startdateE, enddateE, committee_id);
+	}
 	/*public test findTestByNameandCommittee(String testcategory, Long committee_id) {
 		return trepo.findbyTestName(testcategory, committee_id).orElse(null);
 	}*/

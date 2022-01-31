@@ -61,6 +61,7 @@ public class Emails {
 	private Double emailclicksOpens;
 	private Double emaildonorsOpens;
 	private Double emaildonorsClicks;
+	private String content;
 	@DateTimeFormat(pattern ="yyyy-MM-dd kk:mm")
 	private Date Emaildate;
 	private String emailRefcode1;
@@ -455,6 +456,14 @@ public class Emails {
 
 	public void setOveralllink(Link overalllink) {
 		this.overalllink = overalllink;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	

@@ -819,6 +819,7 @@ public class ExcelUtil {
 			int donationsColumn = -1;
 			int recurringrevColumn = -1;
 			int recurringdonationsColumn = -1;
+			int contentColumn = -1;
 			
 			
 			String sender = null;
@@ -842,6 +843,7 @@ public class ExcelUtil {
 			Double recurringrev = null;
 			Integer donations = null;
 			Integer recurringdonations = null;
+			String content = null;
 			
 			Date date = null;
 			System.out.println("The sheet number is " + i + 1);
@@ -873,7 +875,7 @@ public class ExcelUtil {
 							}
 							if (headerValue.contains("MAIL ID (VENDOR)")) {
 								RefcodeColumn = header.getColumnIndex();
-								System.out.println("refcode: " + headerValue);
+								//System.out.println("refcode: " + headerValue);
 							}
 							if (headerValue.contains("SEGMENT")) {
 								listColumn = header.getColumnIndex();
@@ -927,6 +929,10 @@ public class ExcelUtil {
 								categoryColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
+							if (headerValue.contains("MAILING CONTENT")) {
+								contentColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
 							if (headerValue.contains("REVENUE")) {
 								if (headerValue.contains("RECURRING REVENUE")) {
 									recurringrevColumn = header.getColumnIndex();
@@ -959,9 +965,10 @@ public class ExcelUtil {
 								String jtksearch = nameValue;    
 								int jtkindex = jtksearch.indexOf("jtk");
 								int finalindex = 7;
-								String subString = jtksearch.substring(jtkindex, jtksearch.length());
-								subString = jtksearch.substring(jtkindex, jtksearch.length() - 4);
-								if (nameValue.contains("RS")) {
+								System.out.println("index: " + jtkindex);
+								System.out.println("length: " + jtksearch.length());
+								String subString = jtksearch.substring(jtkindex, jtksearch.length() -1);
+								if (nameValue.contains(".RS") || nameValue.contains(" RS")) {
 									finalindex = 8;
 								}
 		
@@ -971,10 +978,11 @@ public class ExcelUtil {
 								}
 		
 								refcode2 = subString;
+								System.out.println("refcode2: " + refcode2 + ".");
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -997,6 +1005,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == clicksColumn) {
@@ -1008,7 +1017,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1031,6 +1040,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == recipientsColumn ) {
@@ -1041,7 +1051,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1064,6 +1074,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == unsubscribersColumn) {
@@ -1075,7 +1086,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1098,6 +1109,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == openersColumn) {
@@ -1107,7 +1119,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1130,6 +1142,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == bouncesColumn) {
@@ -1142,7 +1155,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1165,6 +1178,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == excludeColumn) {
@@ -1175,7 +1189,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1198,38 +1212,40 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == listColumn) {
 				
 								recipientList = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
-										eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
-												clicks, recipients, uploader, nameValue, refcode, refcode2, 
-												date, committee, sender, subject, category, 
-												testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
-										recipientList = null;
-										excludedList = null;
-										openers = null;
-										bounces = null;
-										unsubscribers = null;
-										clicks = null;
-										recipients = null;
-										nameValue = null;
-										refcode = null;
-										refcode2 = null;
-										date = null;
-										sender = null;
-										subject = null;
-										category = null;
-										testing = null;
-										variant =  null;
-										link = null;
-										revenue = null;
-										recurringrev = null;
-										donations = null;
-										recurringdonations = null;
-									}
+									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
+											clicks, recipients, uploader, nameValue, refcode, refcode2, 
+											date, committee, sender, subject, category, content, 
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+									recipientList = null;
+									excludedList = null;
+									openers = null;
+									bounces = null;
+									unsubscribers = null;
+									clicks = null;
+									recipients = null;
+									nameValue = null;
+									refcode = null;
+									refcode2 = null;
+									date = null;
+									sender = null;
+									subject = null;
+									category = null;
+									testing = null;
+									variant =  null;
+									link = null;
+									revenue = null;
+									recurringrev = null;
+									donations = null;
+									recurringdonations = null;
+									content = null;
+								}
 							}
 							//new start 
 							else if (cell.getColumnIndex() == categoryColumn) {
@@ -1238,7 +1254,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1261,6 +1277,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == senderColumn) {
@@ -1269,7 +1286,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1292,6 +1309,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == subjectColumn) {
@@ -1300,7 +1318,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1323,6 +1341,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == testingColumn) {
@@ -1331,7 +1350,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1354,6 +1373,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == linkColumn) {
@@ -1362,7 +1382,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1385,6 +1405,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == variantColumn) {
@@ -1393,7 +1414,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1416,6 +1437,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == DateColumn) {
@@ -1437,7 +1459,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1460,6 +1482,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 							}
 							else if (cell.getColumnIndex() == RefcodeColumn) {
@@ -1469,7 +1492,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1492,6 +1515,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 						}
 							
@@ -1503,7 +1527,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1526,6 +1550,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 					}
 							else if (cell.getColumnIndex() == recurringrevColumn) {
@@ -1535,7 +1560,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1558,6 +1583,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 					}
 							else if (cell.getColumnIndex() == recurringdonationsColumn) {
@@ -1567,7 +1593,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1590,6 +1616,7 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 					}
 							else if (cell.getColumnIndex() == donationsColumn) {
@@ -1600,7 +1627,7 @@ public class ExcelUtil {
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
-											date, committee, sender, subject, category, 
+											date, committee, sender, subject, category, content, 
 											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
@@ -1623,13 +1650,71 @@ public class ExcelUtil {
 									recurringrev = null;
 									donations = null;
 									recurringdonations = null;
+									content = null;
 								}
 					}
+							if (cell.getColumnIndex() == contentColumn) {
+								//System.out.println("Values: " + values);
+								//userMap.put(headerValue, valValue);
+								//System.out.println("NameColumn TWO: " + NameColumn);
+								content = dataFormatter.formatCellValue(cell);  
+								int index = -1;
+								if (content.contains("secure.actblue.com")) {
+									index = content.indexOf("secure.actblue");
+								}
+								else if (content.contains("https://surveys.signforgood.com")) {
+									index = content.indexOf("surveys.signforgood.com");
+								}
+								else if (content.contains("https://action.democraticgovernors.org")) {
+									index = content.indexOf("action.democraticgovernors.org");
+								}
+								System.out.println("index: " + index);
+								
+								String sub = content.substring(index, content.length()-1);
+								System.out.println("sub: " + sub);
+								int finalindex = sub.indexOf("?");
+								System.out.println("final index: " + finalindex);
+								if (index != -1) 
+								{
+									if (finalindex < sub.length())
+								    sub = sub.substring(0, finalindex);
+								}
+								link = sub;
+								System.out.println("link " + link + ".");
+								if (cell.getColumnIndex() == noOfColumns - 1) {
+									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
+											clicks, recipients, uploader, nameValue, refcode, refcode2, 
+											date, committee, sender, subject, category, content, 
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+									recipientList = null;
+									excludedList = null;
+									openers = null;
+									bounces = null;
+									unsubscribers = null;
+									clicks = null;
+									recipients = null;
+									nameValue = null;
+									refcode = null;
+									refcode2 = null;
+									date = null;
+									sender = null;
+									subject = null;
+									category = null;
+									testing = null;
+									variant =  null;
+									link = null;
+									revenue = null;
+									recurringrev = null;
+									donations = null;
+									recurringdonations = null;
+									content = null;
+								}
+							}
 							else if (cell.getColumnIndex() == noOfColumns - 1) {
 						
 								eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 										clicks, recipients, uploader, nameValue, refcode, refcode2, 
-										date, committee, sender, subject, category, 
+										date, committee, sender, subject, category, content,
 										testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
 								recipientList = null;
 								excludedList = null;
@@ -1652,6 +1737,7 @@ public class ExcelUtil {
 								recurringrev = null;
 								donations = null;
 								recurringdonations = null;
+								content = null;
 							}
 						}
 		    	        }
@@ -2532,13 +2618,12 @@ public class ExcelUtil {
         
         row.setRowStyle(bodyStyleA);
         rowB.setRowStyle(bodyStyleA);
-        System.out.println("row: " +rowCount);
         for (int i = 0; i < bigtest.size(); i++) {
-        	System.out.println("bigtest: " + bigtest.size());
+    
             row = sheet.createRow(rowCount);
             rowB = sheet.createRow(rowBCount);
             columnCount = 0;
-            System.out.println("i: " + i);
+      
             Boolean rowStyleset = false;
             
             while (rowStyleset == false) {
@@ -2567,37 +2652,37 @@ public class ExcelUtil {
                     rowStyleset = true;
                 }
             }
-            System.out.println("2: " + columnCount);
+     
             createCell(row, columnCount++, bigtest.get(i).getId(), cellstyle);
             createCell(row, columnCount++, bigtest.get(i).getTestname(), cellstyle);
             createCell(row, columnCount++, "Variant A: " + bigtest.get(i).getVariantA(), boldcellstyle);
-            System.out.println("column: " + columnCount);
+     
             if (columnCount == ClickCol) {
             	System.out.println("clicks: " + bigtest.get(i).getVariantAClicks());
             	createCell(row, columnCount++, bigtest.get(i).getVariantAClicks(), cellstyle);
             }
-            System.out.println("2: " + columnCount);
+
             if (columnCount == OpenCol) {
             	System.out.println("opens: " + bigtest.get(i).getVariantAOpens());
             	createCell(row, columnCount++, bigtest.get(i).getVariantAOpens(), cellstyle);
             }
-            System.out.println("2: " + columnCount);
+   
             if (columnCount == OpenrateCol) {
                 createCell(row, columnCount++, getRateFormatted(bigtest.get(i).getVariantAOpenRate()), cellstyle);
             }
-            System.out.println("2: " + columnCount);
+ 
             if (columnCount == ClickrateCol) {
             	createCell(row, columnCount++, getRateFormatted(bigtest.get(i).getVariantAClickRate()), cellstyle);
             }
             if (columnCount == ClickOpenCol) {
-            	System.out.println("clicks/opens: " + bigtest.get(i).getVariantAClickOpens());
+            
             	createCell(row, columnCount++, getRateFormatted(bigtest.get(i).getVariantAClickOpens()), cellstyle);
             }
-            System.out.println("2: " + columnCount);
+    
             if (columnCount == RevCol) {
             	createCell(row, columnCount++, bigtest.get(i).getVariantARevenue(), cellstyle);
             }
-            System.out.println("2: " + columnCount);
+
             if (columnCount == DonationsCol) {
             	createCell(row, columnCount++, bigtest.get(i).getVariantADonations(), cellstyle);
             }

@@ -1216,6 +1216,8 @@ public class LojoController {
 			 String type = "Select";
 			 Integer range = 0;
 			 String typelabel = "Select";
+			 String operator = "Select";
+			 String operand = "Operand";
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
@@ -1224,11 +1226,14 @@ public class LojoController {
 			 model.addAttribute("typelabel", typelabel);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
 	        return "ExportQuery.jsp";
 	    } 
 	    @GetMapping("/export/query/options/range")
 	    public String exportQueryRange(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("range") Integer range, HttpServletRequest request,  
+				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("range") Integer range, @RequestParam("operator") String operator, 
+				 @RequestParam("operand") String operand, @RequestParam("type") String type, HttpServletRequest request,  
 				 HttpServletResponse response) throws IOException {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 if (user_id == null) {
@@ -1259,10 +1264,7 @@ public class LojoController {
 			 if(range == 0) {
 				 message = "Please select range.";
 			 }
-			 String type = "Select";
 			 String select = "Select";
-			 String operator = "Select";
-			 String operand = "Operand";
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
@@ -1420,7 +1422,7 @@ public class LojoController {
 			 }
 			 if (field == 5) {
 				 System.out.println("Test");
-			     List<test> tests = tservice.findTestswithinRange(startdateD, enddateD, committee_id);
+			     List<test> tests = tservice.TestExporter(startdateD, enddateD, committee_id, type, operator, operand);
 				 System.out.println("Tests size " + tests.size());
 				 System.out.println("input " + input);
 				 excelService.exportTestToExcel(tests, input, response);

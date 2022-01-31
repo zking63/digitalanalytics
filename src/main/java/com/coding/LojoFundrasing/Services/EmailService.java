@@ -185,7 +185,7 @@ public class EmailService {
 	
 	public void setUpEmailsfromUpload(String recipientList, String excludedList, Long openers, Long bounces, Long unsubscribers, 
 			Long clicks, Long recipients, User uploader, String nameValue, String refcode, String refcode2,  
-			Date date, Committees committee, String sender, String subject, String category, 
+			Date date, Committees committee, String sender, String subject, String category, String content, 
 			String testing, String variant, String link, Double revenue, Double recurringrev, 
 			Integer donations, Integer recurringdonations, Integer rowNumber) {
 		System.out.println("email set up found");
@@ -287,6 +287,7 @@ public class EmailService {
         	email.setRecurringRevenue(recurringrev);
         	email.setEmaildonationsum(revenue);
         	email.setEmaildonationcount(donations);
+        	email.setContent(content);
         	createEmail(email);
         	while (committeeSetList == false) {
     			if (committee.getBigtest() == null || committee.getEmails().size() == 0) {
@@ -341,7 +342,7 @@ public class EmailService {
 			if (email.getVariant() != null) {
 				System.out.println("email og variant " + email.getVariant());
 				originalvariant = email.getVariant();
-				if (variant != originaltesting) {
+				if (variant != originalvariant) {
 					if (variant != null) {
 						System.out.println("testing not matching new " );
 						variant = variant;
@@ -370,6 +371,7 @@ public class EmailService {
         	email.setTesting(test);
         	email.setVariant(variant);
         	email.setLink(link);
+        	email.setContent(content);
         	email.setOveralllink(overalllink);
         	email.setRecurringDonationCount(recurringdonations);
         	email.setRecurringRevenue(recurringrev);

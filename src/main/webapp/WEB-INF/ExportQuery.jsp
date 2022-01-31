@@ -176,6 +176,9 @@
 					<div id="parameter-choices">
 				    <input type="hidden" name="page" value="${page}">
 				    <input type="hidden" name="field" value="${field}">
+				    <input type="hidden" name="operator" value="${operator}">
+				    <input type="hidden" name="operand" value="${operand}">
+				    <input type="hidden" name="type" value="${type}">
 				        <label for="range">Time period:</label>
 							<select onchange="this.form.submit()" id="range" name="range">
 							<c:choose>
@@ -318,6 +321,29 @@
 				<label for="input"> Last</label><br>
 			</c:when>
 			<c:when test="${ field == 5}">
+						<div id="parameter-choices">
+				        <label for="type">Select search factor:</label>
+				        <select id="type" name="type">
+											<option value="${type}">${type}</option>
+											<option value="Testing category">Testing category</option>
+											<option value="Specific test">Specific test</option>
+											<option value="All Tests">All tests</option>
+						</select>
+				        </div>
+				        <div id="parameter-choices">
+					        <label for="operator">Select operator:</label>
+							<select id="operator" name="operator">
+							  		<option value="${operator }">${operator }</option>
+									<option value="Equals">Equals</option>
+									<option value="Contains">Contains</option>
+									<option value="Is blank">Is blank</option>
+							</select>
+				        </div>
+				        <div id="parameter-choices">
+					        <label for="operand"></label>
+									<textarea name="operand" placeholder="${operand }"></textarea>
+						</div>
+				        </div>
 			<div id="export-choices">
 				<input type="checkbox" id="input" name="input" value="Clicks">
 				<label for="input"> Clicks</label><br>
