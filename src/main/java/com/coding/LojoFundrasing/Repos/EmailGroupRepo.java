@@ -31,6 +31,14 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND emailgroup_name = :groupname", nativeQuery = true)
 	EmailGroup findbyNameandCommittee(String groupname, Long committee_id);
 	
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList') and email_name like '%(1) A%'", nativeQuery = true)
+	Emails findVariantA(Long groupid, Long committee_id);
+	
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList') and email_name like '%(1) B%'", nativeQuery = true)
+	Emails findVariantB(Long groupid, Long committee_id);
+	
 	//openers calculation
 	@Query(value = "SELECT SUM(openers) FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :groupid", nativeQuery = true)
 	Long GroupOpeners(@Param("groupid") Long groupid, Long committee_id);

@@ -42,6 +42,14 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode2 = :emailRefcode2 AND (email_refcode1 IS NULL or email_refcode1 = '' or email_refcode1 = ' ')", nativeQuery = true)
 	Emails findByemailRefcodeTWOandCommittee(String emailRefcode2, Long committee_id);
 	
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList') and email_name like '%(1) A%'", nativeQuery = true)
+	Emails findVariantA(Long groupid, Long committee_id);
+	
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList') and email_name like '%(1) B%'", nativeQuery = true)
+	Emails findVariantB(Long groupid, Long committee_id);
+	
 	//order emails by date
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND Emaildate >= DATE(:startdateE) and Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) order by emails.Emaildate Desc", nativeQuery = true)
 	List<Emails> findByOrderByDesc(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 

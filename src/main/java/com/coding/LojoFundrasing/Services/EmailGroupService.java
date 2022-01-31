@@ -265,9 +265,57 @@ public class EmailGroupService {
 			System.out.println("variant b is already set " + variantB);
 		}
 		if (test == null || test.isEmpty() || test == " ") {
+			if (variantA != null && variantB != null) {
+				variantASet = true;
+				variantBSet = true;
+			}
+			if (emailgroup.getGroupTest() != null) {
+				variantASet = true;
+				variantBSet = true;
+			}
 			System.out.println("test is null ");
-			variantASet = true;
-			variantBSet = true;
+			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
+			Emails emailB = erepo.findVariantB(emailgroup.getId(), committee_id);
+			if (emailA == null|| emailB == null) {
+				variantASet = true;
+				variantBSet = true;
+			}
+			else if (emailA.getSender() != emailB.getSender()) {
+				System.out.println("senders don't match " + emailA.getSender() + " " + emailB.getSender());
+				test = "SENDER";
+				variantA = emailA.getSender();
+				variantB = emailB.getSender();
+				emailgroup.setVariantA(variantA);
+				emailgroup.setVariantB(variantB);
+				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
+					Emails email = emailgroup.getEmails().get(i);
+					String variant = email.getSender();
+					email.setVariant(variant);
+					erepo.save(email);
+				}
+				variantASet = true;
+				variantBSet = true;
+			}
+			else if (emailA.getSubjectLine() != emailB.getSubjectLine()) {
+				System.out.println("subjects don't match " + emailA.getSubjectLine() + " " + emailB.getSubjectLine());
+				test = "SUBJECT";
+				variantA = emailA.getSubjectLine();
+				variantB = emailB.getSubjectLine();
+				emailgroup.setVariantA(variantA);
+				emailgroup.setVariantB(variantB);
+				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
+					Emails email = emailgroup.getEmails().get(i);
+					String variant = email.getSubjectLine();
+					email.setVariant(variant);
+					erepo.save(email);
+				}
+				variantASet = true;
+				variantBSet = true;
+			}
+			else {
+				variantASet = true;
+				variantBSet = true;
+			}
 		}
 		while (variantASet == false) {
 				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
@@ -327,9 +375,8 @@ public class EmailGroupService {
 			emailgroup.setTest(overallTest);
 			updateEmailGroup(emailgroup);
 		}
-		if ((emailgroup.getGroupTest() != null && !emailgroup.getGroupTest().isEmpty() 
-				&& emailgroup.getGroupTest() != " ")  && (!emailgroup.getGroupTest().contains("SENDER")
-				|| !emailgroup.getGroupTest().contains("SUBJECT"))) {
+		if (emailgroup.getGroupTest() != null && !emailgroup.getGroupTest().isEmpty() 
+				&& emailgroup.getGroupTest() != " ") {
 			overallTest = tservice.SetUpContentTestfromGroup(committee_id, emailgroup);
 			emailgroup.setTest(overallTest);
         	while (testListSet == false) {
