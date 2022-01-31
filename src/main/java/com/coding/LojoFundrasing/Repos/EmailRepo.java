@@ -47,8 +47,8 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	Emails findVariantA(Long groupid, Long committee_id);
 	
 	//find variant a in email group with no test
-	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and email_name like '%(1) B%' ORDER BY testing LIMIT 1", nativeQuery = true)
-	Emails findVariantB(Long groupid, Long committee_id);
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and list = :list and email_name like '%(1) B%' ORDER BY testing LIMIT 1", nativeQuery = true)
+	Emails findVariantB(Long groupid, String list, Long committee_id);
 	
 	//order emails by date
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND Emaildate >= DATE(:startdateE) and Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) order by emails.Emaildate Desc", nativeQuery = true)

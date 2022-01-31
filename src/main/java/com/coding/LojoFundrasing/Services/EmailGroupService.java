@@ -277,22 +277,13 @@ public class EmailGroupService {
 			}
 			System.out.println("test is null ");
 			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
-			Emails emailB = erepo.findVariantB(emailgroup.getId(), committee_id);
+			Emails emailB = null;
+			if (emailA != null) {
+				System.out.println("variant A is null ");
+				emailB = erepo.findVariantB(emailgroup.getId(), emailA.getList(), committee_id);
+			}
 			if (emailA == null && emailB == null) {
 				System.out.println("both variants are null ");
-				variantASet = true;
-				variantBSet = true;
-				testSet = true;
-			}
-			else if (emailA == null) {
-				System.out.println("variant A is null ");
-				variantASet = true;
-				variantBSet = true;
-				testSet = true;
-			}
-			else if (emailB == null) {
-				System.out.println("variant B is null ");
-				System.out.println("emailA: " + emailA.getEmailName());
 				variantASet = true;
 				variantBSet = true;
 				testSet = true;

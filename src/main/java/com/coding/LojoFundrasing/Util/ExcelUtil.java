@@ -951,33 +951,25 @@ public class ExcelUtil {
 						else if (row.getRowNum() > 0) {
 									//Cell value = cell;
 									//value = cell;
-							System.out.println("cell col: " + cell.getColumnIndex());
-							System.out.println("don col: " + donationsColumn);
 							if (cell.getColumnIndex() == NameColumn) {
 								//System.out.println("Values: " + values);
 								//userMap.put(headerValue, valValue);
 								//System.out.println("NameColumn TWO: " + NameColumn);
 								nameValue = dataFormatter.formatCellValue(cell);
-								System.out.println("nameval: " + nameValue);
 								String jtksearch = nameValue;    
-								System.out.println("jtksearch: " + jtksearch);
-								System.out.println("jtksearch size: " + jtksearch.length());
 								int jtkindex = jtksearch.indexOf("jtk");
-								System.out.println("jtkindex: " + jtkindex);
 								int finalindex = 7;
 								String subString = jtksearch.substring(jtkindex, jtksearch.length());
-								System.out.println("subString 1: " + subString);
 								subString = jtksearch.substring(jtkindex, jtksearch.length() - 4);
-								System.out.println("subString 2: " + subString);
 								if (nameValue.contains("RS")) {
 									finalindex = 8;
 								}
-								System.out.println("finalindex: " + finalindex);
+		
 								if (jtkindex != -1) 
 								{
 								    subString = subString.substring(0, finalindex);
 								}
-								System.out.println("subString: " + subString + ".");
+		
 								refcode2 = subString;
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1008,10 +1000,10 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == clicksColumn) {
-								System.out.println("click col: ");
+							
 								String amount1 = dataFormatter.formatCellValue(cell);
 								clicks = Long.parseLong(amount1); 
-								System.out.println("clicks col: " + clicks);
+		
 								//System.out.println(clicks);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1042,7 +1034,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == recipientsColumn ) {
-								System.out.println("recep col: ");
+				
 								String amount1 = dataFormatter.formatCellValue(cell);
 								recipients = Long.parseLong(amount1); 
 								//System.out.println(recipients);
@@ -1075,10 +1067,10 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == unsubscribersColumn) {
-								System.out.println("unsub col: ");
+				
 								String amount1 = dataFormatter.formatCellValue(cell);
 								unsubscribers = Long.parseLong(amount1); 
-								System.out.println("unsub col: " + unsubscribers);
+					
 								//System.out.println(unsubscribers);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1109,7 +1101,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == openersColumn) {
-								System.out.println("opener col: ");
+					
 								String amount1 = dataFormatter.formatCellValue(cell);
 								openers = Long.parseLong(amount1); 
 								if (cell.getColumnIndex() == noOfColumns - 1) {
@@ -1141,11 +1133,11 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == bouncesColumn) {
-								System.out.println("bounce col: ");
+							
 								String amount1 = dataFormatter.formatCellValue(cell);
-								System.out.println("bounces amount1: " + amount1);
+							
 								bounces = Long.parseLong(amount1); 
-								System.out.println("bounces col: " + bounces);
+					
 								//System.out.println(bounces);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1179,7 +1171,7 @@ public class ExcelUtil {
 								//System.out.println("Values: " + values);
 								//userMap.put(headerValue, valValue);
 								excludedList = dataFormatter.formatCellValue(cell);
-								System.out.println(excludedList);
+						
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -1209,7 +1201,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == listColumn) {
-								System.out.println("list col: ");
+				
 								recipientList = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 										eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1241,7 +1233,7 @@ public class ExcelUtil {
 							}
 							//new start 
 							else if (cell.getColumnIndex() == categoryColumn) {
-								System.out.println("category col: ");
+							
 								category = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1272,7 +1264,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == senderColumn) {
-								System.out.println("sender col: ");
+						
 								sender = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1303,7 +1295,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == subjectColumn) {
-								System.out.println("sl col: ");
+							
 								subject = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1334,7 +1326,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == testingColumn) {
-								System.out.println("test col: ");
+			
 								testing = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1365,7 +1357,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == linkColumn) {
-								System.out.println("link col: ");
+					
 								link = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1396,7 +1388,7 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == variantColumn) {
-								System.out.println("var col: ");
+					
 								variant = dataFormatter.formatCellValue(cell);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
@@ -1427,19 +1419,19 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == DateColumn) {
-								System.out.println("cell type: " +  cell.getDateCellValue());
+					
 								String dateValue1 = dataFormatter.formatCellValue(cell);
-								System.out.println("dateValue1: " + dateValue1);
+			
 								if (dateValue1.isEmpty()) {
-									System.out.println("dateValue1: " + dateValue1);
+				
 									date = null;
-									System.out.println("date: " + date);
+						
 									dateValue1 = null;
 								}
 								if (dateValue1 != null) {
-									System.out.println("dateValue1 not null: " + dateValue1);
+							
 									date = new SimpleDateFormat("MM/dd/yy hh:mm").parse(dateValue1);
-									System.out.println("date: " + date);
+
 								}
 								//System.out.println("Simple date: " + date);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
@@ -1471,11 +1463,9 @@ public class ExcelUtil {
 								}
 							}
 							else if (cell.getColumnIndex() == RefcodeColumn) {
-								System.out.println("ref col: ");
+			
 								refcode = dataFormatter.formatCellValue(cell);
-								System.out.println("refcode in reader " + refcode);
-								System.out.println("col " + cell.getColumnIndex());
-								System.out.println("last col " + noOfColumns);
+
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -1506,10 +1496,10 @@ public class ExcelUtil {
 						}
 							
 							else if (cell.getColumnIndex() == revenueColumn) {
-								System.out.println("rev col: ");
+							
 								String amount1 = dataFormatter.formatCellValue(cell);
 								revenue = Double.parseDouble(amount1); 
-								System.out.println("refcode2 in reader " + refcode2);
+			
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -1539,7 +1529,7 @@ public class ExcelUtil {
 								}
 					}
 							else if (cell.getColumnIndex() == recurringrevColumn) {
-								System.out.println("recur rev col: ");
+					
 								String amount1 = dataFormatter.formatCellValue(cell);
 								recurringrev = Double.parseDouble(amount1); 
 								if (cell.getColumnIndex() == noOfColumns - 1) {
@@ -1571,7 +1561,7 @@ public class ExcelUtil {
 								}
 					}
 							else if (cell.getColumnIndex() == recurringdonationsColumn) {
-								System.out.println("recur don col: ");
+		
 								String amount1 = dataFormatter.formatCellValue(cell);
 								recurringdonations = Integer.parseInt(amount1); 
 								if (cell.getColumnIndex() == noOfColumns - 1) {
@@ -1603,10 +1593,10 @@ public class ExcelUtil {
 								}
 					}
 							else if (cell.getColumnIndex() == donationsColumn) {
-								System.out.println("don col: ");
+		
 								String amount1 = dataFormatter.formatCellValue(cell);
 								donations = Integer.parseInt(amount1); 
-								System.out.println("*****donations from email " + donations);
+		
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -1636,7 +1626,7 @@ public class ExcelUtil {
 								}
 					}
 							else if (cell.getColumnIndex() == noOfColumns - 1) {
-								System.out.println("last col: ");
+						
 								eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 										clicks, recipients, uploader, nameValue, refcode, refcode2, 
 										date, committee, sender, subject, category, 
