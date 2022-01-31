@@ -167,7 +167,8 @@ public class EmailGroupService {
 		Double groupdonorsOpens = 0.0;
 		Double groupdonorsClicks = 0.0;
 		//strings
-		String test = emailgroup.getEmails().get(0).getTesting();
+		String test = egrepo.findEmailTesting(emailGroupId, committee_id);
+		System.out.println("testing " + test);
 		String category = null;
 		
 		//email count
@@ -269,9 +270,10 @@ public class EmailGroupService {
 				variantASet = true;
 				variantBSet = true;
 			}
-			if (emailgroup.getGroupTest() != null) {
+			if (emailgroup.getTest() != null) {
 				variantASet = true;
 				variantBSet = true;
+				test = emailgroup.getTest().getTestname();
 			}
 			System.out.println("test is null ");
 			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
@@ -291,6 +293,7 @@ public class EmailGroupService {
 					Emails email = emailgroup.getEmails().get(i);
 					String variant = email.getSender();
 					email.setVariant(variant);
+					email.setTesting(test);
 					erepo.save(email);
 				}
 				variantASet = true;
@@ -307,6 +310,7 @@ public class EmailGroupService {
 					Emails email = emailgroup.getEmails().get(i);
 					String variant = email.getSubjectLine();
 					email.setVariant(variant);
+					email.setTesting(test);
 					erepo.save(email);
 				}
 				variantASet = true;
