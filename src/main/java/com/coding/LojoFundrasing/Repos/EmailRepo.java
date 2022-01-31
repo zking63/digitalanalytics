@@ -43,11 +43,11 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	Emails findByemailRefcodeTWOandCommittee(String emailRefcode2, Long committee_id);
 	
 	//find variant a in email group with no test
-	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList') and email_name like '%(1) A%'", nativeQuery = true)
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and email_name like '%(1) A%' ORDER BY testing LIMIT 1", nativeQuery = true)
 	Emails findVariantA(Long groupid, Long committee_id);
 	
 	//find variant a in email group with no test
-	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList') and email_name like '%(1) B%'", nativeQuery = true)
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and email_name like '%(1) B%' ORDER BY testing LIMIT 1", nativeQuery = true)
 	Emails findVariantB(Long groupid, Long committee_id);
 	
 	//order emails by date

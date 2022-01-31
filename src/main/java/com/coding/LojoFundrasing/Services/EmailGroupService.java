@@ -169,6 +169,10 @@ public class EmailGroupService {
 		//strings
 		String test = egrepo.findEmailTesting(emailGroupId, committee_id);
 		System.out.println("testing " + test);
+		Boolean testSet = true;
+		if (test == null || test.isEmpty() || test == " ") {
+			testSet = false;
+		}
 		String category = null;
 		
 		//email count
@@ -265,24 +269,37 @@ public class EmailGroupService {
 			variantBSet = true;
 			System.out.println("variant b is already set " + variantB);
 		}
-		if (test == null || test.isEmpty() || test == " ") {
-			if (variantA != null && variantB != null) {
-				variantASet = true;
-				variantBSet = true;
-			}
+		while (testSet == false) {
 			if (emailgroup.getTest() != null) {
-				variantASet = true;
-				variantBSet = true;
 				test = emailgroup.getTest().getTestname();
+				System.out.println("test " + test);
+				testSet = true;
 			}
 			System.out.println("test is null ");
 			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
 			Emails emailB = erepo.findVariantB(emailgroup.getId(), committee_id);
-			if (emailA == null|| emailB == null) {
+			if (emailA == null && emailB == null) {
+				System.out.println("both variants are null ");
 				variantASet = true;
 				variantBSet = true;
+				testSet = true;
 			}
-			else if (emailA.getSender() != emailB.getSender()) {
+			else if (emailA == null) {
+				System.out.println("variant A is null ");
+				variantASet = true;
+				variantBSet = true;
+				testSet = true;
+			}
+			else if (emailB == null) {
+				System.out.println("variant B is null ");
+				System.out.println("emailA: " + emailA.getEmailName());
+				variantASet = true;
+				variantBSet = true;
+				testSet = true;
+			}
+			else if (!emailA.getSender().equals(emailB.getSender())) {
+				System.out.println("emailA: " + emailA.getEmailName());
+				System.out.println("emailB: " + emailB.getEmailName());
 				System.out.println("senders don't match " + emailA.getSender() + " " + emailB.getSender());
 				test = "SENDER";
 				variantA = emailA.getSender();
@@ -298,8 +315,11 @@ public class EmailGroupService {
 				}
 				variantASet = true;
 				variantBSet = true;
+				testSet = true;
 			}
-			else if (emailA.getSubjectLine() != emailB.getSubjectLine()) {
+			else if (!emailA.getSubjectLine().equals(emailB.getSubjectLine())) {
+				System.out.println("emailA: " + emailA.getEmailName());
+				System.out.println("emailB: " + emailB.getEmailName());
 				System.out.println("subjects don't match " + emailA.getSubjectLine() + " " + emailB.getSubjectLine());
 				test = "SUBJECT";
 				variantA = emailA.getSubjectLine();
@@ -315,10 +335,14 @@ public class EmailGroupService {
 				}
 				variantASet = true;
 				variantBSet = true;
+				testSet = true;
 			}
 			else {
+				System.out.println("emailA: " + emailA.getEmailName());
+				System.out.println("emailB: " + emailB.getEmailName());
 				variantASet = true;
 				variantBSet = true;
+				testSet = true;
 			}
 		}
 		while (variantASet == false) {
