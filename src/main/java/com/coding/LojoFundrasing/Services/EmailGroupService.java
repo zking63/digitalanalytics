@@ -296,13 +296,6 @@ public class EmailGroupService {
 				variantB = emailB.getSender();
 				emailgroup.setVariantA(variantA);
 				emailgroup.setVariantB(variantB);
-				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
-					Emails email = emailgroup.getEmails().get(i);
-					String variant = email.getSender();
-					email.setVariant(variant);
-					email.setTesting(test);
-					erepo.save(email);
-				}
 				variantASet = true;
 				variantBSet = true;
 				testSet = true;
@@ -316,13 +309,6 @@ public class EmailGroupService {
 				variantB = emailB.getSubjectLine();
 				emailgroup.setVariantA(variantA);
 				emailgroup.setVariantB(variantB);
-				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
-					Emails email = emailgroup.getEmails().get(i);
-					String variant = email.getSubjectLine();
-					email.setVariant(variant);
-					email.setTesting(test);
-					erepo.save(email);
-				}
 				variantASet = true;
 				variantBSet = true;
 				testSet = true;
@@ -386,6 +372,7 @@ public class EmailGroupService {
 				variantBSet = true;
 		}
 		emailgroup.setGroupTest(test);
+		
 		updateEmailGroup(emailgroup);
 		if (emailgroup.getGroupTest() == null || emailgroup.getGroupTest().isEmpty() 
 				|| emailgroup.getGroupTest() == " ") {
@@ -414,6 +401,22 @@ public class EmailGroupService {
     				testListSet = true;
     			}
         	}
+    		for (int i = 0; i < emailgroup.getEmails().size(); i++) {
+    			String variant = null;
+    			Emails email = emailgroup.getEmails().get(i);
+    			if (test.contentEquals("SUBJECT")) {
+    				variant = email.getSubjectLine();
+    			}
+    			else if (test.contentEquals("SENDER")) {
+    				variant = email.getSender();
+    			}
+    			else if (test.contentEquals("CONTENT TEST")) {
+    				variant = email.getVariant();
+    			}
+    			email.setVariant(variant);
+    			email.setTesting(test);
+    			erepo.save(email);
+    		}
 		}
     	updateEmailGroup(emailgroup);
     	if (overallTest != null) {
