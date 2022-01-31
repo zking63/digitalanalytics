@@ -1671,7 +1671,6 @@ public class ExcelUtil {
 								System.out.println("index: " + index);
 								
 								String sub = content.substring(index, content.length()-1);
-								System.out.println("sub: " + sub);
 								int finalindex = sub.indexOf("?");
 								System.out.println("final index: " + finalindex);
 								if (index != -1) 

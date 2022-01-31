@@ -201,7 +201,7 @@ public class EmailService {
 		Boolean LinkSetList = false;
 		Link overalllink = null;
 		
-		if (nameValue.isEmpty() || nameValue == null || date == null) {
+		if (nameValue == null || nameValue.isEmpty() || date == null) {
 			rowNumber = rowNumber +1;
 			System.out.println("*****NAME " + nameValue);
 			System.out.println("*****DATE " + date);
