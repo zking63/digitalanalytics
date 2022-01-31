@@ -279,10 +279,9 @@ public class EmailGroupService {
 			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
 			Emails emailB = null;
 			if (emailA != null) {
-				System.out.println("variant A is null ");
 				emailB = erepo.findVariantB(emailgroup.getId(), emailA.getList(), committee_id);
 			}
-			if (emailA == null && emailB == null) {
+			if (emailA == null || emailB == null) {
 				System.out.println("both variants are null ");
 				variantASet = true;
 				variantBSet = true;
@@ -340,7 +339,7 @@ public class EmailGroupService {
 				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
 					String variant = emailgroup.getEmails().get(i).getVariant();
 					if (!test.toUpperCase().contains("SENDER") && !test.toUpperCase().contains("SUBJECT")) {
-						variant = variant.toUpperCase();
+						//variant = variant.toUpperCase();
 						System.out.println("TEST IS " + test);
 					}
 					System.out.println("variant in A loop " + variant);
@@ -365,7 +364,7 @@ public class EmailGroupService {
 				for (int i = 0; i < emailgroup.getEmails().size(); i++) {
 					String variant = emailgroup.getEmails().get(i).getVariant();
 					if (!test.toUpperCase().contains("SENDER") && !test.toUpperCase().contains("SUBJECT")) {
-						variant = variant.toUpperCase();
+						//variant = variant.toUpperCase();
 						System.out.println("TEST IS " + test);
 					}
 					System.out.println("variant in B loop " + variant);

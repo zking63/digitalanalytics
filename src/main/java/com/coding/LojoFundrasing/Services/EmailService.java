@@ -191,7 +191,7 @@ public class EmailService {
 		System.out.println("email set up found");
 		System.out.println("*****NAME " + nameValue);
 		System.out.println("*****rev " + revenue);
-		System.out.println("*****donations " + donations);
+		System.out.println("*****test " + testing);
 		Emails email = null;
 		Boolean refcodesFiled = false;
 		Boolean committeeSetList = false;
@@ -321,6 +321,34 @@ public class EmailService {
 					email.setOveralllink(overalllink);
 					updateEmail(email);
 					lservice.CalculateLinkData (originalLink, committee.getId());
+				}
+			}
+			String originaltesting = null;
+			if (email.getTesting() != null) {
+				System.out.println("email og testing " + email.getTesting() );
+				originaltesting = email.getTesting();
+				if (test != originaltesting) {
+					if (testing != null) {
+						System.out.println("testing not matching new " );
+						test = test;
+					}
+					else {
+						test = originaltesting;
+					}
+				}
+			}
+			String originalvariant = null;
+			if (email.getVariant() != null) {
+				System.out.println("email og variant " + email.getVariant());
+				originalvariant = email.getVariant();
+				if (variant != originaltesting) {
+					if (variant != null) {
+						System.out.println("testing not matching new " );
+						variant = variant;
+					}
+					else {
+						variant = originalvariant;
+					}
 				}
 			}
         	System.out.println("found email: " + email.getId() + ", " + email.getEmailName());
