@@ -63,7 +63,8 @@ public class EmailGroupService {
 		if (emailgroup == null) {
 			//see if there are emails with same refcode2 and different refcode1
 			emails = erepo.findByemailRefcode2andCommitteeDifferentRefcode1(email.getEmailRefcode1(), email.getEmailRefcode2(), committee_id);
-			if (emails == null) {
+			System.out.println("emails with diff refcode1 and same 2: " + emails);
+			if (emails == null || emails.size() == 0) {
 				return;
 			}
 			//other emails with same refcode2 exist but haven't been grouped yet
@@ -133,6 +134,7 @@ public class EmailGroupService {
 		}
 	}
 	public void getEmailGroupData(Long emailGroupId, Long committee_id) {
+		System.out.println("email group id: " + emailGroupId);
 		EmailGroup emailgroup = egrepo.findbyIdandCommittee(emailGroupId, committee_id);
 		System.out.println(emailgroup.getEmailgroupName());
 		Committees committee = cservice.findbyId(committee_id);
