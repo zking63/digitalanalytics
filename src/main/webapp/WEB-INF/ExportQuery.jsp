@@ -251,6 +251,14 @@
 				        <label for="input">Select data fields:</label>
 				        </p>
 				        			<div id="export-choices">
+				        				<input type="checkbox" id="input" name="input" value="Refcode 1">
+										<label for="input"> Refcode 1</label><br>
+										<input type="checkbox" id="input" name="input" value="Refcode 2">
+										<label for="input"> Refcode 2</label><br>
+										<input type="checkbox" id="input" name="input" value="List">
+										<label for="input"> List</label><br>
+										<input type="checkbox" id="input" name="input" value="Excluded list">
+										<label for="input"> Excluded list</label><br>
 				        				<input type="checkbox" id="input" name="input" value="category">
 										<label for="input"> Category</label><br>
 										<input type="checkbox" id="input" name="input" value="link">
@@ -275,12 +283,12 @@
 										<label for="input"> Unsubscribe rate</label><br>	
 										<input type="checkbox" id="input" name="input" value="Bounce rate">
 										<label for="input"> Bounce rate</label><br>	
+									</div>
+									<div id="export-choices">
 										<input type="checkbox" id="input" name="input" value="Clicks/opens">	
 										<label for="input"> Clicks per open</label><br>	
 										<input type="checkbox" id="input" name="input" value="Revenue">
 										<label for="input"> Revenue</label><br>	
-									</div>
-									<div id="export-choices">
 										<input type="checkbox" id="input" name="input" value="Donations">	
 										<label for="input"> Donations</label><br>		
 										<input type="checkbox" id="input" name="input" value="Donations/opens">	
@@ -345,8 +353,12 @@
 				        <label for="input">Select data fields:</label>
 				        </p>
 				        			<div id="export-choices">
-										<input type="checkbox" id="input" name="input" value="link">
-										<label for="input"> Link</label><br>
+				        				<input type="checkbox" id="input" name="input" value="Refcode 1">
+										<label for="input"> Refcode 1</label><br>
+										<input type="checkbox" id="input" name="input" value="Refcode 2">
+										<label for="input"> Refcode 2</label><br>
+										<input type="checkbox" id="input" name="input" value="Recipients">
+										<label for="input"> Recipients</label><br>
 										<input type="checkbox" id="input" name="input" value="Clicks">
 										<label for="input"> Clicks</label><br>
 										<input type="checkbox" id="input" name="input" value="Opens">
@@ -369,10 +381,10 @@
 										<label for="input"> Revenue</label><br>	
 										<input type="checkbox" id="input" name="input" value="Donations">	
 										<label for="input"> Donations</label><br>		
-										<input type="checkbox" id="input" name="input" value="Donations/opens">	
-										<label for="input"> Donations per open</label><br>
 									</div>
 									<div id="export-choices">
+										<input type="checkbox" id="input" name="input" value="Donations/opens">	
+										<label for="input"> Donations per open</label><br>
 										<input type="checkbox" id="input" name="input" value="Donations/clicks">	
 										<label for="input"> Donations per click</label><br>
 										<input type="checkbox" id="input" name="input" value="Average donation">
