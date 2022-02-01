@@ -50,6 +50,8 @@ public class EmailGroup {
 	private String parentid;
 	private Double tandemrevenue;
 	private Integer tandemdonations;
+	private Double totalrevenue;
+	private Integer donationsforcalculation; //this is the sum of donationsforcalculation in all the emails in the group
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -295,4 +297,17 @@ public class EmailGroup {
 	public void setTandemdonations(Integer tandemdonations) {
 		this.tandemdonations = tandemdonations;
 	}
+	public Double getTotalrevenue() {
+		return totalrevenue;
+	}
+	public void setTotalrevenue(Double totalrevenue) {
+		this.totalrevenue = totalrevenue;
+	}
+	public Integer getDonationsforcalculation() {
+		return donationsforcalculation;
+	}
+	public void setDonationsforcalculation(Integer donationsforcalculation) {
+		this.donationsforcalculation = donationsforcalculation;
+	}
+	
 }

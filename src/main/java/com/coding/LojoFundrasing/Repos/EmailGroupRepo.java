@@ -82,6 +82,19 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	@Query(value = "Select sum(emaildonationsum) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Double GroupRevenue(@Param("groupid") Long groupid, Long committee_id);
 	
+	
+	//group tandem donation count
+	@Query(value = "Select sum(tandemdonations) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
+	Integer GroupTandemDonations(@Param("groupid") Long groupid, Long committee_id);
+	
+	//group tandem revenue
+	@Query(value = "Select sum(tandemrevenue) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
+	Double GroupTandemRevenue(@Param("groupid") Long groupid, Long committee_id);
+	
+	//group donations for calculation revenue
+	@Query(value = "Select sum(donationsforcalculation) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
+	Integer GroupDonationsforCalculation(@Param("groupid") Long groupid, Long committee_id);
+	
 	//recurring functions
 	//@Query(value = "Select COUNT(DISTINCT donations.donor_id) from donations left join emails on donations.email_id = emails.id WHERE emails.emailgroup_id = :groupid AND emails.committees_id = :committee_id AND donations.committees_id = :committee_id AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
 	//Integer GroupRecurringDonors(@Param("groupid") Long groupid, Long committee_id);

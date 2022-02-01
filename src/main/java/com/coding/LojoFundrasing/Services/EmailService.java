@@ -504,6 +504,7 @@ public class EmailService {
 			email.setEmaildonorsOpens(donorsOpens);
 			email.setEmaildonorsClicks(donorsClicks);
 			email.setTotalrevenue(totalrevenue);
+			email.setDonationsforcalculation(donationsforcalculation);
 			erepo.save(email);
     		if (email.getEmailgroup() != null) {
     			egservice.getEmailGroupData(email.getEmailgroup().getId(), committee_id);

@@ -148,14 +148,17 @@ public class EmailGroupService {
 		Long groupUnsubscribers = egrepo.GroupUnsubscribers(emailGroupId, committee_id);
 		//donation info
 		Double groupsum = egrepo.GroupRevenue(emailGroupId, committee_id);
-		System.out.println(groupsum);
 		Integer groupdonationcount = egrepo.GroupDonations(emailGroupId, committee_id);
-		System.out.println(groupdonationcount);
 		Double groupaverage = 0.0;
-		System.out.println(groupaverage);
 		//recurring
 		Integer groupRecurringDonationCount = egrepo.GroupRecurringDonations(emailGroupId, committee_id);
 		Double groupRecurringRevenue = egrepo.GroupRecurringRevenue(emailGroupId, committee_id);
+		
+		//tandem
+		Double tandemrevenue = egrepo.GroupTandemRevenue(emailGroupId, committee_id);
+		Integer tandemdonations = egrepo.GroupTandemDonations(emailGroupId, committee_id);
+		//total revenue
+		Double totalrevenue = tandemrevenue + groupsum;
 		//rates
 		Double groupunsubscribeRate = 0.0;
 		Double groupclickRate = 0.0;
@@ -167,6 +170,10 @@ public class EmailGroupService {
 		Double groupclicksOpens = 0.0;
 		Double groupdonorsOpens = 0.0;
 		Double groupdonorsClicks = 0.0;
+		
+		//donations for count
+		Integer donationsforcalculation = egrepo.GroupDonationsforCalculation(emailGroupId, committee_id);
+		
 		//strings
 		String test = egrepo.findEmailTesting(emailGroupId, committee_id);
 		System.out.println("testing " + test);
@@ -198,6 +205,10 @@ public class EmailGroupService {
 		emailgroup.setGroupBounces(groupBounces);
 		emailgroup.setGroupUnsubscribers(groupUnsubscribers);
 		emailgroup.setGroupemailcount(groupemailcount);
+		emailgroup.setTotalrevenue(totalrevenue);
+		emailgroup.setDonationsforcalculation(donationsforcalculation);
+		emailgroup.setTandemdonations(tandemdonations);
+		emailgroup.setTandemrevenue(tandemrevenue);
 		
 		emailgroup.setGroupsum(groupsum);
 		emailgroup.setGroupdonationcount(groupdonationcount);
@@ -205,22 +216,16 @@ public class EmailGroupService {
 		emailgroup.setGroupRecurringRevenue(groupRecurringRevenue);
 		updateEmailGroup(emailgroup);
 		
-		if (groupsum != 0 && groupsum != null) {
-			groupaverage = (double) groupsum/groupdonationcount;
+		if (donationsforcalculation != 0 && donationsforcalculation != null) {
+			groupaverage = (double) totalrevenue/donationsforcalculation;
 		}
 		//calculate email performance + fundraising stats
 		if (groupOpeners != null && groupOpeners != 0) {
-			System.out.println("groupOpeners is 0 " + groupOpeners);
 			groupclicksOpens = (double) groupClicks/groupOpeners;
-			System.out.println("groupclicksOpens " + groupclicksOpens);
-			groupdonationsOpens = (double) groupdonationcount/groupOpeners;
-			System.out.println("groupdonationsOpens " + groupdonationsOpens);
+			groupdonationsOpens = (double) donationsforcalculation/groupOpeners;
 		}
 		if (groupClicks != null && groupClicks != 0) {
-			System.out.println("groupClicks is NOT 0 " + groupClicks);
-			System.out.println("groupdonationcount " + groupdonationcount);
-			groupdonationsClicks = (double) groupdonationcount/groupClicks;
-			System.out.println("groupdonationsClicks " + groupdonationsClicks);
+			groupdonationsClicks = (double) donationsforcalculation/groupClicks;
 		}
 		
 		//calculate email performance stats
@@ -237,7 +242,6 @@ public class EmailGroupService {
 			}
 			if (groupOpeners != null && groupOpeners != 0) {
 				groupopenRate = (double) groupOpeners/groupRecipients;
-				System.out.println("groupopenrate is " + groupopenRate);
 			}
 		}
 		emailgroup.setGroupopenRate(groupopenRate);

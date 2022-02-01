@@ -66,6 +66,7 @@ public class Emails {
 	private Double tandemrevenue;
 	private Integer tandemdonations;
 	private Double totalrevenue;
+	private Integer donationsforcalculation; //this is whichever is the higher number of donations between tandem/regular. it's used to calculate average and donations/clicks, donations/opens. the aggregate of this will be used in email group to calculate email group data.  
 	@DateTimeFormat(pattern ="yyyy-MM-dd kk:mm")
 	private Date Emaildate;
 	private String emailRefcode1;
@@ -500,6 +501,14 @@ public class Emails {
 
 	public void setTotalrevenue(Double totalrevenue) {
 		this.totalrevenue = totalrevenue;
+	}
+
+	public Integer getDonationsforcalculation() {
+		return donationsforcalculation;
+	}
+
+	public void setDonationsforcalculation(Integer donationsforcalculation) {
+		this.donationsforcalculation = donationsforcalculation;
 	}
 	
 	

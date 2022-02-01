@@ -318,7 +318,6 @@ public class TestService {
 		
 		//getting variant a rates if possible
 		if (variantARecipients != null && variantARecipients != 0) {
-			System.out.println("variantARecipients is NOT 0 " + variantARecipients);
 			variantAOpenRate = (double) variantAOpens/variantARecipients;
 			variantAClickRate = (double) variantAClicks/variantARecipients;
 		}
@@ -332,7 +331,6 @@ public class TestService {
 		
 		//getting variant b rates if possible
 		if (variantBRecipients != null && variantBRecipients != 0) {
-			System.out.println("variantBRecipients is NOT 0 " + variantBRecipients);
 			variantBOpenRate = (double) variantBOpens/variantBRecipients;
 			variantBClickRate = (double) variantBClicks/variantBRecipients;
 		}
