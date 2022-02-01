@@ -251,6 +251,14 @@
 				        <label for="input">Select data fields:</label>
 				        </p>
 				        			<div id="export-choices">
+				        				<input type="checkbox" id="input" name="input" value="category">
+										<label for="input"> Category</label><br>
+										<input type="checkbox" id="input" name="input" value="link">
+										<label for="input"> Link</label><br>
+										<input type="checkbox" id="input" name="input" value="sender">
+										<label for="input"> Sender</label><br>
+										<input type="checkbox" id="input" name="input" value="subject">
+										<label for="input"> Subject Line</label><br>
 										<input type="checkbox" id="input" name="input" value="Clicks">
 										<label for="input"> Clicks</label><br>
 										<input type="checkbox" id="input" name="input" value="Opens">
@@ -271,42 +279,32 @@
 										<label for="input"> Clicks per open</label><br>	
 										<input type="checkbox" id="input" name="input" value="Revenue">
 										<label for="input"> Revenue</label><br>	
-										<input type="checkbox" id="input" name="input" value="Donations">	
-										<label for="input"> Donations</label><br>	
-										<input type="checkbox" id="input" name="input" value="Donors">
-										<label for="input"> Donors</label><br>	
-										<input type="checkbox" id="input" name="input" value="Average donation">
-										<label for="input"> Average donation</label><br>	
-										<input type="checkbox" id="input" name="input" value="parentid">
-										<label for="input"> Parent id</label><br>
 									</div>
 									<div id="export-choices">
+										<input type="checkbox" id="input" name="input" value="Donations">	
+										<label for="input"> Donations</label><br>		
+										<input type="checkbox" id="input" name="input" value="Donations/opens">	
+										<label for="input"> Donations per open</label><br>
+										<input type="checkbox" id="input" name="input" value="Donations/clicks">	
+										<label for="input"> Donations per click</label><br>
+										<input type="checkbox" id="input" name="input" value="Average donation">
+										<label for="input"> Average donation</label><br>	
 										<input type="checkbox" id="input" name="input" value="Tandem revenue">
 										<label for="input"> Tandem revenue</label><br>
 										<input type="checkbox" id="input" name="input" value="Tandem donations">
-										<label for="input"> Tandem donations</label><br>	
-										<input type="checkbox" id="input" name="input" value="Donors/click">
-										<label for="input"> Donors per click</label><br>
+										<label for="input"> Tandem donations</label><br>
+										<input type="checkbox" id="input" name="input" value="Total revenue">
+										<label for="input"> Total revenue</label><br>	
 										<input type="checkbox" id="input" name="input" value="Recurring donations">
 										<label for="input"> Recurring donations</label><br>
-										<input type="checkbox" id="input" name="input" value="Recurring donors">
-										<label for="input"> Recurring donors</label><br>
 										<input type="checkbox" id="input" name="input" value="Recurring revenue">
 										<label for="input"> Recurring revenue</label><br>
-										<input type="checkbox" id="input" name="input" value="variant">
-										<label for="input"> Variant</label><br>
-										<input type="checkbox" id="input" name="input" value="category">
-										<label for="input"> Category</label><br>
-										<input type="checkbox" id="input" name="input" value="link">
-										<label for="input"> Link</label><br>
-										<input type="checkbox" id="input" name="input" value="sender">
-										<label for="input"> Sender</label><br>
-										<input type="checkbox" id="input" name="input" value="subject">
-										<label for="input"> Subject Line</label><br>
 										<input type="checkbox" id="input" name="input" value="testing">
 										<label for="input"> Testing</label><br>
-										<input type="checkbox" id="input" name="input" value="Total revenue">
-										<label for="input"> Total revenue</label><br>
+										<input type="checkbox" id="input" name="input" value="variant">
+										<label for="input"> Variant</label><br>
+										<input type="checkbox" id="input" name="input" value="parentid">
+										<label for="input"> Parent id</label><br>
 										<input type="checkbox" id="input" name="input" value="donationsforcalculation">
 										<label for="input"> Donations used in calculations</label><br>
 									</div>
@@ -347,6 +345,8 @@
 				        <label for="input">Select data fields:</label>
 				        </p>
 				        			<div id="export-choices">
+										<input type="checkbox" id="input" name="input" value="link">
+										<label for="input"> Link</label><br>
 										<input type="checkbox" id="input" name="input" value="Clicks">
 										<label for="input"> Clicks</label><br>
 										<input type="checkbox" id="input" name="input" value="Opens">
@@ -368,41 +368,33 @@
 										<input type="checkbox" id="input" name="input" value="Revenue">
 										<label for="input"> Revenue</label><br>	
 										<input type="checkbox" id="input" name="input" value="Donations">	
-										<label for="input"> Donations</label><br>	
-										<input type="checkbox" id="input" name="input" value="Donors">
-										<label for="input"> Donors</label><br>	
-										<input type="checkbox" id="input" name="input" value="Average donation">
-										<label for="input"> Average donation</label><br>	
-										<input type="checkbox" id="input" name="input" value="parentid">
-										<label for="input"> Parent id</label><br>
+										<label for="input"> Donations</label><br>		
+										<input type="checkbox" id="input" name="input" value="Donations/opens">	
+										<label for="input"> Donations per open</label><br>
 									</div>
 									<div id="export-choices">
+										<input type="checkbox" id="input" name="input" value="Donations/clicks">	
+										<label for="input"> Donations per click</label><br>
+										<input type="checkbox" id="input" name="input" value="Average donation">
+										<label for="input"> Average donation</label><br>	
 										<input type="checkbox" id="input" name="input" value="Tandem revenue">
 										<label for="input"> Tandem revenue</label><br>
 										<input type="checkbox" id="input" name="input" value="Tandem donations">
-										<label for="input"> Tandem donations</label><br>	
-										<input type="checkbox" id="input" name="input" value="Donors/click">
-										<label for="input"> Donors per click</label><br>
+										<label for="input"> Tandem donations</label><br>
+										<input type="checkbox" id="input" name="input" value="Total revenue">
+										<label for="input"> Total revenue</label><br>	
 										<input type="checkbox" id="input" name="input" value="Recurring donations">
 										<label for="input"> Recurring donations</label><br>
-										<input type="checkbox" id="input" name="input" value="Recurring donors">
-										<label for="input"> Recurring donors</label><br>
 										<input type="checkbox" id="input" name="input" value="Recurring revenue">
 										<label for="input"> Recurring revenue</label><br>
-										<input type="checkbox" id="input" name="input" value="variant">
-										<label for="input"> Variant</label><br>
-										<input type="checkbox" id="input" name="input" value="category">
-										<label for="input"> Category</label><br>
-										<input type="checkbox" id="input" name="input" value="link">
-										<label for="input"> Link</label><br>
-										<input type="checkbox" id="input" name="input" value="sender">
-										<label for="input"> Sender</label><br>
-										<input type="checkbox" id="input" name="input" value="subject">
-										<label for="input"> Subject Line</label><br>
 										<input type="checkbox" id="input" name="input" value="testing">
 										<label for="input"> Testing</label><br>
-										<input type="checkbox" id="input" name="input" value="Total revenue">
-										<label for="input"> Total revenue</label><br>
+										<input type="checkbox" id="input" name="input" value="varianta">
+										<label for="input"> Variant A</label><br>
+										<input type="checkbox" id="input" name="input" value="variantb">
+										<label for="input"> Variant B</label><br>
+										<input type="checkbox" id="input" name="input" value="parentid">
+										<label for="input"> Parent id</label><br>
 										<input type="checkbox" id="input" name="input" value="donationsforcalculation">
 										<label for="input"> Donations used in calculations</label><br>
 									</div>
