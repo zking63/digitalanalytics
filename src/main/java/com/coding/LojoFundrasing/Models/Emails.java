@@ -62,6 +62,9 @@ public class Emails {
 	private Double emaildonorsOpens;
 	private Double emaildonorsClicks;
 	private String content;
+	private String parentid;
+	private Double tandemrevenue;
+	private Integer tandemdonations;
 	@DateTimeFormat(pattern ="yyyy-MM-dd kk:mm")
 	private Date Emaildate;
 	private String emailRefcode1;
@@ -464,6 +467,30 @@ public class Emails {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getParentid() {
+		return parentid;
+	}
+
+	public void setParentid(String parentid) {
+		this.parentid = parentid;
+	}
+
+	public Double getTandemrevenue() {
+		return tandemrevenue;
+	}
+
+	public void setTandemrevenue(Double tandemrevenue) {
+		this.tandemrevenue = tandemrevenue;
+	}
+
+	public Integer getTandemdonations() {
+		return tandemdonations;
+	}
+
+	public void setTandemdonations(Integer tandemdonations) {
+		this.tandemdonations = tandemdonations;
 	}
 	
 	

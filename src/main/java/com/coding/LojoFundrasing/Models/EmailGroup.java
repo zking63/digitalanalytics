@@ -47,6 +47,9 @@ public class EmailGroup {
 	private String variantA;
 	private String variantB;
 	private Integer groupemailcount;
+	private String parentid;
+	private Double tandemrevenue;
+	private Integer tandemdonations;
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -269,5 +272,27 @@ public class EmailGroup {
 	public void setGroupemailcount(Integer groupemailcount) {
 		this.groupemailcount = groupemailcount;
 	}
-	
+	public String getParentid() {
+		return parentid;
+	}
+
+	public void setParentid(String parentid) {
+		this.parentid = parentid;
+	}
+
+	public Double getTandemrevenue() {
+		return tandemrevenue;
+	}
+
+	public void setTandemrevenue(Double tandemrevenue) {
+		this.tandemrevenue = tandemrevenue;
+	}
+
+	public Integer getTandemdonations() {
+		return tandemdonations;
+	}
+
+	public void setTandemdonations(Integer tandemdonations) {
+		this.tandemdonations = tandemdonations;
+	}
 }

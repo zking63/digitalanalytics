@@ -21,8 +21,11 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	List<Long> findGroupByOrderByDesc(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emailgroups LEFT JOIN emails ON emails.emailgroup_id = emailgroups.id WHERE emailgroups.committees_id = :committee_id AND emails.email_refcode2 = :refcode2", nativeQuery = true)
-	EmailGroup findGroupByRefcode2(String refcode2, Long committee_id);
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND parentid = :parentid", nativeQuery = true)
+	List<Emails> findEmailsinGroupByParentId(String parentid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND parentid = :parentid", nativeQuery = true)
+	EmailGroup findGroupByParentId(String parentid, Long committee_id);
 	
 	//find number of emails in email group
 	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :groupid", nativeQuery = true)

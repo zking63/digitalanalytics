@@ -185,7 +185,8 @@ public class EmailService {
 	
 	public void setUpEmailsfromUpload(String recipientList, String excludedList, Long openers, Long bounces, Long unsubscribers, 
 			Long clicks, Long recipients, User uploader, String nameValue, String refcode, String refcode2,  
-			Date date, Committees committee, String sender, String subject, String category, String content, 
+			Date date, Committees committee, String sender, String subject, String category, 
+			String content, Integer tandemdonations, Double tandemrev, String parentid,
 			String testing, String variant, String link, Double revenue, Double recurringrev, 
 			Integer donations, Integer recurringdonations, Integer rowNumber) {
 		System.out.println("email set up found");
@@ -200,6 +201,14 @@ public class EmailService {
 		String test = null;
 		Boolean LinkSetList = false;
 		Link overalllink = null;
+		
+		if (tandemrev == null) {
+			tandemrev = 0.0;
+		}
+		
+		if (tandemdonations == null) {
+			tandemdonations = 0;
+		}
 		
 		if (nameValue == null || nameValue.isEmpty() || date == null) {
 			rowNumber = rowNumber +1;
@@ -287,6 +296,9 @@ public class EmailService {
         	email.setRecurringRevenue(recurringrev);
         	email.setEmaildonationsum(revenue);
         	email.setEmaildonationcount(donations);
+        	email.setParentid(parentid);
+        	email.setTandemdonations(tandemdonations);
+        	email.setTandemrevenue(tandemrev);
         	email.setContent(content);
         	createEmail(email);
         	while (committeeSetList == false) {
@@ -372,6 +384,9 @@ public class EmailService {
         	email.setVariant(variant);
         	email.setLink(link);
         	email.setContent(content);
+        	email.setParentid(parentid);
+        	email.setTandemdonations(tandemdonations);
+        	email.setTandemrevenue(tandemrev);
         	email.setOveralllink(overalllink);
         	email.setRecurringDonationCount(recurringdonations);
         	email.setRecurringRevenue(recurringrev);

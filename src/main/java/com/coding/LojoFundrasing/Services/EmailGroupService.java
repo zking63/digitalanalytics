@@ -56,15 +56,15 @@ public class EmailGroupService {
 	public void findorCreateEmailGroup(Emails email, Long committee_id) {
 		List<Emails> emails = new ArrayList<Emails>();
 		//see if email group with same refcode2 already exists
-		EmailGroup emailgroup = egrepo.findGroupByRefcode2(email.getEmailRefcode2(), committee_id);
+		EmailGroup emailgroup = egrepo.findGroupByParentId(email.getParentid(), committee_id);
 		Boolean committeeSetList = false;
 		Boolean emailgroupSetList = false;
 		Committees committee = cservice.findbyId(committee_id);
 		
 		if (emailgroup == null) {
 			//see if there are emails with same refcode2 and different refcode1
-			emails = erepo.findByemailRefcode2andCommitteeDifferentRefcode1(email.getEmailRefcode1(), email.getEmailRefcode2(), committee_id);
-			System.out.println("emails with diff refcode1 and same 2: " + emails);
+			emails = egrepo.findEmailsinGroupByParentId(email.getParentid(), committee_id);
+			System.out.println("emails with same parent id: " + emails);
 			if (emails == null || emails.size() == 0) {
 				return;
 			}
@@ -91,11 +91,11 @@ public class EmailGroupService {
 				}
 				System.out.println("subString 2: " + subString);
 				emailgroup.setEmailgroupName(subString);
+				emailgroup.setParentid(email.getParentid());
 				emailgroup.setCreatedAt(date);
 				emailgroup.setGroup_creator(email.getEmail_uploader());
 				createEmailGroup(emailgroup);
 				
-				emails = erepo.findByemailRefcode2andCommittee(email.getEmailRefcode2(), committee_id);
 				emailgroup.setEmails(emails);
 				
 	        	while (committeeSetList == false) {
