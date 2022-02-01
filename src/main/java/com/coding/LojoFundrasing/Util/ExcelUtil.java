@@ -988,17 +988,19 @@ public class ExcelUtil {
 								System.out.println("index: " + jtkindex);
 								System.out.println("length: " + jtksearch.length());
 								String subString = jtksearch.substring(jtkindex, jtksearch.length() -1);
-								if (nameValue.contains(".RS") || nameValue.contains(" RS")) {
+								System.out.println("                                                             substring: " + subString + ".");
+								char c = subString.charAt(7);
+								boolean isletter = Character.isLetter(c);
+								if (isletter == true) {
 									finalindex = 8;
 								}
-		
 								if (jtkindex != -1) 
 								{
 								    subString = subString.substring(0, finalindex);
 								}
 		
 								refcode2 = subString;
-								System.out.println("refcode2: " + refcode2 + ".");
+								System.out.println("                                                             refcode2: " + refcode2 + ".");
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
