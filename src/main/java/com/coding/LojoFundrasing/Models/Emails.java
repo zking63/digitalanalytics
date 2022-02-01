@@ -65,6 +65,7 @@ public class Emails {
 	private String parentid;
 	private Double tandemrevenue;
 	private Integer tandemdonations;
+	private Double totalrevenue;
 	@DateTimeFormat(pattern ="yyyy-MM-dd kk:mm")
 	private Date Emaildate;
 	private String emailRefcode1;
@@ -491,6 +492,14 @@ public class Emails {
 
 	public void setTandemdonations(Integer tandemdonations) {
 		this.tandemdonations = tandemdonations;
+	}
+
+	public Double getTotalrevenue() {
+		return totalrevenue;
+	}
+
+	public void setTotalrevenue(Double totalrevenue) {
+		this.totalrevenue = totalrevenue;
 	}
 	
 	

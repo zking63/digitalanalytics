@@ -209,6 +209,20 @@ public class EmailService {
 		if (tandemdonations == null) {
 			tandemdonations = 0;
 		}
+		if (revenue == null) {
+			revenue = 0.0;
+		}
+		
+		if (donations == null) {
+			donations = 0;
+		}
+		if (recurringrev == null) {
+			recurringrev = 0.0;
+		}
+		
+		if (recurringdonations == null) {
+			recurringdonations = 0;
+		}
 		
 		if (nameValue == null || nameValue.isEmpty() || date == null) {
 			rowNumber = rowNumber +1;
@@ -425,13 +439,13 @@ public class EmailService {
 	
 	public void CalculateEmailData(Emails email, Long committee_id) {
 		Long id = email.getId();
-		Double esum = 0.00;
+		Double esum = email.getEmaildonationsum();
 		Double eaverage = 0.00;
-		Integer donationscount = 0;
+		Integer donationscount = email.getEmaildonationcount();
 		Integer donorscount = 0;
 		Integer recurringDonorCount = 0;
-		Integer recurringDonationCount = 0;
-		Double recurringRevenue = 0.00;
+		Integer recurringDonationCount = email.getRecurringDonationCount();
+		Double recurringRevenue = email.getRecurringRevenue();
 		Double unsubscribeRate = 0.00;
 		Double clickRate = 0.00;
 		Double openRate = 0.00;
@@ -441,13 +455,17 @@ public class EmailService {
 		Double donorsOpens = 0.00;
 		Double donorsClicks = 0.00;
 		Double clicksOpens = 0.00;
-		
-			if (email.getEmaildonationcount() != null && email.getEmaildonationcount() != 0.0) {
-				esum = email.getEmaildonationsum();
-				System.out.println("esum in calculate:" + esum);
-				donationscount = email.getEmaildonationcount();
-				eaverage = esum/donationscount;
-			}
+		Integer tandemdonations = email.getTandemdonations();
+		Integer donationsforcalculation = donationscount;
+		Double totalrevenue = email.getTandemrevenue() + email.getEmaildonationsum();
+
+				if (tandemdonations > donationscount) {
+					donationsforcalculation = tandemdonations; 
+				}
+				if (donationsforcalculation != 0) {
+					eaverage = totalrevenue/donationsforcalculation;
+				}
+				
 			//aggregate functions
 			if (email.getBounces() != null) {
 				//variables for aggregate functions
@@ -463,18 +481,10 @@ public class EmailService {
 				clickRate = clicks/receps;
 				bounceRate = bounces/receps;
 				clicksOpens = clicks/opens;
-				donationsOpens = donationscount/opens;
-				donationsClicks = donationscount/clicks;
+				donationsOpens = donationsforcalculation/opens;
+				donationsClicks = donationsforcalculation/clicks;
 				donorsOpens = donorscount/opens;
 				donorsClicks = donorscount/clicks;
-			}
-			//recurring functions
-			recurringDonationCount = email.getRecurringDonationCount();
-			recurringRevenue = email.getRecurringRevenue();
-			//set recurring functions
-			if (recurringRevenue == null) {
-				System.out.println("recurringRevenue: " + "null");
-				recurringRevenue = 0.0;
 			}
 			email.setEmaildonationaverage(eaverage);
 			email.setEmaildonationsum(esum);
@@ -493,6 +503,7 @@ public class EmailService {
 			email.setEmailclicksOpens(clicksOpens);
 			email.setEmaildonorsOpens(donorsOpens);
 			email.setEmaildonorsClicks(donorsClicks);
+			email.setTotalrevenue(totalrevenue);
 			erepo.save(email);
     		if (email.getEmailgroup() != null) {
     			egservice.getEmailGroupData(email.getEmailgroup().getId(), committee_id);
