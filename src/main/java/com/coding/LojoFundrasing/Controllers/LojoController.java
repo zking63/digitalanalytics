@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1411,14 +1412,15 @@ public class LojoController {
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
 			 if (field == 0) {
-				 System.out.println("Emails Groups");
-				 List<EmailGroup> emailgroups = egservice.EmailGroupList(startdateD, enddateD, committee_id);
-				 System.out.println("Emails Groups size " + emailgroups.size());
-				 for (int i = 0; i < emailgroups.size(); i++) {
-					 EmailGroup emailgroup = emailgroups.get(i);
-					 this.egservice.getEmailGroupData(emailgroup.getId(), committee_id);
-				 }
-				 excelService.exportEmailGroupsToExcel(emailgroups, input, response);
+				 System.out.println("Email Groups");
+				//egservice.SortEmailsandEmailGroupsId(startdateD, enddateD, committee_id);
+				 //List<String> types = egservice.SortEmailsandEmailGroupsCategory(committee_id);
+				// System.out.println("Emails Groups size " + map.size());
+				// for (int i = 0; i < map.size(); i++) {
+					 //System.out.println("id: " + map.get(i));
+					 
+				 //}
+				// excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			 }
 			 if (field == 5) {
 				 System.out.println("Test");

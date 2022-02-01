@@ -3,6 +3,7 @@ package com.coding.LojoFundrasing.Services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -436,4 +437,33 @@ public class EmailGroupService {
 		System.out.println("emails size " + emails.size());
 		return emails;
 	}
+	/*public void SortEmailsandEmailGroupsId(String startdate, String enddate, Long committee_id){
+		List<EmailGroup> emailgroups = egrepo.sortEmailgroupsbyRevenue(startdate, enddate, committee_id);
+		List<Emails> emails = erepo.sortEmailswithoutGroupbyRevenue(startdate, enddate, committee_id);
+		System.out.println("emails " + emails.size() );
+		List<Long> ids = new ArrayList<Long>();
+		if (emails == null || emails.size() == 0) {
+			for (int i = 0; i <emailgroups.size(); i++) {
+				System.out.println("emailgroup " + emailgroups.get(i).getEmailgroupName() + " " + emailgroups.get(i).getGroupsum());
+			}
+		}
+		else {
+			for (int i = 0; i <emailgroups.size(); i++) {
+				Double max = emailgroups.get(i).getGroupsum();
+				Long maxid = emailgroups.get(i).getId();
+				System.out.println("max " + max );
+				System.out.println("email donation sum " + emails.get(i).getEmaildonationsum() );
+				if (emails.get(i).getEmaildonationsum() == null) {
+					return;
+				}
+				if (emails.get(i).getEmaildonationsum() > max) {
+					max = emails.get(i).getEmaildonationsum();
+					ids.add(maxid);
+				}
+			}
+		}
+		for (int i = 0; i <emailgroups.size(); i++) {
+			System.out.println("emailgroup " + ids.get(i));
+		}
+	}*/
 }

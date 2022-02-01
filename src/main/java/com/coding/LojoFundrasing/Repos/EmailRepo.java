@@ -215,4 +215,9 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	List<Emails> linkisBlank(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
+	//sort emails without group by revenue
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND Emaildate >= DATE(:startdateE) and Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) AND emailgroup_id IS NULL order by emaildonationsum DESC", nativeQuery = true)
+	List<Emails> sortEmailswithoutGroupbyRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
+			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
+	
 }

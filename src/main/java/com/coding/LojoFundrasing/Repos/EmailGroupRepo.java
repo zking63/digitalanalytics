@@ -1,6 +1,7 @@
 package com.coding.LojoFundrasing.Repos;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -88,6 +89,18 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	
 	@Query(value = "Select sum(recurring_revenue) from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id", nativeQuery = true)
 	Double GroupRecurringRevenue(@Param("groupid") Long groupid, Long committee_id);
+	
+	//sort emailgroups by revenue
+	@Query(value = "SELECT * FROM emailgroups left join emails on emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) order by emailgroups.groupsum DESC", nativeQuery = true)
+	List<EmailGroup> sortEmailgroupsbyRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
+			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
+	
+	//Sort emails and email groups together
+	//@Query(value = "select * from (SELECT emailgroups.id as id, \"group\" as source from emailgroups where emailgroups.committees_id = :committee_id union SELECT emails.id as id, \"email\" as source FROM emails where emails.emailgroup_id is NULL and emails.committees_id = :committee_id) as tableC", nativeQuery = true)
+	//Map<Long, String> SortEmailsandEmailGroupsId(Long committee_id);
+	
+	//@Query(value = "select * from (SELECT \"group\" as source from emailgroups where emailgroups.committees_id = :committee_id union SELECT  \"email\" as source FROM emails where emails.emailgroup_id is NULL and emails.committees_id = :committee_id) as tableC", nativeQuery = true)
+	//List<String> SortEmailsandEmailGroupsCategory(Long committee_id);
 	
 	//find an email in the list with recipients
 	//@Query(value = "Select * from emails WHERE emailgroup_id = :groupid AND committees_id = :committee_id AND recipients IS NOT NULL LIMIT 1", nativeQuery = true)
