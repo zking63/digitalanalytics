@@ -176,7 +176,6 @@ public class EmailGroupService {
 		
 		//strings
 		String test = egrepo.findEmailTesting(emailGroupId, committee_id);
-		System.out.println("testing " + test);
 		Boolean testSet = true;
 		if (test == null || test.isEmpty() || test == " ") {
 			testSet = false;
@@ -230,7 +229,6 @@ public class EmailGroupService {
 		
 		//calculate email performance stats
 		if (groupRecipients != null && groupRecipients != 0) {
-			System.out.println("groupRecipients is " + groupRecipients);
 			if (groupUnsubscribers != null && groupUnsubscribers != 0) {
 				groupunsubscribeRate = (double) groupUnsubscribers/groupRecipients;
 			}
@@ -260,42 +258,32 @@ public class EmailGroupService {
 		//testing info
 		if (variantA == null || variantA.isEmpty() || variantA == " " ) {
 			variantASet = false;
-			System.out.println("variant A is null " + variantA);
 		}
 		else {
 			variantASet = true;
-			System.out.println("variant A is already set " + variantA);
 		}
 		if (variantB == null || variantB.isEmpty() || variantB == " " ) {
 			variantBSet = false;
-			System.out.println("variant B is null " + variantB);
 		}
 		else {
 			variantBSet = true;
-			System.out.println("variant b is already set " + variantB);
 		}
 		while (testSet == false) {
 			if (emailgroup.getTest() != null) {
 				test = emailgroup.getTest().getTestname();
-				System.out.println("test " + test);
 				testSet = true;
 			}
-			System.out.println("test is null ");
 			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
 			Emails emailB = null;
 			if (emailA != null) {
 				emailB = erepo.findVariantB(emailgroup.getId(), emailA.getList(), committee_id);
 			}
 			if (emailA == null || emailB == null) {
-				System.out.println("both variants are null ");
 				variantASet = true;
 				variantBSet = true;
 				testSet = true;
 			}
 			else if (!emailA.getSender().equals(emailB.getSender())) {
-				System.out.println("emailA: " + emailA.getEmailName());
-				System.out.println("emailB: " + emailB.getEmailName());
-				System.out.println("senders don't match " + emailA.getSender() + " " + emailB.getSender());
 				test = "SENDER";
 				variantA = emailA.getSender();
 				variantB = emailB.getSender();
@@ -306,9 +294,6 @@ public class EmailGroupService {
 				testSet = true;
 			}
 			else if (!emailA.getSubjectLine().equals(emailB.getSubjectLine())) {
-				System.out.println("emailA: " + emailA.getEmailName());
-				System.out.println("emailB: " + emailB.getEmailName());
-				System.out.println("subjects don't match " + emailA.getSubjectLine() + " " + emailB.getSubjectLine());
 				test = "SUBJECT";
 				variantA = emailA.getSubjectLine();
 				variantB = emailB.getSubjectLine();
@@ -319,8 +304,6 @@ public class EmailGroupService {
 				testSet = true;
 			}
 			else {
-				System.out.println("emailA: " + emailA.getEmailName());
-				System.out.println("emailB: " + emailB.getEmailName());
 				variantASet = true;
 				variantBSet = true;
 				testSet = true;
@@ -347,7 +330,6 @@ public class EmailGroupService {
 					}
 				}
 				emailgroup.setVariantA(variantA);
-				System.out.println("variant A " + variantA);
 				variantASet = true;
 				break;
 		}
@@ -373,7 +355,6 @@ public class EmailGroupService {
 					}
 				}
 				emailgroup.setVariantB(variantB);
-				System.out.println("variant B " + variantB);
 				variantBSet = true;
 		}
 		emailgroup.setGroupTest(test);
