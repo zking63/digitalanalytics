@@ -1,7 +1,6 @@
 package com.coding.LojoFundrasing.Repos;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

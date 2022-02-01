@@ -62,8 +62,8 @@ public class EmailGroupService {
 		Committees committee = cservice.findbyId(committee_id);
 		
 		if (emailgroup == null) {
-			//see if there are emails with same refcode2 and different refcode1
-			emails = egrepo.findEmailsinGroupByParentId(email.getParentid(), committee_id);
+			//get emails in group
+			emails = erepo.findEmailsByParentId(email.getParentid(), committee_id);
 			System.out.println("emails with same parent id: " + emails);
 			if (emails == null || emails.size() == 0) {
 				return;

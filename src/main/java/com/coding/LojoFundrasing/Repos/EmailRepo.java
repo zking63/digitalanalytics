@@ -29,6 +29,9 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode1 != :emailRefcode AND email_refcode2 = :emailRefcode2", nativeQuery = true)
 	List <Emails> findByemailRefcode2andCommitteeDifferentRefcode1(String emailRefcode, String emailRefcode2, Long committee_id);
 	
+	//find emails with parent id
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND parentid = :parentid", nativeQuery = true)
+	List<Emails> findEmailsByParentId(String parentid, Long committee_id);
 	
 	//find list of emails with same refcode2
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode2 = :emailRefcode2", nativeQuery = true)

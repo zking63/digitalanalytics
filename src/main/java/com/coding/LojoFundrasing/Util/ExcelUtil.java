@@ -946,6 +946,10 @@ public class ExcelUtil {
 									recurringrevColumn = header.getColumnIndex();
 									//System.out.println(headerValue);
 								}
+								else if (headerValue.contains("TANDEM REVENUE")) {
+									tandemrevColumn = header.getColumnIndex();
+									//System.out.println(headerValue);
+								}
 								else {
 									revenueColumn = header.getColumnIndex();
 								}
@@ -956,21 +960,17 @@ public class ExcelUtil {
 									recurringdonationsColumn = header.getColumnIndex();
 									//System.out.println(headerValue);
 								}
+								else if (headerValue.contains("TANDEM DONATIONS")) {
+									tandemdonationsColumn = header.getColumnIndex();
+									//System.out.println(headerValue);
+								}
 								else {
 									donationsColumn = header.getColumnIndex();
 								}
 								System.out.println("donationsColumn: " + donationsColumn);
 							}
-							if (headerValue.contains("PARENT ID")) {
+							if (headerValue.contains("PARENT MAIL ID")) {
 								parentidColumn = header.getColumnIndex();
-								//System.out.println(headerValue);
-							}
-							if (headerValue.contains("TANDEM DONATIONS")) {
-								tandemdonationsColumn = header.getColumnIndex();
-								//System.out.println(headerValue);
-							}
-							if (headerValue.contains("TANDEM REVENUE")) {
-								tandemrevColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
 						}
