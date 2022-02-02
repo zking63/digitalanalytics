@@ -1593,7 +1593,7 @@ public class ExcelUtil {
 							
 								String amount1 = dataFormatter.formatCellValue(cell);
 								revenue = Double.parseDouble(amount1); 
-			
+								System.out.println("*****rev " + revenue);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -2035,33 +2035,44 @@ public class ExcelUtil {
 	}
     public void Emailexporter(List<Emails> emails, List<String> input, HttpServletResponse response) throws IOException{
         //column values
-    	int ClickCol = 0;
-    	int OpenCol = 0;
-    	int BounceCol = 0;
-    	int UnsubCol = 0;
-    	int ClickrateCol = 0;
-    	int OpenrateCol = 0;
-    	int UnsubrateCol = 0;
-    	int BouncerateCol = 0;
-    	int ClickOpenCol = 0;
-    	int RevCol = 0;
-    	int DonationsCol = 0;
-    	int DonorsCol =0;
-    	int AvCol = 0;
-    	int DonOpenCol = 0;
-    	int DonClickCol = 0;
-    	int DonorsOpenCol =0;
-    	int DonorsClickCol = 0;
-    	int DonRecurCol = 0;
-    	int DonorsRecurCol =0;
-    	int RevRecurCol = 0;
+    	int ClickCol = -1;
+    	int OpenCol = -1;
+    	int BounceCol = -1;
+    	int UnsubCol = -1;
+    	int ClickrateCol = -1;
+    	int OpenrateCol = -1;
+    	int UnsubrateCol = -1;
+    	int BouncerateCol = -1;
+    	int ClickOpenCol = -1;
+    	int RevCol = -1;
+    	int DonationsCol = -1;
+    	int DonorsCol =-1;
+    	int AvCol = -1;
+    	int DonOpenCol = -1;
+    	int DonClickCol = -1;
+    	int DonorsOpenCol =-1;
+    	int DonorsClickCol = -1;
+    	int DonRecurCol = -1;
+    	int DonorsRecurCol =-1;
+    	int RevRecurCol = -1;
     	
-    	int variantCol = 0;
-    	int categoryCol =0;
-    	int senderCol = 0;
-    	int subjectCol = 0;
-    	int testingCol =0;
-    	int linkCol = 0;
+    	int variantCol = -1;
+    	int categoryCol =-1;
+    	int senderCol = -1;
+    	int subjectCol = -1;
+    	int testingCol =-1;
+    	int linkCol = -1;
+    	
+        int refcode1Col = -1;
+        int refcode2Col = -1;
+        int listCol = -1;
+        int excludedlistCol = -1;
+        int recipientsCol = -1;
+        int tandemrevCol = -1;
+        int tandemdonationsCol = -1;
+        int totalrevCol = -1;
+        int parentidCol = -1;
+        int donationsforcalcCol = -1;
     	
     	
     	this.emails = emails;
@@ -2080,15 +2091,10 @@ public class ExcelUtil {
         style.setFont(font);
          
         createCell(row, 0, "Id", style); 
-        createCell(row, 1, "Email", style); 
-        createCell(row, 2, "Refcode", style); 
-        createCell(row, 3, "Refcode 2", style); 
-        createCell(row, 4, "Send Date", style); 
-        createCell(row, 5, "List", style); 
-        createCell(row, 6, "Excluded List", style); 
-        createCell(row, 7, "Recipients", style);
+        createCell(row, 1, "Send Date", style); 
+        createCell(row, 2, "Email", style); 
         
-        int columnCount = 8;
+        int columnCount = 3;
         Cell cell = row.createCell(columnCount);
         
         if (input == null) {
@@ -2096,130 +2102,21 @@ public class ExcelUtil {
         }
         
             for (int i = 0; i < input.size(); i++) {
-            	System.out.println("Input: " + input.get(i));
-            	if (input.get(i).equals("Clicks")) {
-                    ClickCol = columnCount;
-                    createCell(row, columnCount++, "Clicks", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + ClickCol);
+            	if (input.get(i).equals("Refcode 1")) {
+                    refcode1Col = columnCount;
+                    createCell(row, columnCount++, "Refcode 1", style); 
             	}
-            	if (input.get(i).equals("Opens")) {
-            		OpenCol = columnCount;
-                    createCell(row, columnCount++, "Opens", style);
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + OpenCol);
+            	if (input.get(i).equals("Refcode 2")) {
+                    refcode2Col = columnCount;
+                    createCell(row, columnCount++, "Refcode 2", style); 
             	}
-            	if (input.get(i).equals("Bounces")) {
-                    BounceCol = columnCount;
-                    createCell(row, columnCount++, "Bounces", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + BounceCol);
+            	if (input.get(i).equals("List")) {
+                    listCol = columnCount;
+                    createCell(row, columnCount++, "List", style); 
             	}
-            	if (input.get(i).equals("Unsubscribes")) {
-            		UnsubCol = columnCount;
-                    createCell(row, columnCount++, "Unsubscribes", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + UnsubCol);
-            	}
-            	if (input.get(i).equals("Open rate")) {
-            		OpenrateCol = columnCount;
-                    createCell(row, columnCount++, "Open rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + OpenrateCol);
-            	}
-            	if (input.get(i).equals("Click rate")) {
-            		ClickrateCol = columnCount;
-                    createCell(row, columnCount++, "Click rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + ClickrateCol);
-            	}
-            	if (input.get(i).equals("Unsubscribe rate")) {
-            		UnsubrateCol = columnCount;
-                    createCell(row, columnCount++, "Unsubscribe rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + UnsubrateCol);
-            	}
-            	if (input.get(i).equals("Bounce rate")) {
-            		BouncerateCol = columnCount;
-                    createCell(row, columnCount++, "Bounce rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + BouncerateCol);
-            	}
-            	if (input.get(i).equals("Clicks/opens")) {
-            		ClickOpenCol = columnCount;
-                    createCell(row, columnCount++, "Clicks per open", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + ClickOpenCol);
-            	}
-            	if (input.get(i).equals("Revenue")) {
-            		RevCol = columnCount;
-                    createCell(row, columnCount++, "Revenue", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + RevCol);
-            	}
-            	if (input.get(i).equals("Donations")) {
-            		DonationsCol = columnCount;
-                    createCell(row, columnCount++, "Donations", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonationsCol);
-            	}
-            	if (input.get(i).equals("Donors")) {
-            		DonorsCol = columnCount;
-                    createCell(row, columnCount++, "Donors", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsCol);
-            	}
-            	if (input.get(i).equals("Average donation")) {
-            		AvCol = columnCount;
-                    createCell(row, columnCount++, "Average donation", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + AvCol);
-            	}
-            	if (input.get(i).equals("Donations/open")) {
-            		DonOpenCol = columnCount;
-                    createCell(row, columnCount++, "Donations per open", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonOpenCol);
-            	}
-            	if (input.get(i).equals("Donations/click")) {
-            		DonClickCol = columnCount;
-                    createCell(row, columnCount++, "Donations per click", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonClickCol);
-            	}
-            	if (input.get(i).equals("Donors/open")) {
-            		DonorsOpenCol = columnCount;
-                    createCell(row, columnCount++, "Donors per open", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsOpenCol);
-            	}
-            	if (input.get(i).equals("Donors/click")) {
-            		DonorsClickCol = columnCount;
-                    createCell(row, columnCount++, "Donors per click", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsClickCol);
-            	}
-            	if (input.get(i).equals("Recurring donations")) {
-            		DonRecurCol = columnCount;
-                    createCell(row, columnCount++, "Recurring donations", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonRecurCol);
-            	}
-            	if (input.get(i).equals("Recurring donors")) {
-            		DonorsRecurCol = columnCount;
-                    createCell(row, columnCount++, "Recurring donors", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsRecurCol);
-            	}
-            	if (input.get(i).equals("Recurring revenue")) {
-            		RevRecurCol = columnCount;
-                    createCell(row, columnCount++, "Recurring revenue", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + RevRecurCol);
-            	}
-            	if (input.get(i).equals("variant")) {
-            		variantCol = columnCount;
-                    createCell(row, columnCount++, "Testing variant", style); 
+            	if (input.get(i).equals("Excluded list")) {
+                    excludedlistCol = columnCount;
+                    createCell(row, columnCount++, "Excluded list", style); 
             	}
             	if (input.get(i).equals("category")) {
             		categoryCol = columnCount;
@@ -2237,9 +2134,104 @@ public class ExcelUtil {
             		subjectCol = columnCount;
                     createCell(row, columnCount++, "Subject line", style); 
             	}
+            	if (input.get(i).equals("Recipients")) {
+                    recipientsCol = columnCount;
+                    createCell(row, columnCount++, "Recipients", style); 
+            	}
+            	
+            	if (input.get(i).equals("Clicks")) {
+                    ClickCol = columnCount;
+                    createCell(row, columnCount++, "Clicks", style); 
+            	}
+            	if (input.get(i).equals("Opens")) {
+            		OpenCol = columnCount;
+                    createCell(row, columnCount++, "Opens", style);
+            	}
+            	if (input.get(i).equals("Bounces")) {
+                    BounceCol = columnCount;
+                    createCell(row, columnCount++, "Bounces", style); 
+            	}
+            	if (input.get(i).equals("Unsubscribes")) {
+            		UnsubCol = columnCount;
+                    createCell(row, columnCount++, "Unsubscribes", style); 
+            	}
+            	if (input.get(i).equals("Open rate")) {
+            		OpenrateCol = columnCount;
+                    createCell(row, columnCount++, "Open rate", style); 
+            	}
+            	if (input.get(i).equals("Click rate")) {
+            		ClickrateCol = columnCount;
+                    createCell(row, columnCount++, "Click rate", style); 
+            	}
+            	if (input.get(i).equals("Unsubscribe rate")) {
+            		UnsubrateCol = columnCount;
+                    createCell(row, columnCount++, "Unsubscribe rate", style); 
+            	}
+            	if (input.get(i).equals("Bounce rate")) {
+            		BouncerateCol = columnCount;
+                    createCell(row, columnCount++, "Bounce rate", style); 
+            	}
+            	if (input.get(i).equals("Clicks/opens")) {
+            		ClickOpenCol = columnCount;
+                    createCell(row, columnCount++, "Clicks per open", style); 
+            	}
+            	if (input.get(i).equals("Revenue")) {
+            		RevCol = columnCount;
+                    createCell(row, columnCount++, "Revenue", style); 
+            	}
+            	if (input.get(i).equals("Donations")) {
+            		DonationsCol = columnCount;
+                    createCell(row, columnCount++, "Donations", style); 
+            	}
+            	if (input.get(i).equals("Donations/opens")) {
+            		DonOpenCol = columnCount;
+                    createCell(row, columnCount++, "Donations per open", style); 
+            	}
+            	if (input.get(i).equals("Donations/clicks")) {
+            		DonClickCol = columnCount;
+                    createCell(row, columnCount++, "Donations per click", style); 
+            	}
+            	if (input.get(i).equals("Average donation")) {
+            		AvCol = columnCount;
+                    createCell(row, columnCount++, "Average donation", style); 
+            	}
+            	if (input.get(i).equals("Tandem revenue")) {
+            		tandemrevCol = columnCount;
+                    createCell(row, columnCount++, "Tandem revenue", style); 
+            	}
+            	if (input.get(i).equals("Tandem donations")) {
+            		tandemdonationsCol = columnCount;
+                    createCell(row, columnCount++, "Tandem donations", style); 
+            	}
+            	if (input.get(i).equals("Total revenue")) {
+            		totalrevCol = columnCount;
+                    createCell(row, columnCount++, "Total revenue", style); 
+            	}
+
+            	if (input.get(i).equals("Recurring donations")) {
+            		DonRecurCol = columnCount;
+                    createCell(row, columnCount++, "Recurring donations", style); 
+            	}
+
+            	if (input.get(i).equals("Recurring revenue")) {
+            		RevRecurCol = columnCount;
+                    createCell(row, columnCount++, "Recurring revenue", style); 
+            	}
             	if (input.get(i).equals("testing")) {
             		testingCol = columnCount;
                     createCell(row, columnCount++, "Testing factor", style); 
+            	}
+            	if (input.get(i).equals("variant")) {
+            		variantCol = columnCount;
+                    createCell(row, columnCount++, "Testing variant", style); 
+            	}
+            	if (input.get(i).equals("parentid")) {
+            		parentidCol = columnCount;
+                    createCell(row, columnCount++, "Parent id", style); 
+            	}
+            	if (input.get(i).equals("donationsforcalculation")) {
+            		donationsforcalcCol = columnCount;
+                    createCell(row, columnCount++, "Donations used in calculations", style); 
             	}
             }
         
@@ -2255,13 +2247,40 @@ public class ExcelUtil {
             row = sheet.createRow(rowCount++);
             columnCount = 0;
             createCell(row, columnCount++, emails.get(i).getId(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getEmailName(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getEmailRefcode1(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getEmailRefcode2(), bodyStyle);
             createCell(row, columnCount++, emails.get(i).getEmailDateFormatted(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getList(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getExcludedList(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getRecipients(), bodyStyle);
+            createCell(row, columnCount++, emails.get(i).getEmailName(), bodyStyle);
+           
+            if (columnCount == refcode1Col) {
+            	createCell(row, columnCount++, emails.get(i).getEmailRefcode1(), bodyStyle);
+            }
+            if (columnCount == refcode2Col) {
+            	createCell(row, columnCount++, emails.get(i).getEmailRefcode2(), bodyStyle);
+            }
+            if (columnCount == listCol) {
+            	createCell(row, columnCount++, emails.get(i).getList(), bodyStyle);
+            }
+            
+            if (columnCount == excludedlistCol) {
+            	createCell(row, columnCount++, emails.get(i).getExcludedList(), bodyStyle);
+            }
+            if (columnCount == categoryCol) {
+            	createCell(row, columnCount++, emails.get(i).getEmailCategory(), bodyStyle);
+            }
+            
+            if (columnCount == linkCol) {
+            	createCell(row, columnCount++, emails.get(i).getLink(), bodyStyle);
+            }
+            if (columnCount == senderCol) {
+            	createCell(row, columnCount++, emails.get(i).getSender(), bodyStyle);
+            }
+            if (columnCount == subjectCol) {
+            	createCell(row, columnCount++, emails.get(i).getSubjectLine(), bodyStyle);
+            }
+            
+            if (columnCount == recipientsCol) {
+            	createCell(row, columnCount++, emails.get(i).getRecipients(), bodyStyle);
+            }
+            
             if (columnCount == ClickCol) {
             	createCell(row, columnCount++, emails.get(i).getClicks(), bodyStyle);
             }
@@ -2295,52 +2314,53 @@ public class ExcelUtil {
             if (columnCount == DonationsCol) {
             	createCell(row, columnCount++, emails.get(i).getEmaildonationcount(), bodyStyle);
             }
-            if (columnCount == DonorsCol) {
-            	createCell(row, columnCount++, emails.get(i).getEmaildonorcount(), bodyStyle);
-            }
-            if (columnCount == AvCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationaverage()), bodyStyle);
-            }
             if (columnCount == DonOpenCol) {
             	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationsOpens()), bodyStyle);
             }
             if (columnCount == DonClickCol) {
             	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationsClicks()), bodyStyle);
             }
-            if (columnCount == DonorsOpenCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonorsOpens()), bodyStyle);
+
+            if (columnCount == AvCol) {
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationaverage()), bodyStyle);
             }
-            if (columnCount == DonorsClickCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonorsClicks()), bodyStyle);
+            
+            
+            if (columnCount == tandemrevCol) {
+            	createCell(row, columnCount++, emails.get(i).getTandemrevenue(), bodyStyle);
             }
+            if (columnCount == tandemdonationsCol) {
+            	createCell(row, columnCount++, emails.get(i).getTandemdonations(), bodyStyle);
+            }
+            if (columnCount == totalrevCol) {
+            	createCell(row, columnCount++, emails.get(i).getTotalrevenue(), bodyStyle);
+            }
+            
             if (columnCount == DonRecurCol) {
             	createCell(row, columnCount++, emails.get(i).getRecurringDonationCount(), bodyStyle);
             }
-            if (columnCount == DonorsRecurCol) {
-            	createCell(row, columnCount++, emails.get(i).getRecurringDonorCount(), bodyStyle);
-            }
+
             if (columnCount == RevRecurCol) {
             	createCell(row, columnCount++, emails.get(i).getRecurringRevenue(), bodyStyle);
             }
             
-            if (columnCount == variantCol) {
-            	createCell(row, columnCount++, emails.get(i).getVariant(), bodyStyle);
-            }
-            if (columnCount == categoryCol) {
-            	createCell(row, columnCount++, emails.get(i).getEmailCategory(), bodyStyle);
-            }
-            if (columnCount == linkCol) {
-            	createCell(row, columnCount++, emails.get(i).getLink(), bodyStyle);
-            }
-            if (columnCount == senderCol) {
-            	createCell(row, columnCount++, emails.get(i).getSender(), bodyStyle);
-            }
-            if (columnCount == subjectCol) {
-            	createCell(row, columnCount++, emails.get(i).getSubjectLine(), bodyStyle);
-            }
             if (columnCount == testingCol) {
             	createCell(row, columnCount++, emails.get(i).getTesting(), bodyStyle);
             }
+
+            
+            if (columnCount == variantCol) {
+            	createCell(row, columnCount++, emails.get(i).getVariant(), bodyStyle);
+            }
+            
+            if (columnCount == parentidCol) {
+            	createCell(row, columnCount++, emails.get(i).getParentid(), bodyStyle);
+            }
+            if (columnCount == donationsforcalcCol) {
+            	createCell(row, columnCount++, emails.get(i).getDonationsforcalculation(), bodyStyle);
+            }
+            
+
         }
         //export
         ServletOutputStream outputStream = response.getOutputStream();
@@ -2351,26 +2371,35 @@ public class ExcelUtil {
 	}
     public void EmailGroupexporter(List<EmailGroup> emailgroup, List<String> input, HttpServletResponse response) throws IOException{
         //column values
-    	int ClickCol = 0;
-    	int OpenCol = 0;
-    	int BounceCol = 0;
-    	int UnsubCol = 0;
-    	int ClickrateCol = 0;
-    	int OpenrateCol = 0;
-    	int UnsubrateCol = 0;
-    	int BouncerateCol = 0;
-    	int ClickOpenCol = 0;
-    	int RevCol = 0;
-    	int DonationsCol = 0;
-    	int DonorsCol =0;
-    	int AvCol = 0;
-    	int DonOpenCol = 0;
-    	int DonClickCol = 0;
-    	int DonorsOpenCol =0;
-    	int DonorsClickCol = 0;
-    	int DonRecurCol = 0;
-    	int DonorsRecurCol =0;
-    	int RevRecurCol = 0;
+    	int ClickCol = -1;
+    	int OpenCol = -1;
+    	int BounceCol = -1;
+    	int UnsubCol = -1;
+    	int ClickrateCol = -1;
+    	int OpenrateCol = -1;
+    	int UnsubrateCol = -1;
+    	int BouncerateCol = -1;
+    	int ClickOpenCol = -1;
+    	int RevCol = -1;
+    	int DonationsCol = -1;
+    	int AvCol = -1;
+    	int DonOpenCol = -1;
+    	int DonClickCol = -1;
+    	int DonRecurCol = -1;
+    	int RevRecurCol = -1;
+    	
+    	int variantACol = -1;
+    	int variantBCol = -1;
+    	int testingCol =-1;
+    	
+        int refcode1Col = -1;
+        int refcode2Col = -1;
+        int recipientsCol = -1;
+        int tandemrevCol = -1;
+        int tandemdonationsCol = -1;
+        int totalrevCol = -1;
+        int parentidCol = -1;
+        int donationsforcalcCol = -1;
     	
     	
     	//this.emailgroup = emailgroup;
@@ -2389,135 +2418,125 @@ public class ExcelUtil {
         style.setFont(font);
          
         createCell(row, 0, "Id", style); 
-        createCell(row, 1, "Email Group", style); 
-        createCell(row, 2, "Recipients", style);
+        createCell(row, 1, "Send date", style); 
+        createCell(row, 2, "Email Group", style); 
         
         int columnCount = 3;
         Cell cell = row.createCell(columnCount);
         
             for (int i = 0; i < input.size(); i++) {
-            	System.out.println("Input: " + input.get(i));
-            	if (input.get(i).equals("Clicks")) {
-                    ClickCol = columnCount;
-                    createCell(row, columnCount++, "Clicks", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + ClickCol);
-            	}
-            	if (input.get(i).equals("Opens")) {
-            		OpenCol = columnCount;
-                    createCell(row, columnCount++, "Opens", style);
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + OpenCol);
-            	}
-            	if (input.get(i).equals("Bounces")) {
-                    BounceCol = columnCount;
-                    createCell(row, columnCount++, "Bounces", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + BounceCol);
-            	}
-            	if (input.get(i).equals("Unsubscribes")) {
-            		UnsubCol = columnCount;
-                    createCell(row, columnCount++, "Unsubscribes", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + UnsubCol);
-            	}
-            	if (input.get(i).equals("Open rate")) {
-            		OpenrateCol = columnCount;
-                    createCell(row, columnCount++, "Open rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + OpenrateCol);
-            	}
-            	if (input.get(i).equals("Click rate")) {
-            		ClickrateCol = columnCount;
-                    createCell(row, columnCount++, "Click rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + ClickrateCol);
-            	}
-            	if (input.get(i).equals("Unsubscribe rate")) {
-            		UnsubrateCol = columnCount;
-                    createCell(row, columnCount++, "Unsubscribe rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + UnsubrateCol);
-            	}
-            	if (input.get(i).equals("Bounce rate")) {
-            		BouncerateCol = columnCount;
-                    createCell(row, columnCount++, "Bounce rate", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + BouncerateCol);
-            	}
-            	if (input.get(i).equals("Clicks/opens")) {
-            		ClickOpenCol = columnCount;
-                    createCell(row, columnCount++, "Clicks per open", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + ClickOpenCol);
-            	}
-            	if (input.get(i).equals("Revenue")) {
-            		RevCol = columnCount;
-                    createCell(row, columnCount++, "Revenue", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + RevCol);
-            	}
-            	if (input.get(i).equals("Donations")) {
-            		DonationsCol = columnCount;
-                    createCell(row, columnCount++, "Donations", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonationsCol);
-            	}
-            	if (input.get(i).equals("Donors")) {
-            		DonorsCol = columnCount;
-                    createCell(row, columnCount++, "Donors", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsCol);
-            	}
-            	if (input.get(i).equals("Average donation")) {
-            		AvCol = columnCount;
-                    createCell(row, columnCount++, "Average donation", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + AvCol);
-            	}
-            	if (input.get(i).equals("Donations/open")) {
-            		DonOpenCol = columnCount;
-                    createCell(row, columnCount++, "Donations per open", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonOpenCol);
-            	}
-            	if (input.get(i).equals("Donations/click")) {
-            		DonClickCol = columnCount;
-                    createCell(row, columnCount++, "Donations per click", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonClickCol);
-            	}
-            	if (input.get(i).equals("Donors/open")) {
-            		DonorsOpenCol = columnCount;
-                    createCell(row, columnCount++, "Donors per open", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsOpenCol);
-            	}
-            	if (input.get(i).equals("Donors/click")) {
-            		DonorsClickCol = columnCount;
-                    createCell(row, columnCount++, "Donors per click", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsClickCol);
-            	}
-            	if (input.get(i).equals("Recurring donations")) {
-            		DonRecurCol = columnCount;
-                    createCell(row, columnCount++, "Recurring donations", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonRecurCol);
-            	}
-            	if (input.get(i).equals("Recurring donors")) {
-            		DonorsRecurCol = columnCount;
-                    createCell(row, columnCount++, "Recurring donors", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + DonorsRecurCol);
-            	}
-            	if (input.get(i).equals("Recurring revenue")) {
-            		RevRecurCol = columnCount;
-                    createCell(row, columnCount++, "Recurring revenue", style); 
-                    System.out.println("Input 2: " + input.get(i));
-                    System.out.println("Column logged: " + RevRecurCol);
-            	}
-            }
+                	if (input.get(i).equals("Refcode 1")) {
+                        refcode1Col = columnCount;
+                        createCell(row, columnCount++, "Refcode 1", style); 
+                	}
+                	if (input.get(i).equals("Refcode 2")) {
+                        refcode2Col = columnCount;
+                        createCell(row, columnCount++, "Refcode 2", style); 
+                	}
+                	if (input.get(i).equals("Recipients")) {
+                        recipientsCol = columnCount;
+                        createCell(row, columnCount++, "Recipients", style); 
+                	}
+                	
+                	if (input.get(i).equals("Clicks")) {
+                        ClickCol = columnCount;
+                        createCell(row, columnCount++, "Clicks", style); 
+                	}
+                	if (input.get(i).equals("Opens")) {
+                		OpenCol = columnCount;
+                        createCell(row, columnCount++, "Opens", style);
+                	}
+                	if (input.get(i).equals("Bounces")) {
+                        BounceCol = columnCount;
+                        createCell(row, columnCount++, "Bounces", style); 
+                	}
+                	if (input.get(i).equals("Unsubscribes")) {
+                		UnsubCol = columnCount;
+                        createCell(row, columnCount++, "Unsubscribes", style); 
+                	}
+                	if (input.get(i).equals("Open rate")) {
+                		OpenrateCol = columnCount;
+                        createCell(row, columnCount++, "Open rate", style); 
+                	}
+                	if (input.get(i).equals("Click rate")) {
+                		ClickrateCol = columnCount;
+                        createCell(row, columnCount++, "Click rate", style); 
+                	}
+                	if (input.get(i).equals("Unsubscribe rate")) {
+                		UnsubrateCol = columnCount;
+                        createCell(row, columnCount++, "Unsubscribe rate", style); 
+                	}
+                	if (input.get(i).equals("Bounce rate")) {
+                		BouncerateCol = columnCount;
+                        createCell(row, columnCount++, "Bounce rate", style); 
+                	}
+                	if (input.get(i).equals("Clicks/opens")) {
+                		ClickOpenCol = columnCount;
+                        createCell(row, columnCount++, "Clicks per open", style); 
+                	}
+                	if (input.get(i).equals("Revenue")) {
+                		RevCol = columnCount;
+                        createCell(row, columnCount++, "Revenue", style); 
+                	}
+                	if (input.get(i).equals("Donations")) {
+                		DonationsCol = columnCount;
+                        createCell(row, columnCount++, "Donations", style); 
+                	}
+                	if (input.get(i).equals("Donations/opens")) {
+                		DonOpenCol = columnCount;
+                        createCell(row, columnCount++, "Donations per open", style); 
+                	}
+                	if (input.get(i).equals("Donations/clicks")) {
+                		DonClickCol = columnCount;
+                        createCell(row, columnCount++, "Donations per click", style); 
+                	}
+                	if (input.get(i).equals("Average donation")) {
+                		AvCol = columnCount;
+                        createCell(row, columnCount++, "Average donation", style); 
+                	}
+                	if (input.get(i).equals("Tandem revenue")) {
+                		tandemrevCol = columnCount;
+                        createCell(row, columnCount++, "Tandem revenue", style); 
+                	}
+                	if (input.get(i).equals("Tandem donations")) {
+                		tandemdonationsCol = columnCount;
+                        createCell(row, columnCount++, "Tandem donations", style); 
+                	}
+                	if (input.get(i).equals("Total revenue")) {
+                		totalrevCol = columnCount;
+                        createCell(row, columnCount++, "Total revenue", style); 
+                	}
+
+                	if (input.get(i).equals("Recurring donations")) {
+                		DonRecurCol = columnCount;
+                        createCell(row, columnCount++, "Recurring donations", style); 
+                	}
+
+                	if (input.get(i).equals("Recurring revenue")) {
+                		RevRecurCol = columnCount;
+                        createCell(row, columnCount++, "Recurring revenue", style); 
+                	}
+                	if (input.get(i).equals("testing")) {
+                		testingCol = columnCount;
+                        createCell(row, columnCount++, "Testing factor", style); 
+                	}
+                	if (input.get(i).equals("varianta")) {
+                		variantACol = columnCount;
+                        createCell(row, columnCount++, "Testing variant A", style); 
+                	}
+                	if (input.get(i).equals("variantb")) {
+                		variantBCol = columnCount;
+                        createCell(row, columnCount++, "Testing variant B", style); 
+                	}
+                	if (input.get(i).equals("parentid")) {
+                		parentidCol = columnCount;
+                        createCell(row, columnCount++, "Parent id", style); 
+                	}
+                	if (input.get(i).equals("donationsforcalculation")) {
+                		donationsforcalcCol = columnCount;
+                        createCell(row, columnCount++, "Donations used in calculations", style); 
+                	}
+                }
         
         //write data lines
         int rowCount = 1;
@@ -2530,68 +2549,102 @@ public class ExcelUtil {
         for (int i = 0; i < emailgroup.size(); i++) {
             row = sheet.createRow(rowCount++);
             columnCount = 0;
-            createCell(row, columnCount++, emailgroup.get(i).getId(), bodyStyle);
-            createCell(row, columnCount++, emailgroup.get(i).getEmailgroupName(), bodyStyle);
-            createCell(row, columnCount++, emailgroup.get(i).getGroupRecipients(), bodyStyle);
+            createCell(row, columnCount++, emails.get(i).getId(), bodyStyle);
+            createCell(row, columnCount++, emails.get(i).getEmailDateFormatted(), bodyStyle);
+            createCell(row, columnCount++, emails.get(i).getEmailName(), bodyStyle);
+           
+            if (columnCount == refcode1Col) {
+            	createCell(row, columnCount++, emails.get(i).getEmailRefcode1(), bodyStyle);
+            }
+            if (columnCount == refcode2Col) {
+            	createCell(row, columnCount++, emails.get(i).getEmailRefcode2(), bodyStyle);
+            }
+            
+            if (columnCount == recipientsCol) {
+            	createCell(row, columnCount++, emails.get(i).getRecipients(), bodyStyle);
+            }
+            
             if (columnCount == ClickCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupClicks(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getClicks(), bodyStyle);
             }
             if (columnCount == OpenCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupOpeners(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getOpeners(), bodyStyle);
             }
             if (columnCount == BounceCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupBounces(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getBounces(), bodyStyle);
             }
             if (columnCount == UnsubCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupUnsubscribers(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getUnsubscribers(), bodyStyle);
             }
             if (columnCount == OpenrateCol) {
-                createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupopenRate()), bodyStyle);
+                createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailopenRate()), bodyStyle);
             }
             if (columnCount == ClickrateCol) {
-            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupclickRate()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailclickRate()), bodyStyle);
             }
             if (columnCount == UnsubrateCol) {
-            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupunsubscribeRate()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailunsubscribeRate()), bodyStyle);
             }
             if (columnCount == BouncerateCol) {
-            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupbounceRate()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getBounceRate()), bodyStyle);
             }
             if (columnCount == ClickOpenCol) {
-            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupclicksOpens()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailclicksOpens()), bodyStyle);
             }
             if (columnCount == RevCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupsum(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getEmaildonationsum(), bodyStyle);
             }
             if (columnCount == DonationsCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupdonationcount(), bodyStyle);
-            }
-            if (columnCount == DonorsCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupdonorcount(), bodyStyle);
-            }
-            if (columnCount == AvCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupaverage(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getEmaildonationcount(), bodyStyle);
             }
             if (columnCount == DonOpenCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupdonationsOpens(), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationsOpens()), bodyStyle);
             }
             if (columnCount == DonClickCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupdonationsClicks(), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationsClicks()), bodyStyle);
             }
-            if (columnCount == DonorsOpenCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupdonorsOpens(), bodyStyle);
+
+            if (columnCount == AvCol) {
+            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationaverage()), bodyStyle);
             }
-            if (columnCount == DonorsClickCol) {
-            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupdonorsClicks()), bodyStyle);
+            
+            
+            if (columnCount == tandemrevCol) {
+            	createCell(row, columnCount++, emails.get(i).getTandemrevenue(), bodyStyle);
             }
+            if (columnCount == tandemdonationsCol) {
+            	createCell(row, columnCount++, emails.get(i).getTandemdonations(), bodyStyle);
+            }
+            if (columnCount == totalrevCol) {
+            	createCell(row, columnCount++, emails.get(i).getTotalrevenue(), bodyStyle);
+            }
+            
             if (columnCount == DonRecurCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupRecurringDonationCount(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getRecurringDonationCount(), bodyStyle);
             }
-            if (columnCount == DonorsRecurCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupRecurringDonorCount(), bodyStyle);
-            }
+
             if (columnCount == RevRecurCol) {
-            	createCell(row, columnCount++, emailgroup.get(i).getGroupRecurringRevenue(), bodyStyle);
+            	createCell(row, columnCount++, emails.get(i).getRecurringRevenue(), bodyStyle);
+            }
+            
+            if (columnCount == testingCol) {
+            	createCell(row, columnCount++, emails.get(i).getTesting(), bodyStyle);
+            }
+
+            
+            if (columnCount == variantACol) {
+            	createCell(row, columnCount++, emails.get(i).getVariant(), bodyStyle);
+            }
+            
+            if (columnCount == variantBCol) {
+            	createCell(row, columnCount++, emails.get(i).getVariant(), bodyStyle);
+            }
+            
+            if (columnCount == parentidCol) {
+            	createCell(row, columnCount++, emails.get(i).getParentid(), bodyStyle);
+            }
+            if (columnCount == donationsforcalcCol) {
+            	createCell(row, columnCount++, emails.get(i).getDonationsforcalculation(), bodyStyle);
             }
         }
         //export

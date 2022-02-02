@@ -336,18 +336,22 @@ public class EmailService {
 		}
 		if (email !=  null) {
 			Link originalLink = null;
-			if (email.getOveralllink() != null) {
+			if (email.getLink() != null) {
 				originalLink = email.getOveralllink();
 				if (overalllink != originalLink) {
 					if (overalllink != null) {
 						System.out.println("OG link not matching new " + originalLink.getLinkname() + " " + overalllink.getLinkname());
+						List<Emails> OGemailLink = originalLink.getEmails();
+						OGemailLink.remove(email);
+						originalLink.setEmails(OGemailLink);
+						email.setOveralllink(overalllink);
+						updateEmail(email);
+						lservice.CalculateLinkData (originalLink, committee.getId());
 					}
-					List<Emails> OGemailLink = originalLink.getEmails();
-					OGemailLink.remove(email);
-					originalLink.setEmails(OGemailLink);
-					email.setOveralllink(overalllink);
-					updateEmail(email);
-					lservice.CalculateLinkData (originalLink, committee.getId());
+					else {
+						link = email.getLink();
+						overalllink = email.getOveralllink();
+					}
 				}
 			}
 			String originaltesting = null;
@@ -476,7 +480,6 @@ public class EmailService {
 				Double bounces = (double) email.getBounces();
 				//functions
 				unsubscribeRate = unsubs/receps;
-				System.out.println("unsubscribeRate: " + unsubscribeRate);
 				openRate = opens/receps;
 				clickRate = clicks/receps;
 				bounceRate = bounces/receps;

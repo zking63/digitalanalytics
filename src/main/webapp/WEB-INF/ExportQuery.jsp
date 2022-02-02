@@ -267,6 +267,8 @@
 										<label for="input"> Sender</label><br>
 										<input type="checkbox" id="input" name="input" value="subject">
 										<label for="input"> Subject Line</label><br>
+										<input type="checkbox" id="input" name="input" value="Recipients">
+										<label for="input"> Recipients</label><br>
 										<input type="checkbox" id="input" name="input" value="Clicks">
 										<label for="input"> Clicks</label><br>
 										<input type="checkbox" id="input" name="input" value="Opens">
@@ -281,10 +283,10 @@
 										<label for="input"> Click rate</label><br>	
 										<input type="checkbox" id="input" name="input" value="Unsubscribe rate">	
 										<label for="input"> Unsubscribe rate</label><br>	
-										<input type="checkbox" id="input" name="input" value="Bounce rate">
-										<label for="input"> Bounce rate</label><br>	
 									</div>
 									<div id="export-choices">
+										<input type="checkbox" id="input" name="input" value="Bounce rate">
+										<label for="input"> Bounce rate</label><br>	
 										<input type="checkbox" id="input" name="input" value="Clicks/opens">	
 										<label for="input"> Clicks per open</label><br>	
 										<input type="checkbox" id="input" name="input" value="Revenue">
