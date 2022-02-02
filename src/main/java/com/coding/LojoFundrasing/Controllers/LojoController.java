@@ -1420,7 +1420,9 @@ public class LojoController {
 					 //System.out.println("id: " + map.get(i));
 					 
 				 //}
-				// excelService.exportEmailGroupsToExcel(emailgroups, input, response);
+				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
+				emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
+				excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			 }
 			 if (field == 5) {
 				 System.out.println("Test");

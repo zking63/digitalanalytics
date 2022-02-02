@@ -2549,102 +2549,102 @@ public class ExcelUtil {
         for (int i = 0; i < emailgroup.size(); i++) {
             row = sheet.createRow(rowCount++);
             columnCount = 0;
-            createCell(row, columnCount++, emails.get(i).getId(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getEmailDateFormatted(), bodyStyle);
-            createCell(row, columnCount++, emails.get(i).getEmailName(), bodyStyle);
+            createCell(row, columnCount++, emailgroup.get(i).getId(), bodyStyle);
+            createCell(row, columnCount++, emailgroup.get(i).getEmails().get(0).getEmailDateFormatted(), bodyStyle);
+            createCell(row, columnCount++, emailgroup.get(i).getEmailgroupName(), bodyStyle);
            
             if (columnCount == refcode1Col) {
-            	createCell(row, columnCount++, emails.get(i).getEmailRefcode1(), bodyStyle);
+            	createCell(row, columnCount++, " ", bodyStyle);
             }
             if (columnCount == refcode2Col) {
-            	createCell(row, columnCount++, emails.get(i).getEmailRefcode2(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getEmails().get(0).getEmailRefcode2(), bodyStyle);
             }
             
             if (columnCount == recipientsCol) {
-            	createCell(row, columnCount++, emails.get(i).getRecipients(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupRecipients(), bodyStyle);
             }
             
             if (columnCount == ClickCol) {
-            	createCell(row, columnCount++, emails.get(i).getClicks(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupClicks(), bodyStyle);
             }
             if (columnCount == OpenCol) {
-            	createCell(row, columnCount++, emails.get(i).getOpeners(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupOpeners(), bodyStyle);
             }
             if (columnCount == BounceCol) {
-            	createCell(row, columnCount++, emails.get(i).getBounces(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupBounces(), bodyStyle);
             }
             if (columnCount == UnsubCol) {
-            	createCell(row, columnCount++, emails.get(i).getUnsubscribers(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupUnsubscribers(), bodyStyle);
             }
             if (columnCount == OpenrateCol) {
-                createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailopenRate()), bodyStyle);
+                createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupopenRate()), bodyStyle);
             }
             if (columnCount == ClickrateCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailclickRate()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupclickRate()), bodyStyle);
             }
             if (columnCount == UnsubrateCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailunsubscribeRate()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupunsubscribeRate()), bodyStyle);
             }
             if (columnCount == BouncerateCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getBounceRate()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupbounceRate()), bodyStyle);
             }
             if (columnCount == ClickOpenCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmailclicksOpens()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupclicksOpens()), bodyStyle);
             }
             if (columnCount == RevCol) {
-            	createCell(row, columnCount++, emails.get(i).getEmaildonationsum(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupsum(), bodyStyle);
             }
             if (columnCount == DonationsCol) {
-            	createCell(row, columnCount++, emails.get(i).getEmaildonationcount(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupdonationcount(), bodyStyle);
             }
             if (columnCount == DonOpenCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationsOpens()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupdonationsOpens()), bodyStyle);
             }
             if (columnCount == DonClickCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationsClicks()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupdonationsClicks()), bodyStyle);
             }
 
             if (columnCount == AvCol) {
-            	createCell(row, columnCount++, getRateFormatted(emails.get(i).getEmaildonationaverage()), bodyStyle);
+            	createCell(row, columnCount++, getRateFormatted(emailgroup.get(i).getGroupaverage()), bodyStyle);
             }
             
             
             if (columnCount == tandemrevCol) {
-            	createCell(row, columnCount++, emails.get(i).getTandemrevenue(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getTandemrevenue(), bodyStyle);
             }
             if (columnCount == tandemdonationsCol) {
-            	createCell(row, columnCount++, emails.get(i).getTandemdonations(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getTandemdonations(), bodyStyle);
             }
             if (columnCount == totalrevCol) {
-            	createCell(row, columnCount++, emails.get(i).getTotalrevenue(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getTotalrevenue(), bodyStyle);
             }
             
             if (columnCount == DonRecurCol) {
-            	createCell(row, columnCount++, emails.get(i).getRecurringDonationCount(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupRecurringDonationCount(), bodyStyle);
             }
 
             if (columnCount == RevRecurCol) {
-            	createCell(row, columnCount++, emails.get(i).getRecurringRevenue(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupRecurringRevenue(), bodyStyle);
             }
             
             if (columnCount == testingCol) {
-            	createCell(row, columnCount++, emails.get(i).getTesting(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getGroupTest(), bodyStyle);
             }
 
             
             if (columnCount == variantACol) {
-            	createCell(row, columnCount++, emails.get(i).getVariant(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getVariantA(), bodyStyle);
             }
             
             if (columnCount == variantBCol) {
-            	createCell(row, columnCount++, emails.get(i).getVariant(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getVariantB(), bodyStyle);
             }
             
             if (columnCount == parentidCol) {
-            	createCell(row, columnCount++, emails.get(i).getParentid(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getParentid(), bodyStyle);
             }
             if (columnCount == donationsforcalcCol) {
-            	createCell(row, columnCount++, emails.get(i).getDonationsforcalculation(), bodyStyle);
+            	createCell(row, columnCount++, emailgroup.get(i).getDonationsforcalculation(), bodyStyle);
             }
         }
         //export
