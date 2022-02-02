@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.coding.LojoFundrasing.Models.Committees;
 import com.coding.LojoFundrasing.Models.EmailGroup;
 import com.coding.LojoFundrasing.Models.Emails;
+import com.coding.LojoFundrasing.Models.Link;
 import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Repos.DonationRepo;
 import com.coding.LojoFundrasing.Repos.EmailGroupRepo;
@@ -268,8 +269,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				emailgroup.setGroupTest(test);
 				variantA = emailgroup.getVariantA();
 				variantB = emailgroup.getVariantB();
-				variantASet = true;
-				variantBSet = true;
 				testSet = true;
 			}
 		}
@@ -279,7 +278,16 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 	}
 	else {
-		testSet = false;
+		if (emailgroup.getGroupTest() != null) {
+			testSet = true;
+			variantA = emailgroup.getVariantA();
+			variantB = emailgroup.getVariantB();
+		}
+		else {
+			testSet = false;
+			variantA = emailgroup.getVariantA();
+			variantB = emailgroup.getVariantB();
+		}
 	}
 		//testing info
 		if (variantA == null || variantA.isEmpty() || variantA == " " ) {
@@ -303,9 +311,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			if (emailA == null || emailB == null) {
 				variantASet = true;
 				variantBSet = true;
-				testSet = true;
-			}
-			if (test != null){
 				testSet = true;
 			}
 			else if (!emailA.getSender().equals(emailB.getSender())) {
@@ -394,7 +399,19 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		if (emailgroup.getGroupTest() != null && !emailgroup.getGroupTest().isEmpty() 
 				&& emailgroup.getGroupTest() != " ") {
 			overallTest = tservice.SetUpContentTestfromGroup(committee_id, emailgroup);
+			test originaltest = null;
+			if (emailgroup.getTest() != null) {
+				originaltest = emailgroup.getTest();
+				if (overallTest != originaltest) {
+						System.out.println("OG test not matching new ");
+						List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
+						emailgroups.remove(emailgroup);
+						originaltest.setEmailgroups(emailgroups);
+						tservice.CalculateTestData(originaltest, committee);
+				}
+			}
 			emailgroup.setTest(overallTest);
+			updateEmailGroup(emailgroup);
         	while (testListSet == false) {
     			if (overallTest.getEmailgroups() == null || overallTest.getEmailgroups().size() == 0) {
     				List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
@@ -413,16 +430,13 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
     			}
         	}
     		for (int i = 0; i < emailgroup.getEmails().size(); i++) {
-    			String variant = null;
     			Emails email = emailgroup.getEmails().get(i);
+    			String variant = email.getVariant();
     			if (test.contentEquals("SUBJECT")) {
     				variant = email.getSubjectLine();
     			}
     			else if (test.contentEquals("SENDER")) {
     				variant = email.getSender();
-    			}
-    			else if (test.contentEquals("CONTENT TEST")) {
-    				variant = email.getVariant();
     			}
     			email.setVariant(variant);
     			email.setTesting(test);

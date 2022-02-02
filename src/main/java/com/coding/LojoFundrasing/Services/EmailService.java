@@ -359,8 +359,8 @@ public class EmailService {
 			if (email.getTesting() != null) {
 				System.out.println("email og testing " + email.getTesting() );
 				originaltesting = email.getTesting();
-				if (test != originaltesting) {
-					if (testing != null) {
+				if (!test.contentEquals(originaltesting)) {
+					if (test != null) {
 						System.out.println("testing not matching new " );
 						test = test;
 					}
