@@ -283,6 +283,9 @@ public class EmailGroupService {
 				variantBSet = true;
 				testSet = true;
 			}
+			if (emailA.getTesting() != null){
+				testSet = true;
+			}
 			else if (!emailA.getSender().equals(emailB.getSender())) {
 				test = "SENDER";
 				variantA = emailA.getSender();

@@ -192,6 +192,7 @@ public class EmailService {
 		System.out.println("email set up found");
 		System.out.println("*****NAME " + nameValue);
 		System.out.println("*****rev " + revenue);
+		System.out.println("*****variant " + variant);
 		System.out.println("*****test " + testing);
 		Emails email = null;
 		Boolean refcodesFiled = false;
@@ -276,7 +277,7 @@ public class EmailService {
 				}
 				else {
 					System.out.println("                                          TESTING = other: " + testing);
-					variant = variant.toUpperCase();
+					variant = variant;
 					variantSet = true;
 				}
 			}
@@ -382,6 +383,64 @@ public class EmailService {
 					}
 				}
 			}
+			String originalname = null;
+			if (email.getEmailName() != null) {
+				originalname = email.getEmailName();
+				if (nameValue != originalname) {
+					if (nameValue == null || nameValue == " " || nameValue.isEmpty()) {
+						nameValue = originalname;
+					}
+				}
+			}
+			if (email.getEmaildate() != null) {
+				if (date != email.getEmaildate()) {
+					if (date == null) {
+						date = email.getEmaildate();
+					}
+				}
+			}
+			if (email.getList() != null) {
+				if (recipientList != email.getList() ) {
+					if (recipientList == null || recipientList == " " || recipientList.isEmpty()) {
+						recipientList = email.getList();
+					}
+				}
+			}
+			if (email.getSender() != null) {
+				if (sender != email.getSender() ) {
+					if (sender == null || sender == " " || sender.isEmpty()) {
+						sender = email.getSender();
+					}
+				}
+			}
+			if (email.getSubjectLine() != null) {
+				if (subject != email.getSubjectLine() ) {
+					if (subject == null || subject == " " || subject.isEmpty()) {
+						subject = email.getSubjectLine();
+					}
+				}
+			}
+			if (email.getEmailCategory() != null) {
+				if (category != email.getEmailCategory()  ) {
+					if (category == null || category == " " || category.isEmpty()) {
+						category = email.getEmailCategory() ;
+					}
+				}
+			}
+			if (email.getParentid() != null) {
+				if (parentid != email.getParentid() ) {
+					if (parentid == null || parentid == " " || parentid.isEmpty()) {
+						parentid = email.getParentid();
+					}
+				}
+			}
+			if (email.getContent() != null) {
+				if (content != email.getContent() ) {
+					if (content == null || content == " " || content.isEmpty()) {
+						content = email.getContent();
+					}
+				}
+			}
         	System.out.println("found email: " + email.getId() + ", " + email.getEmailName());
         	email.setEmailName(nameValue);
         	email.setEmaildate(date);
@@ -399,6 +458,7 @@ public class EmailService {
         	email.setSubjectLine(subject);
         	email.setEmailCategory(category);
         	email.setTesting(test);
+        	System.out.println("variant set: " + variant);
         	email.setVariant(variant);
         	email.setLink(link);
         	email.setContent(content);
