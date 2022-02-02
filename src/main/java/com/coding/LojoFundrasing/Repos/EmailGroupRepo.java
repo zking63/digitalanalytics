@@ -35,7 +35,7 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	EmailGroup findbyNameandCommittee(String groupname, Long committee_id);
 	
 	//find variant a in email group with no test
-	@Query(value = "select testing from emails where committees_id = :committee_id and emailgroup_id = :groupid and email_name like '%) A%' ORDER BY testing DESC LIMIT 1", nativeQuery = true)
+	@Query(value = "select testing from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null ORDER BY testing DESC LIMIT 1", nativeQuery = true)
 	<Optional>String findEmailTesting(Long groupid, Long committee_id);
 	
 	//find variant a in email group with no test

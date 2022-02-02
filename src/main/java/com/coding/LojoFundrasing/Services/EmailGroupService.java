@@ -174,29 +174,8 @@ public class EmailGroupService {
 		//donations for count
 		Integer donationsforcalculation = egrepo.GroupDonationsforCalculation(emailGroupId, committee_id);
 		
-		//strings
-		String test = egrepo.findEmailTesting(emailGroupId, committee_id);
-		Boolean testSet = true;
-		if (test == null || test.isEmpty() || test == " ") {
-			testSet = false;
-		}
-		String category = null;
-		
 		//email count
 		Integer groupemailcount = egrepo.countEmailsinEmailGroup(emailgroup.getId(), committee_id);
-		
-		//test
-		test overallTest = null;
-		
-		//set lists
-		Boolean testListSet = false;
-		Boolean committeeListSet = false;
-		
-		//variants
-		String variantA = emailgroup.getVariantA();
-		String variantB = emailgroup.getVariantB();
-		Boolean variantASet = false;
-		Boolean variantBSet = false;
 		
 		emailgroup.setGroupOpeners(groupOpeners);
 		emailgroup.setGroupRecipients(groupRecipients);
@@ -254,7 +233,54 @@ public class EmailGroupService {
 		emailgroup.setGroupunsubscribeRate(groupunsubscribeRate);
 		emailgroup.setGroupbounceRate(groupbounceRate);
 		updateEmailGroup(emailgroup);
-		
+		getEmailGroupTesting(emailGroupId, committee_id);
+	}
+	
+public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
+	EmailGroup emailgroup = egrepo.findbyIdandCommittee(emailGroupId, committee_id);
+	System.out.println(emailgroup.getEmailgroupName());
+	Committees committee = cservice.findbyId(committee_id);
+	
+	String test = egrepo.findEmailTesting(emailGroupId, committee_id);
+	Boolean testSet = false;
+	
+	//test
+	test overallTest = null;
+	
+	//set lists
+	Boolean testListSet = false;
+	Boolean committeeListSet = false;
+	
+	//variants
+	String variantA = null;
+	String variantB = null;
+	Boolean variantASet = false;
+	Boolean variantBSet = false;
+	
+	if (test != null && !test.isEmpty() && test != " ") {
+		if (emailgroup.getTest() != null) {
+			if (!emailgroup.getTest().equals(test)) {
+				System.out.println("TEST doesn't match OG " + test + " " + emailgroup.getGroupTest());
+				emailgroup.setGroupTest(test);
+				testSet = true;
+			}
+			else {
+				emailgroup.setGroupTest(test);
+				variantA = emailgroup.getVariantA();
+				variantB = emailgroup.getVariantB();
+				variantASet = true;
+				variantBSet = true;
+				testSet = true;
+			}
+		}
+		else {
+			emailgroup.setGroupTest(test);
+			testSet = true;
+		}
+	}
+	else {
+		testSet = false;
+	}
 		//testing info
 		if (variantA == null || variantA.isEmpty() || variantA == " " ) {
 			variantASet = false;
@@ -269,10 +295,6 @@ public class EmailGroupService {
 			variantBSet = true;
 		}
 		while (testSet == false) {
-			if (emailgroup.getTest() != null) {
-				test = emailgroup.getTest().getTestname();
-				testSet = true;
-			}
 			Emails emailA = erepo.findVariantA(emailgroup.getId(), committee_id);
 			Emails emailB = null;
 			if (emailA != null) {
@@ -283,7 +305,7 @@ public class EmailGroupService {
 				variantBSet = true;
 				testSet = true;
 			}
-			if (emailA.getTesting() != null){
+			if (test != null){
 				testSet = true;
 			}
 			else if (!emailA.getSender().equals(emailB.getSender())) {
