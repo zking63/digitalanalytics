@@ -234,10 +234,14 @@ public class EmailGroupService {
 		emailgroup.setGroupunsubscribeRate(groupunsubscribeRate);
 		emailgroup.setGroupbounceRate(groupbounceRate);
 		updateEmailGroup(emailgroup);
-		getEmailGroupTesting(emailGroupId, committee_id);
+		if (emailgroup.getEmails().size() > 2) {
+			System.out.println("email group too small in email group" + emailgroup.getEmails().size() );
+			getEmailGroupTesting(emailGroupId, committee_id);
+		}
 	}
 	
 public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
+	System.out.println("                                                        made it to group test set up ");
 	EmailGroup emailgroup = egrepo.findbyIdandCommittee(emailGroupId, committee_id);
 	System.out.println(emailgroup.getEmailgroupName());
 	Committees committee = cservice.findbyId(committee_id);
@@ -258,11 +262,18 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	Boolean variantASet = false;
 	Boolean variantBSet = false;
 	
+	if (emailgroup.getEmails().size() < 2) {
+		System.out.println("email group too small " + emailgroup.getEmails().size() );
+		return;
+	}
+	
 	if (test != null && !test.isEmpty() && test != " ") {
 		if (emailgroup.getTest() != null) {
 			if (!emailgroup.getTest().equals(test)) {
 				System.out.println("TEST doesn't match OG " + test + " " + emailgroup.getGroupTest());
 				emailgroup.setGroupTest(test);
+				variantA = null;
+				variantB = null;
 				testSet = true;
 			}
 			else {
@@ -285,8 +296,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 		else {
 			testSet = false;
-			variantA = emailgroup.getVariantA();
-			variantB = emailgroup.getVariantB();
 		}
 	}
 		//testing info
@@ -404,7 +413,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				originaltest = emailgroup.getTest();
 				if (overallTest != originaltest) {
 						System.out.println("OG test not matching new ");
-						List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
+						List<EmailGroup> emailgroups = originaltest.getEmailgroups();
 						emailgroups.remove(emailgroup);
 						originaltest.setEmailgroups(emailgroups);
 						tservice.CalculateTestData(originaltest, committee);
@@ -421,12 +430,16 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
     				testListSet = true;
     			}
     			else {
-    				emailgroup.setTest(overallTest);
     				List<EmailGroup> emailgroups = overallTest.getEmailgroups();
-    				emailgroups.add(emailgroup);
-    				overallTest.setEmailgroups(emailgroups);
-    				tservice.updateTest(overallTest);
-    				testListSet = true;
+    				if (emailgroups.contains(emailgroup)) {
+    					testListSet = true;
+    				}
+    				else {
+        				emailgroups.add(emailgroup);
+        				overallTest.setEmailgroups(emailgroups);
+        				tservice.updateTest(overallTest);
+        				testListSet = true;
+    				}
     			}
         	}
     		for (int i = 0; i < emailgroup.getEmails().size(); i++) {
