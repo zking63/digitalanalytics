@@ -234,9 +234,11 @@ public class EmailGroupService {
 		emailgroup.setGroupunsubscribeRate(groupunsubscribeRate);
 		emailgroup.setGroupbounceRate(groupbounceRate);
 		updateEmailGroup(emailgroup);
-		if (emailgroup.getEmails().size() > 2) {
-			System.out.println("email group too small in email group" + emailgroup.getEmails().size() );
+		if (emailgroup.getEmails().size() > 1) {
 			getEmailGroupTesting(emailGroupId, committee_id);
+		}
+		else {
+			System.out.println("email group too small in email group " + emailgroup.getEmails().size() );
 		}
 	}
 	
@@ -262,8 +264,15 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	Boolean variantASet = false;
 	Boolean variantBSet = false;
 	
-	if (emailgroup.getEmails().size() < 2) {
+	if (egrepo.findEmailswithTest(emailgroup.getId(), committee_id) < 2 && egrepo.findEmailswithTest(emailgroup.getId(), committee_id) > 0) {
 		System.out.println("email group too small " + emailgroup.getEmails().size() );
+		return;
+	}
+	if (egrepo.findnumberofdifferenttestsingroup(emailgroup.getId(), committee_id) > 1) {
+		if (emailgroup.getTest() != null) {
+			tservice.CalculateTestData(emailgroup.getTest(), committee);
+		}
+		System.out.println("number of tests in group " + egrepo.findnumberofdifferenttestsingroup(emailgroup.getId(), committee_id) );
 		return;
 	}
 	
@@ -407,6 +416,19 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 		if (emailgroup.getGroupTest() != null && !emailgroup.getGroupTest().isEmpty() 
 				&& emailgroup.getGroupTest() != " ") {
+    		for (int i = 0; i < emailgroup.getEmails().size(); i++) {
+    			Emails email = emailgroup.getEmails().get(i);
+    			String variant = email.getVariant();
+    			if (test.contentEquals("SUBJECT")) {
+    				variant = email.getSubjectLine();
+    			}
+    			else if (test.contentEquals("SENDER")) {
+    				variant = email.getSender();
+    			}
+    			email.setVariant(variant);
+    			email.setTesting(test);
+    			erepo.save(email);
+    		}
 			overallTest = tservice.SetUpContentTestfromGroup(committee_id, emailgroup);
 			test originaltest = null;
 			if (emailgroup.getTest() != null) {
@@ -442,19 +464,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
     				}
     			}
         	}
-    		for (int i = 0; i < emailgroup.getEmails().size(); i++) {
-    			Emails email = emailgroup.getEmails().get(i);
-    			String variant = email.getVariant();
-    			if (test.contentEquals("SUBJECT")) {
-    				variant = email.getSubjectLine();
-    			}
-    			else if (test.contentEquals("SENDER")) {
-    				variant = email.getSender();
-    			}
-    			email.setVariant(variant);
-    			email.setTesting(test);
-    			erepo.save(email);
-    		}
 		}
     	updateEmailGroup(emailgroup);
     	if (overallTest != null) {

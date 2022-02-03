@@ -190,8 +190,8 @@ public class EmailService {
 			String testing, String variant, String link, Double revenue, Double recurringrev, 
 			Integer donations, Integer recurringdonations, Integer rowNumber) {
 		System.out.println("email set up found");
-		System.out.println("*****NAME " + nameValue);
-		System.out.println("*****rev " + revenue);
+		//System.out.println("*****NAME " + nameValue);
+		//System.out.println("*****rev " + revenue);
 		System.out.println("*****variant " + variant);
 		System.out.println("*****test " + testing);
 		Emails email = null;
@@ -227,32 +227,32 @@ public class EmailService {
 		
 		if (nameValue == null || nameValue.isEmpty() || date == null) {
 			rowNumber = rowNumber +1;
-			System.out.println("*****NAME " + nameValue);
-			System.out.println("*****DATE " + date);
-			System.out.println("*****NOTHING IN THIS ROW " + rowNumber);
+			//System.out.println("*****NAME " + nameValue);
+			//System.out.println("*****DATE " + date);
+			//System.out.println("*****NOTHING IN THIS ROW " + rowNumber);
 			return;
 		}
 		while (refcodesFiled == false) {
 			if (refcode2 == null || refcode2.isEmpty() || refcode2 == " ") {
 				if (refcode == null || refcode.isEmpty() || refcode == " ") {
-					System.out.println("no refcodes");
+					//System.out.println("no refcodes");
 					//make a find by name/date with null refcodes
 					refcodesFiled = true;
 				}
 				else {
-					System.out.println("refcode2 == null && refcode != null");
+					//System.out.println("refcode2 == null && refcode != null");
 					email = findEmailbyOneRefcodeandCommittee(refcode, committee);
 					refcodesFiled = true;
 				}
 			}
 			else {
 				if (refcode == null || refcode.isEmpty() || refcode == " ") {
-					System.out.println("refcode2 != null && refcode == null");
+					//System.out.println("refcode2 != null && refcode == null");
 					email = findEmailbyRefcodeTWOandCommittee(refcode2, committee);
 					refcodesFiled = true;
 				}
 				else {
-					System.out.println("refcode2 != null && refcode != null");
+					//System.out.println("refcode2 != null && refcode != null");
 					email = findEmailbyRefcodeandCommittee(refcode, refcode2, committee);
 					refcodesFiled = true;
 				}
@@ -335,13 +335,13 @@ public class EmailService {
     			}
         	}
 		}
-		if (email !=  null) {
+		else if (email !=  null) {
 			Link originalLink = null;
 			if (email.getLink() != null) {
 				originalLink = email.getOveralllink();
 				if (overalllink != originalLink) {
 					if (overalllink != null) {
-						System.out.println("OG link not matching new " + originalLink.getLinkname() + " " + overalllink.getLinkname());
+						//System.out.println("OG link not matching new " + originalLink.getLinkname() + " " + overalllink.getLinkname());
 						List<Emails> OGemailLink = originalLink.getEmails();
 						OGemailLink.remove(email);
 						originalLink.setEmails(OGemailLink);
@@ -359,28 +359,28 @@ public class EmailService {
 			if (email.getTesting() != null) {
 				System.out.println("email og testing " + email.getTesting() );
 				originaltesting = email.getTesting();
-				if (!test.contentEquals(originaltesting)) {
-					if (test != null) {
+				if (test != null) {
+					if (!test.contentEquals(originaltesting)) {
 						System.out.println("testing not matching new " );
 						test = test;
 					}
-					else {
-						test = originaltesting;
-					}
+				}
+				else {
+					test = originaltesting;
 				}
 			}
 			String originalvariant = null;
 			if (email.getVariant() != null) {
 				System.out.println("email og variant " + email.getVariant());
 				originalvariant = email.getVariant();
-				if (variant != originalvariant) {
-					if (variant != null) {
+				if (variant != null) {
+					if (!variant.equals(originalvariant)) {
 						System.out.println("testing not matching new " );
 						variant = variant;
 					}
-					else {
-						variant = originalvariant;
-					}
+				}
+				else {
+					variant = originalvariant;
 				}
 			}
 			String originalname = null;

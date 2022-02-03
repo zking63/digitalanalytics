@@ -38,6 +38,13 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	@Query(value = "select testing from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null ORDER BY testing DESC LIMIT 1", nativeQuery = true)
 	<Optional>String findEmailTesting(Long groupid, Long committee_id);
 	
+	@Query(value = "select count(distinct id) from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null and email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	Integer findEmailswithTest(Long groupid, Long committee_id);
+	
+	//find how many tests in email group 
+	@Query(value = "select count(distinct testing) from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null and email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	Integer findnumberofdifferenttestsingroup(Long groupid, Long committee_id);
+	
 	//find variant a in email group with no test
 	//@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list = 'donors' OR list = 'FullList' OR list = 'prospects') and email_name like '%(1) A%' ORDER BY list DESC LIMIT 1", nativeQuery = true)
 	//Emails findVariantA(Long groupid, Long committee_id);
