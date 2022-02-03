@@ -854,6 +854,7 @@ public class ExcelUtil {
 			Integer tandemdonations = null;
 			
 			Date date = null;
+			Date dateforgroup = null;
 			System.out.println("The sheet number is " + i + 1);
 			// 2. Or you can use a for-each loop to iterate over the rows and columns
 			System.out.println("\n\nIterating over Rows and Columns using for-each loop\n");
@@ -987,7 +988,11 @@ public class ExcelUtil {
 								int finalindex = 7;
 								System.out.println("index: " + jtkindex);
 								System.out.println("length: " + jtksearch.length());
-								String subString = jtksearch.substring(jtkindex, jtksearch.length() -1);
+								String subString = jtksearch.substring(0, jtksearch.length() -1);
+								if (jtkindex != -1) 
+								{
+									subString = jtksearch.substring(jtkindex, jtksearch.length() -1);
+								}
 								System.out.println("                                                             substring: " + subString + ".");
 								char c = subString.charAt(7);
 								boolean isletter = Character.isLetter(c);
@@ -998,6 +1003,9 @@ public class ExcelUtil {
 								{
 								    subString = subString.substring(0, finalindex);
 								}
+								else if (jtkindex == -1) {
+									refcode2 = null;
+								}
 		
 								refcode2 = subString;
 								System.out.println("                                                             refcode2: " + refcode2 + ".");
@@ -1005,7 +1013,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1031,6 +1039,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == clicksColumn) {
@@ -1043,7 +1052,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1069,6 +1078,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == recipientsColumn ) {
@@ -1080,7 +1090,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1106,6 +1116,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == unsubscribersColumn) {
@@ -1118,7 +1129,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1144,6 +1155,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == openersColumn) {
@@ -1154,7 +1166,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1180,6 +1192,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == bouncesColumn) {
@@ -1193,7 +1206,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1219,6 +1232,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == excludeColumn) {
@@ -1230,7 +1244,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1256,6 +1270,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == listColumn) {
@@ -1265,7 +1280,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1291,6 +1306,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							//new start 
@@ -1301,7 +1317,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1327,6 +1343,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == senderColumn) {
@@ -1336,7 +1353,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1362,6 +1379,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == subjectColumn) {
@@ -1371,7 +1389,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1397,6 +1415,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == testingColumn) {
@@ -1406,7 +1425,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1432,6 +1451,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == linkColumn) {
@@ -1441,7 +1461,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1467,6 +1487,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == variantColumn) {
@@ -1476,7 +1497,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1502,6 +1523,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == DateColumn) {
@@ -1517,14 +1539,15 @@ public class ExcelUtil {
 								if (dateValue1 != null) {
 							
 									date = new SimpleDateFormat("MM/dd/yy hh:mm").parse(dateValue1);
-
+									dateforgroup = new SimpleDateFormat("MM/dd/yy").parse(dateValue1);
+									System.out.println("date2: " + dateforgroup);
 								}
 								//System.out.println("Simple date: " + date);
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1550,6 +1573,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == RefcodeColumn) {
@@ -1560,7 +1584,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1586,6 +1610,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 						}
 							
@@ -1598,7 +1623,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1624,6 +1649,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 					}
 							else if (cell.getColumnIndex() == recurringrevColumn) {
@@ -1634,7 +1660,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1660,6 +1686,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 					}
 							else if (cell.getColumnIndex() == recurringdonationsColumn) {
@@ -1670,7 +1697,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1696,6 +1723,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 					}
 							else if (cell.getColumnIndex() == donationsColumn) {
@@ -1707,7 +1735,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1733,6 +1761,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 					}
 							if (cell.getColumnIndex() == contentColumn) {
@@ -1766,7 +1795,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1792,6 +1821,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 							}
 							else if (cell.getColumnIndex() == parentidColumn) {
@@ -1802,7 +1832,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1828,6 +1858,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 					}
 							else if (cell.getColumnIndex() == tandemrevColumn) {
@@ -1838,7 +1869,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1864,6 +1895,7 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 					}
 							}
 							else if (cell.getColumnIndex() == tandemdonationsColumn) {
@@ -1874,7 +1906,7 @@ public class ExcelUtil {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
 											date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-											testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+											testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 									recipientList = null;
 									excludedList = null;
 									openers = null;
@@ -1900,13 +1932,14 @@ public class ExcelUtil {
 									tandemdonations = null;
 									tandemrev = null;
 									parentid = null;
+									dateforgroup = null;
 								}
 					}
 							else if (cell.getColumnIndex() == noOfColumns - 1) {
 								eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 										clicks, recipients, uploader, nameValue, refcode, refcode2, 
 										date, committee, sender, subject, category, content, tandemdonations, tandemrev, parentid, 
-										testing, variant, link, revenue, recurringrev, donations, recurringdonations, row.getRowNum());
+										testing, variant, link, revenue, recurringrev, donations, recurringdonations, dateforgroup, row.getRowNum());
 								recipientList = null;
 								excludedList = null;
 								openers = null;
@@ -1932,6 +1965,7 @@ public class ExcelUtil {
 								tandemdonations = null;
 								tandemrev = null;
 								parentid = null;
+								dateforgroup = null;
 							}
 						}
 		    	        }

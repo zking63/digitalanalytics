@@ -246,7 +246,14 @@ public class TestService {
 		if (test == null) {
 			return;
 		}
-		System.out.println("made it to calculate test ");
+		System.out.println("made it to calculate test " + test.getTestname());
+    	Long emailscount = trepo.testEmailsCount(committee.getId(), test.getId());
+    	Long variantaemailcount = trepo.testAEmailsCount(committee.getId(), test.getId());
+    	Long variantbemailcount = trepo.testBEmailsCount(committee.getId(), test.getId());
+    	System.out.println("variantaemailcount: " + variantaemailcount);
+    	System.out.println("variantbemailcount: " + variantbemailcount);
+    	System.out.println("email count: " + emailscount);
+		
 		
 	    Long variantARecipients = trepo.variantARecipients(committee.getId(), test.getId());
 	    Long variantBRecipients = trepo.variantBRecipients(committee.getId(), test.getId());
@@ -291,11 +298,6 @@ public class TestService {
 		test.setVariantAaverageRevenueperEmail(variantAaveragerevenueperEmail);
 		test.setVariantBaverageRevenueperEmail(variantBaveragerevenueperEmail);
 	    
-    	Long emailscount = trepo.testEmailsCount(committee.getId(), test.getId());
-    	Long variantaemailcount = trepo.testAEmailsCount(committee.getId(), test.getId());
-    	Long variantbemailcount = trepo.testBEmailsCount(committee.getId(), test.getId());
-    	System.out.println("variantaemailcount: " + variantaemailcount);
-    	System.out.println("variantbemailcount: " + variantbemailcount);
     	 
     	test.setEmailcount(emailscount);
     	test.setVariantAemailcount(variantaemailcount);

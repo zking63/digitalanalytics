@@ -1,5 +1,8 @@
 package com.coding.LojoFundrasing.Services;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +41,11 @@ public class EmailGroupService {
 	
 	Date date = new Date();
 	
+	public Date formatdate(String date2) throws ParseException {
+		date = new SimpleDateFormat("MM/dd/yy").parse(date2);
+		return date;
+	}
+	
 	public EmailGroup createEmailGroup(EmailGroup emailgroup) {
 		emailgroup.setCreatedAt(date);
 		return egrepo.save(emailgroup);
@@ -54,14 +62,14 @@ public class EmailGroupService {
 		EmailGroup group = egrepo.findbyIdandCommittee(id, committee_id);
 		return group;
 	}
-	public void findorCreateEmailGroup(Emails email, Long committee_id) {
+	public void findorCreateEmailGroup(Emails email, Long committee_id, Date dateforgroup) {
 		List<Emails> emails = new ArrayList<Emails>();
 		//see if email group with same refcode2 already exists
 		EmailGroup emailgroup = egrepo.findGroupByParentId(email.getParentid(), committee_id);
 		Boolean committeeSetList = false;
 		Boolean emailgroupSetList = false;
 		Committees committee = cservice.findbyId(committee_id);
-		
+		System.out.println("dateforgroup: " + dateforgroup);
 		if (emailgroup == null) {
 			//get emails in group
 			emails = erepo.findEmailsByParentId(email.getParentid(), committee_id);
@@ -69,7 +77,6 @@ public class EmailGroupService {
 			if (emails == null || emails.size() == 0) {
 				return;
 			}
-			//other emails with same refcode2 exist but haven't been grouped yet
 			else {
 				emailgroup = new EmailGroup();
 				
@@ -93,6 +100,7 @@ public class EmailGroupService {
 				System.out.println("subString 2: " + subString);
 				emailgroup.setEmailgroupName(subString);
 				emailgroup.setParentid(email.getParentid());
+				emailgroup.setDate(dateforgroup);
 				emailgroup.setCreatedAt(date);
 				emailgroup.setGroup_creator(email.getEmail_uploader());
 				createEmailGroup(emailgroup);
@@ -129,6 +137,7 @@ public class EmailGroupService {
 		else {
 			emails = emailgroup.getEmails();
 			emails.add(email);
+			emailgroup.setDate(dateforgroup);
 			emailgroup.setEmails(emails);
 			updateEmailGroup(emailgroup);
 			email.setEmailgroup(emailgroup);
@@ -210,7 +219,7 @@ public class EmailGroupService {
 		//calculate email performance stats
 		if (groupRecipients != null && groupRecipients != 0) {
 			if (groupUnsubscribers != null && groupUnsubscribers != 0) {
-				groupunsubscribeRate = (double) groupUnsubscribers/groupRecipients;
+				groupunsubscribeRate = (double) groupUnsubscribers/groupOpeners;
 			}
 			if (groupBounces != null && groupBounces != 0) {
 				groupbounceRate = (double) groupBounces/groupRecipients;
@@ -253,6 +262,8 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	
 	//test
 	test overallTest = null;
+	test originaltest = null;
+	String ogTest = null;
 	
 	//set lists
 	Boolean testListSet = false;
@@ -280,6 +291,8 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		if (emailgroup.getTest() != null) {
 			if (!emailgroup.getTest().equals(test)) {
 				System.out.println("TEST doesn't match OG " + test + " " + emailgroup.getGroupTest());
+				ogTest = emailgroup.getGroupTest();
+				originaltest = emailgroup.getTest();
 				emailgroup.setGroupTest(test);
 				variantA = null;
 				variantB = null;
@@ -430,11 +443,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
     			erepo.save(email);
     		}
 			overallTest = tservice.SetUpContentTestfromGroup(committee_id, emailgroup);
-			test originaltest = null;
-			if (emailgroup.getTest() != null) {
-				originaltest = emailgroup.getTest();
-				if (overallTest != originaltest) {
-						System.out.println("OG test not matching new ");
+			if (ogTest != null) {
+				if (!ogTest.equals(test)) {
+						System.out.println("OG test not matching new in emailgrouptest ");
 						List<EmailGroup> emailgroups = originaltest.getEmailgroups();
 						emailgroups.remove(emailgroup);
 						originaltest.setEmailgroups(emailgroups);

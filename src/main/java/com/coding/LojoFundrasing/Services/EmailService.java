@@ -188,12 +188,13 @@ public class EmailService {
 			Date date, Committees committee, String sender, String subject, String category, 
 			String content, Integer tandemdonations, Double tandemrev, String parentid,
 			String testing, String variant, String link, Double revenue, Double recurringrev, 
-			Integer donations, Integer recurringdonations, Integer rowNumber) {
+			Integer donations, Integer recurringdonations, Date dateforgroup, Integer rowNumber) {
 		System.out.println("email set up found");
 		//System.out.println("*****NAME " + nameValue);
 		//System.out.println("*****rev " + revenue);
 		System.out.println("*****variant " + variant);
 		System.out.println("*****test " + testing);
+		System.out.println("*****category " + category);
 		Emails email = null;
 		Boolean refcodesFiled = false;
 		Boolean committeeSetList = false;
@@ -224,14 +225,39 @@ public class EmailService {
 		if (recurringdonations == null) {
 			recurringdonations = 0;
 		}
-		
-		if (nameValue == null || nameValue.isEmpty() || date == null) {
-			rowNumber = rowNumber +1;
-			//System.out.println("*****NAME " + nameValue);
-			//System.out.println("*****DATE " + date);
-			//System.out.println("*****NOTHING IN THIS ROW " + rowNumber);
-			return;
+		//
+		if (openers == null) {
+			openers = (long) 0;
 		}
+		if (clicks == null) {
+			clicks = (long) 0;
+		}
+		if (recipients == null) {
+			recipients = (long) 0;
+		}
+		if (bounces == null) {
+			bounces = (long) 0;
+		}
+		if (unsubscribers == null) {
+			unsubscribers = (long) 0;
+		}
+		if (category != null) {
+			category = category.toUpperCase();
+			System.out.println("*****category " + category);
+			if (category.contains("PET")) {
+				category = "petition";
+				System.out.println("*****category " + category);
+			}
+			if (category.contains("SU")) {
+				category = "survey";
+				System.out.println("*****category " + category);
+			}
+			if (category.contains("FUND")) {
+				category = "fundraiser";
+				System.out.println("*****category " + category);
+			}
+		}
+		
 		while (refcodesFiled == false) {
 			if (refcode2 == null || refcode2.isEmpty() || refcode2 == " ") {
 				if (refcode == null || refcode.isEmpty() || refcode == " ") {
@@ -286,6 +312,13 @@ public class EmailService {
 			overalllink = lservice.findAndSetUpLinkfromUpload(link, committee);
 		}
 		if (email == null) {
+			if (nameValue == null || nameValue.isEmpty() || date == null) {
+				rowNumber = rowNumber +1;
+				//System.out.println("*****NAME " + nameValue);
+				//System.out.println("*****DATE " + date);
+				//System.out.println("*****NOTHING IN THIS ROW " + rowNumber);
+				return;
+			}
 			System.out.println("*****email not found ");
         	email = new Emails();
         	email.setEmailName(nameValue);
@@ -337,10 +370,10 @@ public class EmailService {
 		}
 		else if (email !=  null) {
 			Link originalLink = null;
-			if (email.getLink() != null) {
+			if (email.getOveralllink() != null) {
 				originalLink = email.getOveralllink();
-				if (overalllink != originalLink) {
-					if (overalllink != null) {
+				if (overalllink != null) {
+					if (overalllink != originalLink) {
 						//System.out.println("OG link not matching new " + originalLink.getLinkname() + " " + overalllink.getLinkname());
 						List<Emails> OGemailLink = originalLink.getEmails();
 						OGemailLink.remove(email);
@@ -349,10 +382,10 @@ public class EmailService {
 						updateEmail(email);
 						lservice.CalculateLinkData (originalLink, committee.getId());
 					}
-					else {
-						link = email.getLink();
-						overalllink = email.getOveralllink();
-					}
+				}
+				else {
+					link = email.getLink();
+					overalllink = email.getOveralllink();
 				}
 			}
 			String originaltesting = null;
@@ -386,59 +419,99 @@ public class EmailService {
 			String originalname = null;
 			if (email.getEmailName() != null) {
 				originalname = email.getEmailName();
-				if (nameValue != originalname) {
-					if (nameValue == null || nameValue == " " || nameValue.isEmpty()) {
-						nameValue = originalname;
-					}
+				if (nameValue == null || nameValue == " " || nameValue.isEmpty()) {
+					nameValue = originalname;
 				}
 			}
 			if (email.getEmaildate() != null) {
-				if (date != email.getEmaildate()) {
-					if (date == null) {
-						date = email.getEmaildate();
-					}
+				if (date == null) {
+					date = email.getEmaildate();
 				}
 			}
 			if (email.getList() != null) {
-				if (recipientList != email.getList() ) {
-					if (recipientList == null || recipientList == " " || recipientList.isEmpty()) {
-						recipientList = email.getList();
-					}
+				if (recipientList == null || recipientList == " " || recipientList.isEmpty()) {
+					recipientList = email.getList();
 				}
 			}
 			if (email.getSender() != null) {
-				if (sender != email.getSender() ) {
-					if (sender == null || sender == " " || sender.isEmpty()) {
-						sender = email.getSender();
-					}
+				if (sender == null || sender == " " || sender.isEmpty()) {
+					sender = email.getSender();
 				}
 			}
 			if (email.getSubjectLine() != null) {
-				if (subject != email.getSubjectLine() ) {
 					if (subject == null || subject == " " || subject.isEmpty()) {
 						subject = email.getSubjectLine();
 					}
-				}
 			}
 			if (email.getEmailCategory() != null) {
-				if (category != email.getEmailCategory()  ) {
 					if (category == null || category == " " || category.isEmpty()) {
 						category = email.getEmailCategory() ;
 					}
-				}
 			}
 			if (email.getParentid() != null) {
-				if (parentid != email.getParentid() ) {
 					if (parentid == null || parentid == " " || parentid.isEmpty()) {
 						parentid = email.getParentid();
 					}
-				}
 			}
 			if (email.getContent() != null) {
-				if (content != email.getContent() ) {
 					if (content == null || content == " " || content.isEmpty()) {
 						content = email.getContent();
 					}
+			}
+			//
+			if (email.getClicks() != null && email.getClicks() != 0) {
+				if (clicks == null || clicks == 0) {
+					clicks = email.getClicks();
+				}
+			}
+			if (email.getOpeners() != null && email.getOpeners() != 0) {
+				if (openers == null || openers == 0) {
+					openers = email.getOpeners();
+				}
+			}
+			if (email.getRecipients() != null && email.getRecipients() != 0) {
+				if (recipients == null || recipients == 0) {
+					recipients = email.getRecipients();
+				}
+			}
+			if (email.getUnsubscribers() != null && email.getUnsubscribers() != 0) {
+				if (unsubscribers == null ||unsubscribers == 0) {
+					unsubscribers = email.getUnsubscribers();
+				}
+			}
+			if (email.getBounces() != null && email.getBounces() != 0) {
+				if (bounces == null || bounces == 0) {
+					bounces = email.getBounces();
+				}
+			}
+			if (email.getEmaildonationcount() != null && email.getEmaildonationcount() != 0) {
+				if (donations == null || donations == 0) {
+					donations = email.getEmaildonationcount();
+				}
+			}
+			if (email.getEmaildonationsum() != null && email.getEmaildonationsum() != 0.0) {
+				if (revenue == null || revenue == 0.0) {
+					revenue = email.getEmaildonationsum();
+				}
+			}
+			if (email.getTandemdonations() != null && email.getTandemdonations() != 0) {
+				if (tandemdonations == null ||tandemdonations == 0) {
+					tandemdonations = email.getTandemdonations();
+				}
+			}
+			if (email.getTandemrevenue() != null && email.getTandemrevenue() != 0.0) {
+				if (tandemrev == null || tandemrev == 0.0) {
+					tandemrev = email.getTandemrevenue();
+				}
+			}
+			if (email.getRecurringDonationCount() != null && email.getRecurringDonationCount() != 0) {
+				if (recurringdonations == null || recurringdonations == 0) {
+					recurringdonations = email.getRecurringDonationCount();
+				}
+			}
+			if (email.getRecurringRevenue() != null && email.getRecurringRevenue() != 0.0) {
+				if (recurringrev == null || recurringrev == 0.0) {
+					recurringrev = email.getRecurringRevenue();
 				}
 			}
         	System.out.println("found email: " + email.getId() + ", " + email.getEmailName());
@@ -494,7 +567,7 @@ public class EmailService {
     		}
     	}
     	if (email.getEmailgroup() == null) {
-    		egservice.findorCreateEmailGroup(email, committee.getId());
+    		egservice.findorCreateEmailGroup(email, committee.getId(), dateforgroup);
     	}
 		CalculateEmailData(email, committee.getId());
 		System.out.println("Id: " + email.getId() + " Email: " + email.getEmailName());
@@ -539,7 +612,7 @@ public class EmailService {
 				Double opens = (double) email.getOpeners();
 				Double bounces = (double) email.getBounces();
 				//functions
-				unsubscribeRate = unsubs/receps;
+				unsubscribeRate = unsubs/opens;
 				openRate = opens/receps;
 				clickRate = clicks/receps;
 				bounceRate = bounces/receps;

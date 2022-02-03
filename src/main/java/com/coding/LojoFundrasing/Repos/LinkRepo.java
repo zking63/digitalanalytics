@@ -28,11 +28,11 @@ public interface LinkRepo extends CrudRepository<Link, Long>{
 	Long clicksfromEmailcount(Long linkid, Long committee_id);
 	
 	//revenue donations from link
-	@Query(value = "SELECT SUM(donations.amount) FROM donations LEFT JOIN emails on donations.email_id = emails.id WHERE emails.committees_id = :committee_id AND emails.link_id = :linkid", nativeQuery = true)
+	@Query(value = "SELECT SUM(totalrevenue) FROM emails WHERE committees_id = :committee_id AND link_id = :linkid", nativeQuery = true)
 	Double revenue(Long linkid, Long committee_id);
 	
 	//number of donations from link
-	@Query(value = "SELECT COUNT(DISTINCT donations.id) FROM donations LEFT JOIN emails on donations.email_id = emails.id WHERE emails.committees_id = :committee_id AND emails.link_id = :linkid", nativeQuery = true)
+	@Query(value = "SELECT SUM(donationsforcalculation) FROM emails WHERE committees_id = :committee_id AND link_id = :linkid", nativeQuery = true)
 	Long donationscount(Long linkid, Long committee_id);
 	
 	//number of donors from link
@@ -40,11 +40,11 @@ public interface LinkRepo extends CrudRepository<Link, Long>{
 	Long donorscount(Long linkid, Long committee_id);
 	
 	//recurring revenue from link
-	@Query(value = "SELECT SUM(donations.amount) FROM donations LEFT JOIN emails on donations.email_id = emails.id WHERE emails.committees_id = :committee_id AND emails.link_id = :linkid AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
+	@Query(value = "SELECT SUM(recurring_revenue) FROM emails WHERE committees_id = :committee_id AND link_id = :linkid", nativeQuery = true)
 	Double recurringrevenue(Long linkid, Long committee_id);
 	
 	//recurring donations from link
-	@Query(value = "SELECT COUNT(DISTINCT donations.id) FROM donations LEFT JOIN emails on donations.email_id = emails.id WHERE emails.committees_id = :committee_id AND emails.link_id = :linkid AND (donations.recurring = 'unlimited' OR donations.recurring >= 1)", nativeQuery = true)
+	@Query(value = "SELECT SUM(recurring_donation_count) FROM emails WHERE committees_id = :committee_id AND link_id = :linkid", nativeQuery = true)
 	Long recurringdonationscount(Long linkid, Long committee_id);
 	
 	//recurring donors from link
