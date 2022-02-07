@@ -874,7 +874,7 @@ public class ExcelUtil {
 							//System.out.println("Header column: " + header.getColumn());
 							
 							String headerValue = dataFormatter.formatCellValue(header).toUpperCase();
-							if (headerValue.contains("LIST NAME")) {
+							if (headerValue.contains("MAILING NAME")) {
 								NameColumn = header.getColumnIndex();
 								//System.out.println(headerValue);
 							}
@@ -985,26 +985,37 @@ public class ExcelUtil {
 								nameValue = dataFormatter.formatCellValue(cell);
 								String jtksearch = nameValue;    
 								int jtkindex = jtksearch.indexOf("jtk");
-								int finalindex = 7;
-								System.out.println("index: " + jtkindex);
-								System.out.println("length: " + jtksearch.length());
-								String subString = jtksearch.substring(0, jtksearch.length() -1);
+								//System.out.println("index: " + jtkindex);
+								//System.out.println("length: " + jtksearch.length());
+								String subString = jtksearch.substring(0, jtksearch.length());
+								//System.out.println("                                                             substring 1: " + subString + ".");
+								char c = subString.charAt(subString.length() -1);
+								int finalindex = subString.length() -1;
+								//System.out.println("                                                             c 1: " + c + ".");
+								//System.out.println("                                                            findal index 1: " + finalindex + ".");
 								if (jtkindex != -1) 
 								{
-									subString = jtksearch.substring(jtkindex, jtksearch.length() -1);
-								}
-								System.out.println("                                                             substring: " + subString + ".");
-								char c = subString.charAt(7);
-								boolean isletter = Character.isLetter(c);
-								if (isletter == true) {
-									finalindex = 8;
-								}
-								if (jtkindex != -1) 
-								{
-								    subString = subString.substring(0, finalindex);
+									subString = jtksearch.substring(jtkindex, jtksearch.length());
+									//System.out.println("                                                             substring: " + subString + ".");
+									if (subString.length() > 7) {
+										//System.out.println("                                                            longer than 7 substring: " + subString.length() + ".");
+										c = subString.charAt(7);
+										finalindex = 7;
+										//System.out.println("                                                             c 2: " + c + ".");
+										boolean isletter = Character.isLetter(c);
+										if (isletter == true) {
+											finalindex = 8;
+										}
+									}
+									else {
+										//System.out.println("                                                            shorter than 7 substring: " + subString.length() + ".");
+										finalindex = subString.length();
+										
+									}
+									subString = subString.substring(0, finalindex);
 								}
 								else if (jtkindex == -1) {
-									refcode2 = null;
+									subString = null;
 								}
 		
 								refcode2 = subString;
@@ -1770,27 +1781,77 @@ public class ExcelUtil {
 								//System.out.println("NameColumn TWO: " + NameColumn);
 								content = dataFormatter.formatCellValue(cell);  
 								int index = -1;
-								if (content.contains("secure.actblue.com")) {
-									index = content.indexOf("secure.actblue");
+								int ahref = -1;
+								int finalindex = -1;
+								String sub = content;
+								if (content.contains("?refcode2=")) {
+						
+									finalindex = sub.indexOf("refcode2=");
+									sub = sub.substring(0, finalindex);
+									
+									if (sub.contains("a href")) {
+										ahref = sub.indexOf("a href");
+										sub = sub.substring(ahref, finalindex);
+										System.out.println("refcode sub: " + sub);
+									}
+									if (sub.contains("secure.actblue.com")) {
+										index = sub.indexOf("secure.actblue");
+									}
+									else if (sub.contains("surveys.signforgood.com")) {
+										index = sub.indexOf("surveys.signforgood.com");
+									}
+									else if (sub.contains("shop.democraticgovernors.org")) {
+										index = sub.indexOf("shop.democraticgovernors.org");
+									}
+									else if (sub.contains("action.democraticgovernors.org")) {
+										if (sub.contains("action.democraticgovernors.org/unsubscribe")) {
+											System.out.println("contains unsub link: ");
+											index = -1;
+										}
+										else {
+											index = sub.indexOf("action.democraticgovernors.org");
+										}
+						
+									}
 								}
-								else if (content.contains("https://surveys.signforgood.com")) {
-									index = content.indexOf("surveys.signforgood.com");
-								}
-								else if (content.contains("https://action.democraticgovernors.org")) {
-									index = content.indexOf("action.democraticgovernors.org");
+								else {
+									if (sub.contains("secure.actblue.com")) {
+										index = sub.indexOf("secure.actblue");
+									}
+									else if (sub.contains("https://surveys.signforgood.com")) {
+										index = sub.indexOf("surveys.signforgood.com");
+									}
+									else if (sub.contains("https://shop.democraticgovernors.org")) {
+										index = sub.indexOf("shop.democraticgovernors.org");
+									}
+									else if (sub.contains("https://action.democraticgovernors.org")) {
+										if (sub.contains("action.democraticgovernors.org/unsubscribe")) {
+											System.out.println("contains unsub link: ");
+											index = -1;
+										}
+										else {
+											index = sub.indexOf("action.democraticgovernors.org");
+										}
+						
+									}
 								}
 								System.out.println("index: " + index);
 								
-								String sub = content.substring(index, content.length()-1);
-								int finalindex = sub.indexOf("?");
+								
 								System.out.println("final index: " + finalindex);
 								if (index != -1) 
 								{
-									if (finalindex < sub.length())
-								    sub = sub.substring(0, finalindex);
+									sub = sub.substring(index, sub.length()-1);
+									finalindex = sub.indexOf("?");
+									if (finalindex != -1 && finalindex < sub.length()) {
+										sub = sub.substring(0, finalindex);
+									}
+								}
+								else {
+									sub = null;
 								}
 								link = sub;
-								System.out.println("link " + link + ".");
+								System.out.println("link: " + link + ".");
 								if (cell.getColumnIndex() == noOfColumns - 1) {
 									eservice.setUpEmailsfromUpload(recipientList, excludedList, openers, bounces, unsubscribers, 
 											clicks, recipients, uploader, nameValue, refcode, refcode2, 
@@ -2426,6 +2487,11 @@ public class ExcelUtil {
     	int variantBCol = -1;
     	int testingCol =-1;
     	
+    	int variantfullsendCol = -1;
+    	int senderCol = -1;
+    	int subjectCol = -1;
+    	int linkCol = -1;
+    	
         int refcode1Col = -1;
         int refcode2Col = -1;
         int recipientsCol = -1;
@@ -2470,6 +2536,18 @@ public class ExcelUtil {
                 	if (input.get(i).equals("Recipients")) {
                         recipientsCol = columnCount;
                         createCell(row, columnCount++, "Recipients", style); 
+                	}
+                	if (input.get(i).equals("link")) {
+                		linkCol = columnCount;
+                        createCell(row, columnCount++, "Link", style); 
+                	}
+                	if (input.get(i).equals("sender")) {
+                		senderCol = columnCount;
+                        createCell(row, columnCount++, "Sender", style); 
+                	}
+                	if (input.get(i).equals("subject")) {
+                		subjectCol = columnCount;
+                        createCell(row, columnCount++, "Subject line", style); 
                 	}
                 	
                 	if (input.get(i).equals("Clicks")) {
@@ -2545,6 +2623,10 @@ public class ExcelUtil {
                 		DonRecurCol = columnCount;
                         createCell(row, columnCount++, "Recurring donations", style); 
                 	}
+                	if (input.get(i).equals("fullsendvariant")) {
+                		variantfullsendCol = columnCount;
+                        createCell(row, columnCount++, "Full send variant", style); 
+                	}
 
                 	if (input.get(i).equals("Recurring revenue")) {
                 		RevRecurCol = columnCount;
@@ -2579,12 +2661,96 @@ public class ExcelUtil {
         bodyfont.setBold(false);
         bodyfont.setFontHeight(14);
         bodyStyle.setFont(bodyfont);
+        
+        String fullsend = null;
+        String sender = null;
+        String subject = null;
                  
         for (int i = 0; i < emailgroup.size(); i++) {
+        	fullsend = null;
+            sender = emailgroup.get(i).getEmails().get(0).getSender();
+            subject = emailgroup.get(i).getEmails().get(0).getSubjectLine();
+        	if (input.contains("fullsendvariant")) {
+            	if (emailgroup.get(i).getFullsendvariant() == null) {
+            		if (emailgroup.get(i).getFullsendvariantdonors() != null) {
+            			if (emailgroup.get(i).getFullsendvariantprospects() != null) {
+            				fullsend = "Donors: " + emailgroup.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroup.get(i).getFullsendvariantprospects();
+            				System.out.println("fullsend" + fullsend);
+            			}
+            			else {
+            				fullsend = emailgroup.get(i).getFullsendvariantdonors();
+            			}
+            			
+            		}
+            	}
+            	else {
+            		fullsend = emailgroup.get(i).getFullsendvariant(); 
+            	}
+        	}
+        	if (input.contains("sender")) {
+        		if (emailgroup.get(i).getGroupTest() != null && emailgroup.get(i).getGroupTest().contentEquals("SENDER")) {
+        			System.out.println("tested sender");
+                	/*if (emailgroup.get(i).getFullsendvariant() == null) {
+                		if (emailgroup.get(i).getFullsendvariantdonors() != null) {
+                			if (emailgroup.get(i).getFullsendvariantprospects() != null) {
+                				sender = "Donors: " + emailgroup.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroup.get(i).getFullsendvariantprospects();
+                				System.out.println("fullsend" + fullsend);
+                			}
+                			else {
+                				sender = emailgroup.get(i).getFullsendvariantdonors();
+                			}
+                			
+                		}
+                		else { 
+                			sender = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
+                		}
+                	}*/
+        			if (emailgroup.get(i).getVariantA() != null && 
+        					emailgroup.get(i).getVariantB() != null ) {
+        				sender = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
+        			}
+                	else {
+                		sender = emailgroup.get(i).getFullsendvariant(); 
+                	}
+        		}
+        		else {
+        			sender = emailgroup.get(i).getEmails().get(0).getSender();
+        		}
+        	}
+        	if (input.contains("subject")) {
+        		if (emailgroup.get(i).getGroupTest() != null && emailgroup.get(i).getGroupTest().contentEquals("SUBJECT")) {
+        			System.out.println("tested subject");
+                	/*if (emailgroup.get(i).getFullsendvariant() == null) {
+                		if (emailgroup.get(i).getFullsendvariantdonors() != null) {
+                			if (emailgroup.get(i).getFullsendvariantprospects() != null) {
+                				subject = "Donors: " + emailgroup.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroup.get(i).getFullsendvariantprospects();
+                				System.out.println("Sl" + subject);
+                			}
+                			else {
+                				subject = emailgroup.get(i).getFullsendvariantdonors();
+                			}
+                			
+                		}
+                		else { 
+                			subject = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
+                		}
+                	}*/
+        			if (emailgroup.get(i).getVariantA() != null && 
+        					emailgroup.get(i).getVariantB() != null ) {
+        				subject = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
+        			}
+                	else {
+                		subject = emailgroup.get(i).getFullsendvariant(); 
+                	}
+        		}
+        		else {
+        			subject = emailgroup.get(i).getEmails().get(0).getSubjectLine();
+        		}
+        	}
             row = sheet.createRow(rowCount++);
             columnCount = 0;
             createCell(row, columnCount++, emailgroup.get(i).getId(), bodyStyle);
-            createCell(row, columnCount++, emailgroup.get(i).getEmails().get(0).getEmailDateFormatted(), bodyStyle);
+            createCell(row, columnCount++, emailgroup.get(i).getDate(), bodyStyle);
             createCell(row, columnCount++, emailgroup.get(i).getEmailgroupName(), bodyStyle);
            
             if (columnCount == refcode1Col) {
@@ -2596,6 +2762,15 @@ public class ExcelUtil {
             
             if (columnCount == recipientsCol) {
             	createCell(row, columnCount++, emailgroup.get(i).getGroupRecipients(), bodyStyle);
+            }
+            if (columnCount == linkCol) {
+            	createCell(row, columnCount++, emailgroup.get(i).getLink(), bodyStyle);
+            }
+            if (columnCount == senderCol) {
+            	createCell(row, columnCount++, sender, bodyStyle);
+            }
+            if (columnCount == subjectCol) {
+            	createCell(row, columnCount++, subject, bodyStyle);
             }
             
             if (columnCount == ClickCol) {
@@ -2663,6 +2838,9 @@ public class ExcelUtil {
             
             if (columnCount == testingCol) {
             	createCell(row, columnCount++, emailgroup.get(i).getGroupTest(), bodyStyle);
+            }
+            if (columnCount == variantfullsendCol) {
+            	createCell(row, columnCount++, fullsend, bodyStyle);
             }
 
             

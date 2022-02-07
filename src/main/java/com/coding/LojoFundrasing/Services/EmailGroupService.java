@@ -62,17 +62,45 @@ public class EmailGroupService {
 		EmailGroup group = egrepo.findbyIdandCommittee(id, committee_id);
 		return group;
 	}
-	public void findorCreateEmailGroup(Emails email, Long committee_id, Date dateforgroup) {
+	public void findorCreateEmailGroup(Emails email, Long committee_id, Date dateforgroup, String oldparentid) {
+		EmailGroup oldgroup = null;
+		if (oldparentid != null) {
+			System.out.println("oldparentid: " + oldparentid);
+		}
+		if (email.getEmailgroup() != null) {
+			oldgroup = email.getEmailgroup();
+		}
 		List<Emails> emails = new ArrayList<Emails>();
+		EmailGroup emailgroup = null;
 		//see if email group with same refcode2 already exists
-		EmailGroup emailgroup = egrepo.findGroupByParentId(email.getParentid(), committee_id);
+		if (email.getParentid() != null && email.getParentid() != "" 
+				&& email.getParentid() != " " && !email.getParentid().isEmpty()) {
+			emailgroup = egrepo.findGroupByParentId(email.getParentid(), committee_id);
+		}
+		else {
+			if (egrepo.findGroupByRefcode2(email.getEmailRefcode2(), committee_id) != null) {
+				emailgroup = egrepo.findGroupByRefcode2(email.getEmailRefcode2(), committee_id);
+				email.setParentid(email.getEmailRefcode2());
+			}
+		}
 		Boolean committeeSetList = false;
 		Boolean emailgroupSetList = false;
 		Committees committee = cservice.findbyId(committee_id);
 		System.out.println("dateforgroup: " + dateforgroup);
 		if (emailgroup == null) {
 			//get emails in group
-			emails = erepo.findEmailsByParentId(email.getParentid(), committee_id);
+			if (email.getParentid() != null && email.getParentid() != "" 
+					&& email.getParentid() != " " && !email.getParentid().isEmpty()) {
+				emails = erepo.findEmailsByParentId(email.getParentid(), committee_id);
+			}
+			else if (email.getParentid() == null || email.getParentid() == "" 
+					|| email.getParentid() == " " || email.getParentid().isEmpty()) {
+				System.out.println("parentid doesn't exist in emailgroup");
+				emails = erepo.findByemailRefcode2andCommittee(email.getEmailRefcode2(), committee_id);
+				email.setParentid(email.getEmailRefcode2());
+				erepo.save(email);
+				
+			}
 			System.out.println("emails with same parent id: " + emails);
 			if (emails == null || emails.size() == 0) {
 				return;
@@ -82,22 +110,22 @@ public class EmailGroupService {
 				
 				//setting up email group name by using email name
 				String emailname = email.getEmailName();
-				System.out.println("name: " + emailname);
-				System.out.println("name size: " + emailname.length());
+				//System.out.println("name: " + emailname);
+				//System.out.println("name size: " + emailname.length());
 				int index = emailname.indexOf("M.");
-				System.out.println("index: " + index);
+				//System.out.println("index: " + index);
 				String subString = emailname;
 				if (index != -1) 
 				{
 					subString = emailname.substring(index, emailname.length());
-					System.out.println("subString 1: " + subString);
+					//System.out.println("subString 1: " + subString);
 					index = subString.indexOf("(1)");
 					if (index != -1) 
 					{
 						subString = subString.substring(0, index);
 					}
 				}
-				System.out.println("subString 2: " + subString);
+				//System.out.println("subString 2: " + subString);
 				emailgroup.setEmailgroupName(subString);
 				emailgroup.setParentid(email.getParentid());
 				emailgroup.setDate(dateforgroup);
@@ -125,6 +153,20 @@ public class EmailGroupService {
 	    				committeeSetList = true;
 	    			}
 	        	}
+	        	updateEmailGroup(emailgroup);
+	        	if (oldgroup != null && (oldgroup.getId() != emailgroup.getId() 
+	        			|| !oldparentid.contentEquals(emailgroup.getParentid()))) {
+	        		System.out.println("group doesn't match old");
+	        		email.setEmailgroup(emailgroup);
+	        		erepo.save(email);
+	        		List<Emails> oldgroupemails = oldgroup.getEmails();
+	        		System.out.println("old group list size " + oldgroup.getEmails().size());
+	        		oldgroupemails.remove(email);
+	        		oldgroup.setEmails(oldgroupemails);
+	        		updateEmailGroup(oldgroup);
+	        		System.out.println("old group list size updated" + oldgroup.getEmails().size());
+	        		getEmailGroupData(oldgroup.getId(), committee_id);
+	        	}
 			
 	        	updateEmailGroup(emailgroup);
 	        	for (int i = 0; i < emails.size(); i++) {
@@ -149,6 +191,50 @@ public class EmailGroupService {
 		EmailGroup emailgroup = egrepo.findbyIdandCommittee(emailGroupId, committee_id);
 		System.out.println(emailgroup.getEmailgroupName());
 		Committees committee = cservice.findbyId(committee_id);
+		
+		String link = null;
+		String fullsendvariant = null;
+		String fullsendvariantdonors = null;
+		String fullsendvariantprospects = null;
+		
+		if (emailgroup.getEmails().size() > 1) {
+			if (erepo.emailwithfulllistremainder(emailGroupId, committee_id) != null) {
+				Emails email = erepo.emailwithfulllistremainder(emailGroupId, committee_id);
+				if (email.getVariant() != null) {
+					fullsendvariant = email.getVariant();
+				}
+				if (email.getLink() != null) {
+					link = email.getLink();
+				}
+			}
+			else {
+				if (erepo.emailwithprospectremainder(emailGroupId, committee_id) != null) {
+					Emails email = erepo.emailwithprospectremainder(emailGroupId, committee_id);
+					if (email.getVariant() != null) {
+						fullsendvariantprospects = email.getVariant();
+					}
+				}
+				if (erepo.emailwithdonorremainder(emailGroupId, committee_id) != null) {
+					Emails email = erepo.emailwithdonorremainder(emailGroupId, committee_id);
+					if (email.getVariant() != null) {
+						fullsendvariantdonors = email.getVariant();
+					}
+					if (email.getLink() != null) {
+						link = email.getLink();
+					}
+				}
+				if (fullsendvariantprospects != null && fullsendvariantdonors != null) {
+					if (fullsendvariantprospects.contentEquals(fullsendvariantdonors)) {
+						fullsendvariant = fullsendvariantprospects;
+					}
+				}
+			}
+		}
+		if (link == null) {
+			if (emailgroup.getEmails().get(0).getLink() != null) {
+				link = emailgroup.getEmails().get(0).getLink();
+			}
+		}
 		
 		//email performance
 		Long groupOpeners = egrepo.GroupOpeners(emailGroupId, committee_id);
@@ -186,6 +272,11 @@ public class EmailGroupService {
 		
 		//email count
 		Integer groupemailcount = egrepo.countEmailsinEmailGroup(emailgroup.getId(), committee_id);
+		
+		emailgroup.setFullsendvariant(fullsendvariant);
+		emailgroup.setFullsendvariantdonors(fullsendvariantdonors);
+		emailgroup.setFullsendvariantprospects(fullsendvariantprospects);
+		emailgroup.setLink(link);
 		
 		emailgroup.setGroupOpeners(groupOpeners);
 		emailgroup.setGroupRecipients(groupRecipients);

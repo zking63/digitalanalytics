@@ -20,15 +20,35 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	List<Long> findGroupByOrderByDesc(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
+	//find emails in group by parentid
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND parentid = :parentid", nativeQuery = true)
 	List<Emails> findEmailsinGroupByParentId(String parentid, Long committee_id);
 	
+	//find group by parentid
 	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND parentid = :parentid", nativeQuery = true)
 	EmailGroup findGroupByParentId(String parentid, Long committee_id);
+	
+	//find group by refcode2
+	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND parentid = :refcode2", nativeQuery = true)
+	EmailGroup findGroupByRefcode2(String refcode2, Long committee_id);
+	
+	//find emails in group by refcode2
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode2 = :refcode2", nativeQuery = true)
+	List<Emails> findEmailsinGroupRefcode2(String refcode2, Long committee_id);
 	
 	//find number of emails in email group
 	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :groupid", nativeQuery = true)
 	Integer countEmailsinEmailGroup(Long groupid, Long committee_id);
+	
+	//find full send emails with group 
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	Emails emailwithdonorremainder(Long emailgroupid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	Emails emailwithprospectremainder(Long emailgroupid, Long committee_id);
 	
 	//find email group
 	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND emailgroup_name = :groupname", nativeQuery = true)

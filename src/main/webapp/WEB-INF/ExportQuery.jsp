@@ -361,6 +361,12 @@
 										<label for="input"> Refcode 2</label><br>
 										<input type="checkbox" id="input" name="input" value="Recipients">
 										<label for="input"> Recipients</label><br>
+										<input type="checkbox" id="input" name="input" value="link">
+										<label for="input"> Link</label><br>
+										<input type="checkbox" id="input" name="input" value="sender">
+										<label for="input"> Sender</label><br>
+										<input type="checkbox" id="input" name="input" value="subject">
+										<label for="input"> Subject Line</label><br>
 										<input type="checkbox" id="input" name="input" value="Clicks">
 										<label for="input"> Clicks</label><br>
 										<input type="checkbox" id="input" name="input" value="Opens">
@@ -380,17 +386,17 @@
 										<input type="checkbox" id="input" name="input" value="Clicks/opens">	
 										<label for="input"> Clicks per open</label><br>	
 										<input type="checkbox" id="input" name="input" value="Revenue">
-										<label for="input"> Revenue</label><br>	
-										<input type="checkbox" id="input" name="input" value="Donations">	
-										<label for="input"> Donations</label><br>		
+										<label for="input"> Revenue</label><br>			
 									</div>
 									<div id="export-choices">
+										<input type="checkbox" id="input" name="input" value="Donations">	
+										<label for="input"> Donations</label><br>	
 										<input type="checkbox" id="input" name="input" value="Donations/opens">	
 										<label for="input"> Donations per open</label><br>
 										<input type="checkbox" id="input" name="input" value="Donations/clicks">	
 										<label for="input"> Donations per click</label><br>
 										<input type="checkbox" id="input" name="input" value="Average donation">
-										<label for="input"> Average donation</label><br>	
+										<label for="input"> Average donation</label><br>
 										<input type="checkbox" id="input" name="input" value="Tandem revenue">
 										<label for="input"> Tandem revenue</label><br>
 										<input type="checkbox" id="input" name="input" value="Tandem donations">
@@ -403,6 +409,8 @@
 										<label for="input"> Recurring revenue</label><br>
 										<input type="checkbox" id="input" name="input" value="testing">
 										<label for="input"> Testing</label><br>
+										<input type="checkbox" id="input" name="input" value="fullsendvariant">
+										<label for="input"> Full send variant</label><br>
 										<input type="checkbox" id="input" name="input" value="varianta">
 										<label for="input"> Variant A</label><br>
 										<input type="checkbox" id="input" name="input" value="variantb">

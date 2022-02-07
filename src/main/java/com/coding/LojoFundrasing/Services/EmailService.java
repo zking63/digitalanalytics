@@ -203,6 +203,7 @@ public class EmailService {
 		String test = null;
 		Boolean LinkSetList = false;
 		Link overalllink = null;
+		String oldparentid = null;
 		
 		if (tandemrev == null) {
 			tandemrev = 0.0;
@@ -243,18 +244,33 @@ public class EmailService {
 		}
 		if (category != null) {
 			category = category.toUpperCase();
-			System.out.println("*****category " + category);
+			//System.out.println("*****category " + category);
 			if (category.contains("PET")) {
 				category = "petition";
-				System.out.println("*****category " + category);
+				//System.out.println("*****category " + category);
 			}
 			if (category.contains("SU")) {
 				category = "survey";
-				System.out.println("*****category " + category);
+				//System.out.println("*****category " + category);
 			}
 			if (category.contains("FUND")) {
 				category = "fundraiser";
-				System.out.println("*****category " + category);
+				//System.out.println("*****category " + category);
+			}
+		}
+		if ((category == null || category.isEmpty() 
+				|| category == "" || category == " ") && nameValue != null) {
+			if(nameValue.contains("- FR -") || nameValue.contains("_FR_") 
+					|| nameValue.contains("-FR -") || nameValue.contains("- FR-")) {
+				category = "fundraiser";
+			}
+			else if(nameValue.contains("- SU -") || nameValue.contains("_SU_") 
+					|| nameValue.contains("-SU -") || nameValue.contains("- SU-")) {
+				category = "survey";
+			}
+			else if(nameValue.contains("- PET -") || nameValue.contains("_PET_") 
+					|| nameValue.contains("-PET -") || nameValue.contains("- PET-")) {
+				category = "petition";
 			}
 		}
 		
@@ -452,6 +468,9 @@ public class EmailService {
 					if (parentid == null || parentid == " " || parentid.isEmpty()) {
 						parentid = email.getParentid();
 					}
+					else if (!email.getParentid().contentEquals(parentid)) {
+						oldparentid = email.getParentid();
+					}
 			}
 			if (email.getContent() != null) {
 					if (content == null || content == " " || content.isEmpty()) {
@@ -566,8 +585,11 @@ public class EmailService {
     			}
     		}
     	}
-    	if (email.getEmailgroup() == null) {
-    		egservice.findorCreateEmailGroup(email, committee.getId(), dateforgroup);
+    	System.out.println("*****parent id " + parentid + " email parent id " + email.getParentid());
+    	if (email.getEmailgroup() == null || parentid.isEmpty() || email.getParentid() == null 
+    			|| email.getParentid() == "" || email.getParentid() == " " || oldparentid != null) {
+    		System.out.println("*****email group set up ");
+    		egservice.findorCreateEmailGroup(email, committee.getId(), dateforgroup, oldparentid);
     	}
 		CalculateEmailData(email, committee.getId());
 		System.out.println("Id: " + email.getId() + " Email: " + email.getEmailName());

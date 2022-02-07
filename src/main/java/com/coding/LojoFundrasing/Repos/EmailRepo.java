@@ -45,6 +45,7 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode2 = :emailRefcode2 AND (email_refcode1 IS NULL or email_refcode1 = '' or email_refcode1 = ' ')", nativeQuery = true)
 	Emails findByemailRefcodeTWOandCommittee(String emailRefcode2, Long committee_id);
 	
+
 	//find variant a in email group with no test
 	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and email_name like '%) A%' ORDER BY testing LIMIT 1", nativeQuery = true)
 	Emails findVariantA(Long groupid, Long committee_id);
@@ -52,6 +53,17 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	//find variant a in email group with no test
 	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and list = :list and email_name like '%) B%' ORDER BY testing LIMIT 1", nativeQuery = true)
 	Emails findVariantB(Long groupid, String list, Long committee_id);
+	
+	//find full send emails with group 
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	Emails emailwithdonorremainder(Long emailgroupid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	Emails emailwithprospectremainder(Long emailgroupid, Long committee_id);
+	
 	
 	//order emails by date
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND Emaildate >= DATE(:startdateE) and Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) order by emails.Emaildate Desc", nativeQuery = true)

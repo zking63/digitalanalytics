@@ -53,6 +53,10 @@ public class EmailGroup {
 	private Double totalrevenue;
 	private Date date;
 	private Integer donationsforcalculation; //this is the sum of donationsforcalculation in all the emails in the group
+	private String link;
+	private String fullsendvariant;
+	private String fullsendvariantdonors;
+	private String fullsendvariantprospects;
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -315,6 +319,30 @@ public class EmailGroup {
 	}
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
+	}
+	public String getFullsendvariant() {
+		return fullsendvariant;
+	}
+	public void setFullsendvariant(String fullsendvariant) {
+		this.fullsendvariant = fullsendvariant;
+	}
+	public String getFullsendvariantdonors() {
+		return fullsendvariantdonors;
+	}
+	public void setFullsendvariantdonors(String fullsendvariantdonors) {
+		this.fullsendvariantdonors = fullsendvariantdonors;
+	}
+	public String getFullsendvariantprospects() {
+		return fullsendvariantprospects;
+	}
+	public void setFullsendvariantprospects(String fullsendvariantprospects) {
+		this.fullsendvariantprospects = fullsendvariantprospects;
 	}
 	
 }
