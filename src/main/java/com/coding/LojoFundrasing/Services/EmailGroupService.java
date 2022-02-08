@@ -200,12 +200,14 @@ public class EmailGroupService {
 		String fullsendvariant = null;
 		String fullsendvariantdonors = null;
 		String fullsendvariantprospects = null;
+		String category = null;
 		
 		if (emailgroup.getEmails().size() > 1) {
 			if (erepo.emailwithfulllistremainder(emailGroupId, committee_id) != null) {
 				Emails email = erepo.emailwithfulllistremainder(emailGroupId, committee_id);
 				if (email.getVariant() != null) {
 					fullsendvariant = email.getVariant();
+					category = email.getEmailCategory();
 				}
 				if (email.getLink() != null) {
 					link = email.getLink();
@@ -222,6 +224,7 @@ public class EmailGroupService {
 					Emails email = erepo.emailwithdonorremainder(emailGroupId, committee_id);
 					if (email.getVariant() != null) {
 						fullsendvariantdonors = email.getVariant();
+						category = email.getEmailCategory();
 					}
 					if (email.getLink() != null) {
 						link = email.getLink();
@@ -237,6 +240,11 @@ public class EmailGroupService {
 		if (link == null) {
 			if (emailgroup.getEmails().get(0).getLink() != null) {
 				link = emailgroup.getEmails().get(0).getLink();
+			}
+		}
+		if (category == null) {
+			if (emailgroup.getEmails().get(0).getEmailCategory() != null) {
+				category = emailgroup.getEmails().get(0).getEmailCategory();
 			}
 		}
 		
@@ -281,6 +289,7 @@ public class EmailGroupService {
 		emailgroup.setFullsendvariantdonors(fullsendvariantdonors);
 		emailgroup.setFullsendvariantprospects(fullsendvariantprospects);
 		emailgroup.setLink(link);
+		emailgroup.setGroupCategory(category);
 		
 		emailgroup.setGroupOpeners(groupOpeners);
 		emailgroup.setGroupRecipients(groupRecipients);

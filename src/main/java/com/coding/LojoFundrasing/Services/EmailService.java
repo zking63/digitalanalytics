@@ -248,6 +248,9 @@ public class EmailService {
 		if (subject != null) {
 			subject = subject.trim();
 		}
+		if (variant != null) {
+			variant = variant.trim();
+		}
 		if (nameValue != null) {
 			String name = nameValue.toUpperCase();
 			if(nameValue.contains("- FR -") || name.contains("_FR_") || name.contains("FUND")
@@ -258,11 +261,12 @@ public class EmailService {
 					|| name.contains("-SU -") || name.contains("- SU-") || name.contains(" SU")) {
 				category = "survey";
 			}
-			else if(name.contains("- PET -") || name.contains("_PET_") || name.contains("PETITION")
+			if(name.contains("- PET -") || name.contains("_PET_") || name.contains("PETITION")
 					|| name.contains("-PET -") || name.contains("- PET-") || name.contains(" PET")) {
 				category = "petition";
 			}
 		}
+		System.out.println("*****category " + category);
 		if (category != null) {
 			category = category.toUpperCase();
 			//System.out.println("*****category " + category);
@@ -279,7 +283,8 @@ public class EmailService {
 				//System.out.println("*****category " + category);
 			}
 		}
-		if ((category == null || category.isEmpty() 
+		System.out.println("*****category 2 " + category);
+		/*if ((category == null || category.isEmpty() 
 				|| category == "" || category == " ") && nameValue != null) {
 			if(nameValue.contains("- FR -") || nameValue.contains("_FR_") 
 					|| nameValue.contains("-FR -") || nameValue.contains("- FR-") || nameValue.contains(" FR")) {
@@ -293,7 +298,7 @@ public class EmailService {
 					|| nameValue.contains("-PET -") || nameValue.contains("- PET-") || nameValue.contains(" PET")) {
 				category = "petition";
 			}
-		}
+		}*/
 		
 		while (refcodesFiled == false) {
 			if (refcode2 == null || refcode2.isEmpty() || refcode2 == " ") {
