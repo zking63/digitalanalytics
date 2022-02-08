@@ -41,28 +41,32 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	Integer countEmailsinEmailGroup(Long groupid, Long committee_id);
 	
 	//find full send emails with group 
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithdonorremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithprospectremainder(Long emailgroupid, Long committee_id);
 	
 	//find email group
 	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND emailgroup_name = :groupname", nativeQuery = true)
 	EmailGroup findbyNameandCommittee(String groupname, Long committee_id);
 	
+	//find email group
+	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id AND emailgroups.test_id = :testid", nativeQuery = true)
+	List<EmailGroup> findgroupbytestid(Long testid, Long committee_id);
+	
 	//find variant a in email group with no test
 	@Query(value = "select testing from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null ORDER BY testing DESC LIMIT 1", nativeQuery = true)
 	<Optional>String findEmailTesting(Long groupid, Long committee_id);
 	
-	@Query(value = "select count(distinct id) from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null and email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "select count(distinct id) from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null and email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Integer findEmailswithTest(Long groupid, Long committee_id);
 	
 	//find how many tests in email group 
-	@Query(value = "select count(distinct testing) from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null and email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "select count(distinct testing) from emails where committees_id = :committee_id and emailgroup_id = :groupid and testing is not null and email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Integer findnumberofdifferenttestsingroup(Long groupid, Long committee_id);
 	
 	//find variant a in email group with no test

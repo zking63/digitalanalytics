@@ -33,6 +33,9 @@ public class TestService {
 		test.setUpdatedAt(date);
 		return trepo.save(test);
 	}
+	public void delete(long id) {
+		trepo.deleteById(id);
+	}
 	public List<test> findAllTests(Long committee_id){
 		return trepo.findTestsbyCommittee(committee_id);
 	}

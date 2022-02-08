@@ -242,6 +242,27 @@ public class EmailService {
 		if (unsubscribers == null) {
 			unsubscribers = (long) 0;
 		}
+		if (sender != null) {
+			sender = sender.trim();
+		}
+		if (subject != null) {
+			subject = subject.trim();
+		}
+		if (nameValue != null) {
+			String name = nameValue.toUpperCase();
+			if(nameValue.contains("- FR -") || name.contains("_FR_") || name.contains("FUND")
+					|| name.contains("-FR -") || name.contains("- FR-") || name.contains(" FR")) {
+				category = "fundraiser";
+			}
+			else if(name.contains("- SU -") || name.contains("_SU_") || name.contains("SURVEY")
+					|| name.contains("-SU -") || name.contains("- SU-") || name.contains(" SU")) {
+				category = "survey";
+			}
+			else if(name.contains("- PET -") || name.contains("_PET_") || name.contains("PETITION")
+					|| name.contains("-PET -") || name.contains("- PET-") || name.contains(" PET")) {
+				category = "petition";
+			}
+		}
 		if (category != null) {
 			category = category.toUpperCase();
 			//System.out.println("*****category " + category);
@@ -261,15 +282,15 @@ public class EmailService {
 		if ((category == null || category.isEmpty() 
 				|| category == "" || category == " ") && nameValue != null) {
 			if(nameValue.contains("- FR -") || nameValue.contains("_FR_") 
-					|| nameValue.contains("-FR -") || nameValue.contains("- FR-")) {
+					|| nameValue.contains("-FR -") || nameValue.contains("- FR-") || nameValue.contains(" FR")) {
 				category = "fundraiser";
 			}
 			else if(nameValue.contains("- SU -") || nameValue.contains("_SU_") 
-					|| nameValue.contains("-SU -") || nameValue.contains("- SU-")) {
+					|| nameValue.contains("-SU -") || nameValue.contains("- SU-") || nameValue.contains(" SU")) {
 				category = "survey";
 			}
 			else if(nameValue.contains("- PET -") || nameValue.contains("_PET_") 
-					|| nameValue.contains("-PET -") || nameValue.contains("- PET-")) {
+					|| nameValue.contains("-PET -") || nameValue.contains("- PET-") || nameValue.contains(" PET")) {
 				category = "petition";
 			}
 		}

@@ -46,55 +46,55 @@ public interface testrepo extends CrudRepository<test, Long> {
 	Optional<test> findbyVariantB(String testcategory, Long committee_id, String variantb);
 	
 	//emails per test calculation
-	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long testEmailsCount(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long testAEmailsCount(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT COUNT(DISTINCT emails.id) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long testBEmailsCount(Long committee_id, Long testid);
 	
 	//total recipients calculation
-	@Query(value = "SELECT SUM(emails.recipients) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.recipients) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantARecipients(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT SUM(emails.recipients) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.recipients) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantBRecipients(Long committee_id, Long testid);
 	
 	//total openers calculation
-	@Query(value = "SELECT SUM(emails.openers) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.openers) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantAOpens(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT SUM(emails.openers) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.openers) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantBOpens(Long committee_id, Long testid);
 	
 	//total clicks calculation
-	@Query(value = "SELECT SUM(emails.clicks) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.clicks) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantAClicks(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT SUM(emails.clicks) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.clicks) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantBClicks(Long committee_id, Long testid);
 	
 	//total donations calculation
-	@Query(value = "SELECT SUM(emails.donationsforcalculation) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.donationsforcalculation) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantADonations(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT SUM(emails.donationsforcalculation) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.donationsforcalculation) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Long variantBDonations(Long committee_id, Long testid);
 	
 	//total revenue calculation
-	@Query(value = "SELECT SUM(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Double variantARevenue(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT SUM(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT SUM(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Double variantBRevenue(Long committee_id, Long testid);
 	
 	//total averages per donation calculation
-	@Query(value = "SELECT AVG(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT AVG(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.varianta = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Double variantAaverageperEmail(Long committee_id, Long testid);
 	
-	@Query(value = "SELECT AVG(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT AVG(emails.totalrevenue) FROM emailgroups LEFT JOIN emails on emailgroups.id = emails.emailgroup_id RIGHT JOIN test on emailgroups.test_id = test.id WHERE test.id = :testid AND test.committees_id = :committee_id AND test.variantb = emails.variant AND emails.email_name NOT LIKE '%) remainder%'", nativeQuery = true)
 	Double variantBaverageperEmail(Long committee_id, Long testid);
 	
 	

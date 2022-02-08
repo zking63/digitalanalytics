@@ -55,13 +55,13 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<E
 	Emails findVariantB(Long groupid, String list, Long committee_id);
 	
 	//find full send emails with group 
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithdonorremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%(1) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithprospectremainder(Long emailgroupid, Long committee_id);
 	
 	

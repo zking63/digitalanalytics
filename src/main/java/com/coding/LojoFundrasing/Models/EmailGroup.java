@@ -1,5 +1,6 @@
 package com.coding.LojoFundrasing.Models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -344,5 +345,9 @@ public class EmailGroup {
 	public void setFullsendvariantprospects(String fullsendvariantprospects) {
 		this.fullsendvariantprospects = fullsendvariantprospects;
 	}
+	public String getDateFormatted() {
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    	return df.format(this.date);
+    }
 	
 }

@@ -2750,7 +2750,7 @@ public class ExcelUtil {
             row = sheet.createRow(rowCount++);
             columnCount = 0;
             createCell(row, columnCount++, emailgroup.get(i).getId(), bodyStyle);
-            createCell(row, columnCount++, emailgroup.get(i).getDate(), bodyStyle);
+            createCell(row, columnCount++, emailgroup.get(i).getDateFormatted(), bodyStyle);
             createCell(row, columnCount++, emailgroup.get(i).getEmailgroupName(), bodyStyle);
            
             if (columnCount == refcode1Col) {

@@ -1569,4 +1569,42 @@ public class LojoController {
 			excelService.readChairData(file);
 			return "redirect:/home";
 		}
+	   /* @GetMapping(value="/rundata/test")
+		public void rundataontest(HttpSession session, Model model, HttpServletRequest request) {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 String pagename = request.getRequestURL().toString();
+			 System.out.println("page: " + pagename);
+			 session.setAttribute("page", pagename);
+			 User user = uservice.findUserbyId(user_id);
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
+			 model.addAttribute("committee", committee);
+			model.addAttribute("committees", committees);
+			model.addAttribute("user", user);
+		}*/
+		@RequestMapping("/rundata/test")
+		public String runtestdata(HttpSession session) {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			 
+			 List<test> tests = tservice.findAllTests(committee_id);
+			 for (int i = 0; i < tests.size(); i++) {
+				 test test = tests.get(i);
+				 tservice.CalculateTestData(test, committee);
+				 if (tests.get(i).getEmailcount() == 0) {
+					//if( egservice.findgroupbytestid(test.getId(), committee_id).size()> 0){
+					 System.out.println("delete TEST" + test.getId());
+					 tests.remove(test);
+					 committee.setBigtest(tests);
+					 tservice.delete(test.getId());
+				// }
+			 }
+			 }
+			return "redirect:/home";
+		}
 }

@@ -46,6 +46,10 @@ public class EmailGroupService {
 		return date;
 	}
 	
+	public List<EmailGroup> findgroupbytestid(Long testid, Long committee_id) {
+		return egrepo.findgroupbytestid(testid, committee_id);
+	}
+	
 	public EmailGroup createEmailGroup(EmailGroup emailgroup) {
 		emailgroup.setCreatedAt(date);
 		return egrepo.save(emailgroup);
