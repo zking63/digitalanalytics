@@ -103,18 +103,18 @@ public class WordUtil {
 			r2.setText(row);
 			String html = emailgroups.get(i).getEmails().get(0).getContent();
 			 HtmlImageGenerator imageGenerator = new HtmlImageGenerator(); 
-			 imageGenerator.loadHtml(emailgroups.get(i).getEmails().get(0).getContent()); 
+			// imageGenerator.loadHtml(emailgroups.get(i).getEmails().get(0).getContent()); 
 			// File file = new File("email");
 			 
 			// System.out.println(frame);
 			 //BufferedImage image = imageGenerator.saveAsImage(emailgroups.get(i).getEmails().get(0).getContent()); 
-			 imageGenerator.saveAsHtmlWithMap("hello-world.html", "hello-world.png");
-			 File image = new File("hello-world.png");
-			imageGenerator.renderHTML(html, image);
+			// imageGenerator.saveAsHtmlWithMap("html.html", "html.png");
+			 File image = new File("html.jpeg");
+			image = imageGenerator.renderHTML(html, image);
 		        FileInputStream imageData = new FileInputStream(image);
 		        System.out.println("data " + imageData.read());
 			 int imageType = XWPFDocument.PICTURE_TYPE_JPEG;
-		        String imageFileName = "hello-world.png";
+		        String imageFileName = "hello-world.jpeg";
 		  
 		        // Step 6: Setting the width and height of the image
 		        // in pixels.
@@ -122,15 +122,15 @@ public class WordUtil {
 		  
 		        // Step 7: Adding the picture using the addPicture()
 		        // method and writing into the document
-		        document.addPictureData(imageData, imageType);
+		        //document.addPictureData(imageData, imageType);
 		       // addPicture(imageData, imageType, imageFileName,
 		                     //  Units.toEMU(width),
 		                      // Units.toEMU(height));
 			 rowcount++;
 			XWPFParagraph para2 = document.createParagraph();
 			XWPFRun para2Run = para2.createRun();
-			para2Run.addPicture(imageData, imageType, imageFileName, Units.toEMU(10), Units.toEMU(40));
-			para2Run.setText("           ");
+			para2Run.addPicture(imageData, imageType, imageFileName, Units.toEMU(600), Units.toEMU(12000));
+			para2Run.setText(html);
 		}
 		
         //export

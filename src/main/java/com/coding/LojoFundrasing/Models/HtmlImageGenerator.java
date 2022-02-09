@@ -165,30 +165,34 @@ public class HtmlImageGenerator extends HTMLEditorKit{
 		return img;
 	}
 	
-    public BufferedImage renderHTML(String html, File output) {
-    	JEditorPane pane = new JEditorPane("text/html", html);
-    	pane.setText(html);
+    public File renderHTML(String html, File output) {
+    	System.out.println(html);
+    	JEditorPane pane2 = new JEditorPane("text/html", html);
+    	//pane.setText(html);
+    	JScrollPane pane = new JScrollPane(pane2);
+    	   int w = 800;
+           int h = 650;
     	/*JFrame frame=new JFrame();
     	frame.add(pane);
     	frame.setSize(200,200);
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	frame.setVisible(true);*/
-    	HTMLEditorKit kit = new HTMLEditorKit();
+    	/*HTMLEditorKit kit = new HTMLEditorKit();
     	pane.setEditorKit(kit);
     	Document doc = kit.createDefaultDocument();
-    	pane.setDocument(doc);
-    	pane.setMinimumSize(DEFAULT_SIZE);
+    	pane.setDocument(doc);*/
+    	
     	//File file = null;
-    	  BufferedImage image = new BufferedImage(600, 2000, BufferedImage.TYPE_INT_RGB);
-    	  pane.print(image.getGraphics());
+    	  BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+    	  pane2.paint(image.getGraphics());
     	  
     	  try {
-			ImageIO.write(image, "PNG", output);
+			ImageIO.write(image, "jpeg", output);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	 return image;
+    	 return output;
     	// now add it to a scroll pane
     	//JScrollPane scrollPane = new JScrollPane(pane);
     	//pane.setText(html);
