@@ -75,6 +75,14 @@
 			<artifactId>poi</artifactId>
 			<version>3.17</version>
 		</dependency>
+			
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	
 
 		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
 		<dependency>
@@ -83,12 +91,29 @@
 			<version>3.17</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>yoava</id>
+			<name>AOL yoava</name>
+			<url>http://yoava.artifactoryonline.com/yoava/libs-releases-local</url>
+			<!--<url>http://yoava.artifactoryonline.com/yoava/libs-snapshots-local</url>-->
+		</repository>
+	</distributionManagement>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>utf-8</encoding>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

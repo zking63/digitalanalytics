@@ -652,23 +652,27 @@ public class EmailService {
 				}
 				
 			//aggregate functions
-			if (email.getBounces() != null) {
-				//variables for aggregate functions
 				Double unsubs = (double) email.getUnsubscribers();
 				Double receps = (double) email.getRecipients();
 				Double clicks = (double) email.getClicks();
 				Double opens = (double) email.getOpeners();
 				Double bounces = (double) email.getBounces();
+			if (email.getRecipients() != null && email.getRecipients() != 0) {
+				//variables for aggregate functions
 				//functions
-				unsubscribeRate = unsubs/opens;
 				openRate = opens/receps;
 				clickRate = clicks/receps;
 				bounceRate = bounces/receps;
+			}
+			if (email.getClicks() != null && email.getClicks() != 0) {
+				donationsClicks = donationsforcalculation/clicks;
+				donorsClicks = donorscount/clicks;
+			}
+			if (email.getOpeners() != null && email.getOpeners() != 0) {
+				unsubscribeRate = unsubs/opens;
 				clicksOpens = clicks/opens;
 				donationsOpens = donationsforcalculation/opens;
-				donationsClicks = donationsforcalculation/clicks;
 				donorsOpens = donorscount/opens;
-				donorsClicks = donorscount/clicks;
 			}
 			email.setEmaildonationaverage(eaverage);
 			email.setEmaildonationsum(esum);

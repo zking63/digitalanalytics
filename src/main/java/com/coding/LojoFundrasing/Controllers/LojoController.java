@@ -1613,7 +1613,7 @@ public class LojoController {
 		}
 		@RequestMapping("/export/report")
 		public String createReport(HttpSession session, HttpServletRequest request,   
-				 HttpServletResponse response) throws IOException {
+				 HttpServletResponse response) throws IOException, InvalidFormatException {
 			System.out.println("create report");
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 if (user_id == null) {

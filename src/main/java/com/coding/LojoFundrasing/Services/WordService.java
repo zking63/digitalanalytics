@@ -28,7 +28,7 @@ public class WordService {
 	private WordUtil wordutil;
 
 	public String url = "D:\\word\\";
-    public void exportWord(List<EmailGroup> emailgroups, HttpServletResponse response) throws IOException {
+    public void exportWord(List<EmailGroup> emailgroups, HttpServletResponse response) throws IOException, InvalidFormatException {
     	System.out.println("word service");
         response.setContentType("application/octet-stream");
         //MediaType.APPLICATION_JSON

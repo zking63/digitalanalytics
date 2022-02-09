@@ -1,6 +1,7 @@
 package com.coding.LojoFundrasing.Util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -19,6 +20,7 @@ import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JFrame;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -33,6 +35,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.ss.util.CellAddress;
+import org.apache.poi.util.Units;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -49,6 +52,7 @@ import com.coding.LojoFundrasing.Models.Donation;
 import com.coding.LojoFundrasing.Models.Donor;
 import com.coding.LojoFundrasing.Models.EmailGroup;
 import com.coding.LojoFundrasing.Models.Emails;
+import com.coding.LojoFundrasing.Models.HtmlImageGenerator;
 import com.coding.LojoFundrasing.Models.User;
 import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Services.CommitteeService;
@@ -62,7 +66,7 @@ import com.coding.LojoFundrasing.Services.UserService;
 public class WordUtil {
 
 	public void MonthlyTop10Bottom10(List<EmailGroup> emailgroups, HttpServletResponse response) 
-			throws IOException{
+			throws IOException, InvalidFormatException{
 		System.out.println("word util");
 		XWPFDocument document = new XWPFDocument();
 		String output = "rest-with-spring.docx";
@@ -97,9 +101,35 @@ public class WordUtil {
 			r2.setBold(true);
 			String row = rowcount.toString();
 			r2.setText(row);
-			rowcount++;
+			String html = emailgroups.get(i).getEmails().get(0).getContent();
+			 HtmlImageGenerator imageGenerator = new HtmlImageGenerator(); 
+			 imageGenerator.loadHtml(emailgroups.get(i).getEmails().get(0).getContent()); 
+			// File file = new File("email");
+			 
+			// System.out.println(frame);
+			 //BufferedImage image = imageGenerator.saveAsImage(emailgroups.get(i).getEmails().get(0).getContent()); 
+			 imageGenerator.saveAsHtmlWithMap("hello-world.html", "hello-world.png");
+			 File image = new File("hello-world.png");
+			imageGenerator.renderHTML(html, image);
+		        FileInputStream imageData = new FileInputStream(image);
+		        System.out.println("data " + imageData.read());
+			 int imageType = XWPFDocument.PICTURE_TYPE_JPEG;
+		        String imageFileName = "hello-world.png";
+		  
+		        // Step 6: Setting the width and height of the image
+		        // in pixels.
+		      
+		  
+		        // Step 7: Adding the picture using the addPicture()
+		        // method and writing into the document
+		        document.addPictureData(imageData, imageType);
+		       // addPicture(imageData, imageType, imageFileName,
+		                     //  Units.toEMU(width),
+		                      // Units.toEMU(height));
+			 rowcount++;
 			XWPFParagraph para2 = document.createParagraph();
 			XWPFRun para2Run = para2.createRun();
+			para2Run.addPicture(imageData, imageType, imageFileName, Units.toEMU(10), Units.toEMU(40));
 			para2Run.setText("           ");
 		}
 		
