@@ -62,6 +62,7 @@ import com.coding.LojoFundrasing.Services.EmailService;
 import com.coding.LojoFundrasing.Services.ExcelService;
 import com.coding.LojoFundrasing.Services.TestService;
 import com.coding.LojoFundrasing.Services.UserService;
+import com.coding.LojoFundrasing.Services.WordService;
 import com.coding.LojoFundrasing.Validation.DonorValidation;
 import com.coding.LojoFundrasing.Validation.UserValidation;
 
@@ -96,6 +97,9 @@ public class LojoController {
 	
 	@Autowired
 	private TestService tservice;
+	
+	@Autowired
+	private WordService wservice;
 	
 	@RequestMapping("/")
 	public String index(@ModelAttribute("user")User user, Model model) {
@@ -1605,6 +1609,20 @@ public class LojoController {
 				// }
 			 }
 			 }
+			return "redirect:/home";
+		}
+		@RequestMapping("/export/report")
+		public String createReport(HttpSession session, HttpServletRequest request,   
+				 HttpServletResponse response) throws IOException {
+			System.out.println("create report");
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			 List<EmailGroup> emailgroups = egservice.top10byRevenue(committee_id);
+			wservice.exportWord(emailgroups, response);
 			return "redirect:/home";
 		}
 }
