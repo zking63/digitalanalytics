@@ -1573,6 +1573,36 @@ public class LojoController {
 			excelService.readChairData(file);
 			return "redirect:/home";
 		}
+	    @RequestMapping(value="/import/digireport")
+		public String importdig(HttpSession session, Model model, HttpServletRequest request) {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 String pagename = request.getRequestURL().toString();
+			 System.out.println("page: " + pagename);
+			 session.setAttribute("page", pagename);
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 User user = uservice.findUserbyId(user_id);
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
+			 model.addAttribute("committee", committee);
+			model.addAttribute("committees", committees);
+			model.addAttribute("user", user);
+			return "import3.jsp";
+		}
+		@PostMapping("/import/digireport")
+		public String readdigi(HttpSession session, MultipartFile file) throws EncryptedDocumentException, InvalidFormatException, IOException, ParseException {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			 System.out.println("here");
+			excelService.reademaildata(file);
+			return "redirect:/home";
+		}
 	   /* @GetMapping(value="/rundata/test")
 		public void rundataontest(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1625,4 +1655,29 @@ public class LojoController {
 			wservice.exportWord(emailgroups, response);
 			return "redirect:/home";
 		}
+		 @RequestMapping("/render/emails/{id}")
+		 public String renderEmail(@PathVariable("id") long id, Model model, HttpSession session, 
+				 @ModelAttribute("email")Emails email, HttpServletRequest request) {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 User user = uservice.findUserbyId(user_id);
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			 model.addAttribute("committee", committee);
+			String html = eservice.findEmailbyId(id).getContent();
+			 model.addAttribute("html", html);
+			 String pagename = request.getRequestURL().toString();
+			 System.out.println("page: " + pagename);
+			 session.setAttribute("page", pagename);
+			 if (committee == this.eservice.findEmailbyId(id).getCommittee()) {
+				 model.addAttribute("user", user);
+				 model.addAttribute("emails", this.eservice.findEmailbyId(id));
+			 }
+			 else {
+				 return "redirect:/committees/select";
+			 }
+			 return "/emails/renderemail.jsp";
+		 }
 }

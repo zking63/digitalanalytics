@@ -253,7 +253,7 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	List<EmailGroup> findByOrderByDesc(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emailgroups WHERE committees_id = :committee_id order by groupsum Desc LIMIT 10", nativeQuery = true)
+	@Query(value = "SELECT emailgroups.* FROM emails LEFT JOIN emailgroups ON emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id group by emailgroups.id order by emailgroups.groupsum Desc LIMIT 10", nativeQuery = true)
 	List<EmailGroup> top10byRevenue(Long committee_id);
 
 	//Sort emails and email groups together

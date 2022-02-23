@@ -3339,5 +3339,177 @@ public class ExcelUtil {
 	        }
 		}
   }
+	public void readdigitalreport(String excelPath)
+			throws EncryptedDocumentException, InvalidFormatException, IOException, ParseException {
+
+		List<String> list = new ArrayList<String>();
+
+		// Creating a Workbook from an Excel file (.xls or .xlsx)
+		Workbook workbook = WorkbookFactory.create(new File(excelPath));
+		System.out.println("workbook created");
+
+		int x = workbook.getNumberOfSheets();
+		
+		System.out.println("number of sheets " + x);
+
+		int noOfColumns = 0;
+		List<Cell> headers = new ArrayList<Cell>();
+		Cell header = null;
+		Cell value = null;
+		List<Cell> values = new ArrayList<Cell>();
+		
+		// Getting the Sheet at index zero
+		for (int i = 0; i < x; i++) {
+
+			Sheet sheet1 = workbook.getSheetAt(i);
+			
+			System.out.println("sheet1 " + sheet1);
+			Iterator<Row> rowIterator = sheet1.iterator();
+
+			noOfColumns = sheet1.getRow(i).getLastCellNum();
+			
+			System.out.println("number of columns " + noOfColumns);
+			
+
+			// Create a DataFormatter to format and get each cell's value as String
+			DataFormatter dataFormatter = new DataFormatter();
+			int NameColumn = 0;
+			int RevenueColumn = 0;
+			int GiftsColumn = 0;
+			int dateColumn = 0;
+			int goColumn = 0;
+			String Name = null;
+			String date = null;
+			String go = null;
+			Double Revenue = null;
+			Integer Gifts = null;
+			System.out.println("The sheet number is " + i + 1);
+			// 2. Or you can use a for-each loop to iterate over the rows and columns
+			System.out.println("\n\nIterating over Rows and Columns using for-each loop\n");
+	        while (rowIterator.hasNext()) {
+	            Row row = rowIterator.next();
+	             Iterator<Cell> cellIterator = row.cellIterator();
+	                while(cellIterator.hasNext()) {
+
+	                   
+	                	Cell cell = cellIterator.next();
+	                	//System.out.println("CELL: " + cell.getAddress());
+						if (row.getRowNum() == 0) {
+							//header = cell.getAddress();
+							header = cell;
+							//System.out.println("Header: " + header);
+							headers.add(header);
+							//System.out.println("Header column: " + header.getColumn());
+							
+							String headerValue = dataFormatter.formatCellValue(header).toUpperCase();
+							if (headerValue.contains("EMAIL GROUP")) {
+								NameColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("REVENUE")) {
+								RevenueColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("DONATIONS")) {
+								GiftsColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("DONATIONS")) {
+								GiftsColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("DONATIONS PER OPEN")) {
+								goColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							if (headerValue.contains("SEND DATE")) {
+								dateColumn = header.getColumnIndex();
+								//System.out.println(headerValue);
+							}
+							//System.out.println("Headers: " + headers);
+						}
+						else if (row.getRowNum() > 0){
+							//if (refcode == null) {
+								//if (cell.getColumnIndex() == headers.get(j).getColumnIndex()) {
+									value = cell;
+									if (cell.getColumnIndex() == dateColumn) {
+										//System.out.println("Values: " + values);
+										//userMap.put(headerValue, valValue);
+										//System.out.println("NameColumn TWO: " + NameColumn);
+										date = dataFormatter.formatCellValue(cell);
+										//System.out.println(nameValue);
+										if (cell.getColumnIndex() == noOfColumns - 1) {
+											System.out.println("Date: " + date + " " + Name + " - " + "$" + Revenue + ", " + Gifts + " gifts");
+											Name = null;
+											Revenue = null;
+											Gifts = null;
+											date = null;
+									
+										}
+									}
+									/*if (cell.getColumnIndex() == goColumn) {
+										//System.out.println("Values: " + values);
+										//userMap.put(headerValue, valValue);
+										//System.out.println("NameColumn TWO: " + NameColumn);
+										go = dataFormatter.formatCellValue(cell);
+										System.out.println("double found");
+										//go = Double.parseDouble(ngo);
+										//go = getRateFormatted(go);
+										//System.out.println(nameValue);
+										if (cell.getColumnIndex() == noOfColumns - 1) {
+											System.out.println("Date: " + date + " " + Name + " - " + "$" + Revenue + ", " + Gifts + " gifts" + " " + go + " g/o");
+											Name = null;
+											Revenue = null;
+											Gifts = null;
+											date = null;
+											go = null;
+										}
+									}*/
+									if (cell.getColumnIndex() == NameColumn) {
+										//System.out.println("Values: " + values);
+										//userMap.put(headerValue, valValue);
+										//System.out.println("NameColumn TWO: " + NameColumn);
+										Name = dataFormatter.formatCellValue(cell);
+										//System.out.println(nameValue);
+										if (cell.getColumnIndex() == noOfColumns - 1) {
+											System.out.println("Date: " + date + " " + Name + " - " + "$" + Revenue + ", " + Gifts + " gifts");
+											Name = null;
+											Revenue = null;
+											Gifts = null;
+											date = null;
+									
+										}
+									}
+									else if (cell.getColumnIndex() == RevenueColumn) {
+										String amount1 = dataFormatter.formatCellValue(cell);
+										Revenue = Double.parseDouble(amount1); 
+										//System.out.println(nameValue);
+										if (cell.getColumnIndex() == noOfColumns - 1) {
+											System.out.println("Date: " + date + " " + Name + " - " + "$" + Revenue + ", " + Gifts + " gifts");
+											Name = null;
+											Revenue = null;
+											Gifts = null;
+											date = null;
+									
+										}
+									}
+									if (cell.getColumnIndex() == GiftsColumn) {
+										String amount2 = dataFormatter.formatCellValue(cell);
+										Gifts = Integer.parseInt(amount2); 
+										if (cell.getColumnIndex() == noOfColumns - 1) {
+											System.out.println("Date: " + date + " " + Name + " - " + "$" + Revenue + ", " + Gifts + " gifts");
+											Name = null;
+											Revenue = null;
+											Gifts = null;
+											date = null;
+									
+										}
+									}
+		    	        }
+
+	            }
+	        }
+		}
+  }
 }
 	
