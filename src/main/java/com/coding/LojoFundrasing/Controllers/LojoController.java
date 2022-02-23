@@ -1250,6 +1250,7 @@ public class LojoController {
 			 String pagename = request.getRequestURL().toString();
 			 System.out.println("page: " + pagename);
 			 session.setAttribute("page", pagename);
+			 System.out.println("type: " + type);
 			 Committees committee = cservice.findbyId(committee_id);
 			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
 			 model.addAttribute("committee", committee);
@@ -1375,7 +1376,7 @@ public class LojoController {
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
 				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("range") Integer range, @RequestParam("type") String type, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam(value = "input", required = false) List<String> input, 
-				 HttpServletResponse response) throws IOException {
+				 HttpServletResponse response) throws IOException, InvalidFormatException {
 			Long user_id = (Long)session.getAttribute("user_id");
 	    	Long committee_id = (Long)session.getAttribute("committee_id");
 	    	User user = uservice.findUserbyId(user_id);
@@ -1386,6 +1387,7 @@ public class LojoController {
 	    	
 	    	//lists
 	    	List<Emails> emails = new ArrayList<Emails>();
+	    	 System.out.println("type: " + type);
 	    	
 			 if (field == 4) {
 				 String message = "Please select a category to export.";
@@ -1435,6 +1437,11 @@ public class LojoController {
 				 System.out.println("input " + input);
 				 excelService.exportTestToExcel(tests, input, response);
 			 }
+			 if (field == 6) {
+				 System.out.println("Report");
+				 List<EmailGroup> emailgroups = egservice.top10byRevenue(startdateD, enddateD, committee_id);
+				 wservice.exportWord(emailgroups, response);
+			 }
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
 			 model.addAttribute("range", range);
@@ -1450,7 +1457,7 @@ public class LojoController {
 	    public String exportToExcel(Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
 				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("type") Integer type, @RequestParam(value = "input", required = false) List<String> input, 
-				 HttpServletResponse response) throws IOException {
+				 HttpServletResponse response) throws IOException, InvalidFormatException {
 			Long user_id = (Long)session.getAttribute("user_id");
 	    	Long committee_id = (Long)session.getAttribute("committee_id");
 	    	System.out.println("Start: " + startdateD);
@@ -1501,6 +1508,11 @@ public class LojoController {
 				 System.out.println("Tests size " + tests.size());
 				 System.out.println("input " + input);
 				 excelService.exportTestToExcel(tests, input, response);
+			 }
+			 if (field == 6) {
+				 System.out.println("Report");
+				 List<EmailGroup> emailgroups = egservice.top10byRevenue(startdateD, enddateD, committee_id);
+				 wservice.exportWord(emailgroups, response);
 			 }
 			 String message = "What are you exporting?";
 			 model.addAttribute("message", message);
@@ -1641,7 +1653,7 @@ public class LojoController {
 			 }
 			return "redirect:/home";
 		}
-		@RequestMapping("/export/report")
+		/*@RequestMapping("/export/report")
 		public String createReport(HttpSession session, HttpServletRequest request,   
 				 HttpServletResponse response) throws IOException, InvalidFormatException {
 			System.out.println("create report");
@@ -1654,7 +1666,7 @@ public class LojoController {
 			 List<EmailGroup> emailgroups = egservice.top10byRevenue(committee_id);
 			wservice.exportWord(emailgroups, response);
 			return "redirect:/home";
-		}
+		}*/
 		 @RequestMapping("/render/emails/{id}")
 		 public String renderEmail(@PathVariable("id") long id, Model model, HttpSession session, 
 				 @ModelAttribute("email")Emails email, HttpServletRequest request) {

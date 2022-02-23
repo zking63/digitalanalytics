@@ -747,8 +747,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 		return egrepo.findByOrderByDesc(startdateE, enddateE, committee_id);
 	}
-	public List<EmailGroup> top10byRevenue(Long committee_id){
-		List<EmailGroup> emailgroups = egrepo.top10byRevenue(committee_id);
+	public List<EmailGroup> top10byRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
+	@DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id){
+		List<EmailGroup> emailgroups = egrepo.top10byRevenue(startdateE, enddateE, committee_id);
 		return emailgroups;
 	}
 	/*public void SortEmailsandEmailGroupsId(String startdate, String enddate, Long committee_id){

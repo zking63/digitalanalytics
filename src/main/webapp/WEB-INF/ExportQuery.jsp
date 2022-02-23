@@ -127,12 +127,14 @@
 		        <option name="field" value="2">Donations</option>
 		        <option name="field" value="3">Donors</option>
 		        <option name="field" value="5">Tests</option>
+		        <option name="field" value="6">Top 10 Report</option>
 			</c:when>
 			<c:when test="${ field == 1}">
 				<option name="field" value="1">Emails</option>
 		        <option name="field" value="2">Donations</option>
 		        <option name="field" value="3">Donors</option>
 		        <option name="field" value="5">Tests</option>
+		        <option name="field" value="6">Top 10 Report</option>
 		        <option name="field" value="0">Email groups</option>
 			</c:when>
 			<c:when test="${ field == 2}">
@@ -141,6 +143,7 @@
 				<option name="field" value="0">Email groups</option>
 		        <option name="field" value="3">Donors</option>
 		        <option name="field" value="5">Tests</option>
+		        <option name="field" value="6">Top 10 Report</option>
 			</c:when>
 			<c:when test="${ field == 3}">
 				<option name="field" value="3">Donors</option>
@@ -148,6 +151,7 @@
 				<option name="field" value="1">Emails</option>
 				<option name="field" value="2">Donations</option>
 				<option name="field" value="5">Tests</option>
+				<option name="field" value="6">Top 10 Report</option>
 			</c:when>
 			<c:when test="${ field == 5}">
 				<option name="field" value="5">Tests</option>
@@ -155,6 +159,15 @@
 				<option name="field" value="1">Emails</option>
 				<option name="field" value="2">Donations</option>
 				<option name="field" value="3">Donors</option>
+				<option name="field" value="6">Top 10 Report</option>
+			</c:when>
+			<c:when test="${ field == 6}">
+				<option name="field" value="6">Top 10 Report</option>
+				<option name="field" value="0">Email groups</option>
+				<option name="field" value="1">Emails</option>
+				<option name="field" value="2">Donations</option>
+				<option name="field" value="3">Donors</option>
+				<option name="field" value="5">Tests</option>
 			</c:when>
 			<c:otherwise>
 				<option name="field" value="4">Select</option>
@@ -163,6 +176,7 @@
 		        <option name="field" value="2">Donations</option>
 		        <option name="field" value="3">Donors</option>
 		        <option name="field" value="5">Tests</option>
+		        <option name="field" value="6">Top 10 Report</option>
 			</c:otherwise>
 		</c:choose>
 		</select>
@@ -491,8 +505,13 @@
 				<label for="input"> Recipients</label><br>
 				</div>
 			</c:when>
+				<c:when test="${ field == 6}">
+				    <input type="hidden" name="operator" value="${operator}">
+				    <input type="hidden" name="operand" value="${operand}">
+				    <input type="hidden" name="type" value="${type}">
+				 </c:when>
 		</c:choose>
-			<button>Download Excel</button>
+			<button>Download</button>
 	</form>
 							        </div>
 </div>
