@@ -308,16 +308,16 @@ public class EmailGroupService {
 		emailgroup.setGroupRecurringRevenue(groupRecurringRevenue);
 		updateEmailGroup(emailgroup);
 		
-		if (donationsforcalculation != 0 && donationsforcalculation != null) {
-			groupaverage = (double) totalrevenue/donationsforcalculation;
-		}
+		//if (donationsforcalculation != 0 && donationsforcalculation != null) {
+			groupaverage = (double) totalrevenue/groupdonationcount;
+		//}
 		//calculate email performance + fundraising stats
 		if (groupOpeners != null && groupOpeners != 0) {
 			groupclicksOpens = (double) groupClicks/groupOpeners;
-			groupdonationsOpens = (double) donationsforcalculation/groupOpeners;
+			groupdonationsOpens = (double) groupdonationcount/groupOpeners;
 		}
 		if (groupClicks != null && groupClicks != 0) {
-			groupdonationsClicks = (double) donationsforcalculation/groupClicks;
+			groupdonationsClicks = (double) groupdonationcount/groupClicks;
 		}
 		
 		//calculate email performance stats
@@ -750,6 +750,21 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	public List<EmailGroup> top10byRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
 	@DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id){
 		List<EmailGroup> emailgroups = egrepo.top10byRevenue(startdateE, enddateE, committee_id);
+		return emailgroups;
+	}
+	public List<EmailGroup> bottom10byRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
+	@DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id){
+		List<EmailGroup> emailgroups = egrepo.bottom10byRevenue(startdateE, enddateE, committee_id);
+		return emailgroups;
+	}
+	public List<EmailGroup> top10byGO(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
+	@DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id){
+		List<EmailGroup> emailgroups = egrepo.top10byGO(startdateE, enddateE, committee_id);
+		return emailgroups;
+	}
+	public List<EmailGroup> bottom10byGO(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
+	@DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id){
+		List<EmailGroup> emailgroups = egrepo.bottom10byGO(startdateE, enddateE, committee_id);
 		return emailgroups;
 	}
 	/*public void SortEmailsandEmailGroupsId(String startdate, String enddate, Long committee_id){

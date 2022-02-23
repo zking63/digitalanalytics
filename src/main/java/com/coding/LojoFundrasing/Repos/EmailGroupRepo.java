@@ -253,10 +253,20 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	List<EmailGroup> findByOrderByDesc(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	
-	@Query(value = "SELECT emailgroups.* FROM emails LEFT JOIN emailgroups ON emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) group by emailgroups.id order by emailgroups.groupsum Desc LIMIT 10", nativeQuery = true)
+	@Query(value = "SELECT emailgroups.* FROM emails LEFT JOIN emailgroups ON emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) and emailgroups.emailgroup_name not like '%Warmup%' group by emailgroups.id order by emailgroups.groupsum Desc LIMIT 10", nativeQuery = true)
 	List<EmailGroup> top10byRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
 			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 
+	@Query(value = "SELECT emailgroups.* FROM emails LEFT JOIN emailgroups ON emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) and emailgroups.emailgroup_name not like '%Warmup%' group by emailgroups.id order by emailgroups.groupsum Asc LIMIT 10", nativeQuery = true)
+	List<EmailGroup> bottom10byRevenue(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
+			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
+	
+	@Query(value = "SELECT emailgroups.* FROM emails LEFT JOIN emailgroups ON emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) and emailgroups.emailgroup_name not like '%Warmup%' group by emailgroups.id order by emailgroups.groupdonations_opens Desc LIMIT 10", nativeQuery = true)
+	List<EmailGroup> top10byGO(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
+			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
+	@Query(value = "SELECT emailgroups.* FROM emails LEFT JOIN emailgroups ON emailgroups.id = emails.emailgroup_id WHERE emailgroups.committees_id = :committee_id AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY) and emailgroups.emailgroup_name not like '%Warmup%' group by emailgroups.id order by emailgroups.groupdonations_opens Asc LIMIT 10", nativeQuery = true)
+	List<EmailGroup> bottom10byGO(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 
+			@Param("enddateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id);
 	//Sort emails and email groups together
 	//@Query(value = "select * from (SELECT emailgroups.id as id, \"group\" as source from emailgroups where emailgroups.committees_id = :committee_id union SELECT emails.id as id, \"email\" as source FROM emails where emails.emailgroup_id is NULL and emails.committees_id = :committee_id) as tableC", nativeQuery = true)
 	//Map<Long, String> SortEmailsandEmailGroupsId(Long committee_id);

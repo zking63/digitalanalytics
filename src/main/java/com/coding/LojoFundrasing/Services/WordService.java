@@ -28,7 +28,8 @@ public class WordService {
 	private WordUtil wordutil;
 
 	public String url = "D:\\word\\";
-    public void exportWord(List<EmailGroup> emailgroups, HttpServletResponse response) throws IOException, InvalidFormatException {
+    public void exportWord(List<EmailGroup> top10GO, List<EmailGroup> top10revenue, List<EmailGroup> bottom10GO, List<EmailGroup> bottom10revenue, 
+    		HttpServletResponse response) throws IOException, InvalidFormatException {
     	System.out.println("word service");
         response.setContentType("application/octet-stream");
         //MediaType.APPLICATION_JSON
@@ -40,7 +41,7 @@ public class WordService {
         response.setHeader(headerKey, headerValue);
         String word = "hello world";
         
-        wordutil.MonthlyTop10Bottom10(emailgroups, response);
+        wordutil.MonthlyTop10Bottom10(top10GO, top10revenue, bottom10GO, bottom10revenue, response);
     
     }
 }

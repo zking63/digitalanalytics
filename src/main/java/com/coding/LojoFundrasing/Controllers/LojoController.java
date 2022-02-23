@@ -1439,8 +1439,11 @@ public class LojoController {
 			 }
 			 if (field == 6) {
 				 System.out.println("Report");
-				 List<EmailGroup> emailgroups = egservice.top10byRevenue(startdateD, enddateD, committee_id);
-				 wservice.exportWord(emailgroups, response);
+				 List<EmailGroup> top10revenue = egservice.top10byRevenue(startdateD, enddateD, committee_id);
+				 List<EmailGroup> bottom10revenue = egservice.bottom10byRevenue(startdateD, enddateD, committee_id);
+				 List<EmailGroup> top10GO = egservice.top10byGO(startdateD, enddateD, committee_id);
+				 List<EmailGroup> bottom10GO= egservice.bottom10byGO(startdateD, enddateD, committee_id);
+				 wservice.exportWord(top10GO, top10revenue, bottom10GO, bottom10revenue, response);
 			 }
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
@@ -1511,8 +1514,11 @@ public class LojoController {
 			 }
 			 if (field == 6) {
 				 System.out.println("Report");
-				 List<EmailGroup> emailgroups = egservice.top10byRevenue(startdateD, enddateD, committee_id);
-				 wservice.exportWord(emailgroups, response);
+				 List<EmailGroup> top10revenue = egservice.top10byRevenue(startdateD, enddateD, committee_id);
+				 List<EmailGroup> bottom10revenue = egservice.bottom10byRevenue(startdateD, enddateD, committee_id);
+				 List<EmailGroup> top10GO = egservice.top10byGO(startdateD, enddateD, committee_id);
+				 List<EmailGroup> bottom10GO= egservice.bottom10byGO(startdateD, enddateD, committee_id);
+				 wservice.exportWord(top10GO, top10revenue, bottom10GO, bottom10revenue, response);
 			 }
 			 String message = "What are you exporting?";
 			 model.addAttribute("message", message);
