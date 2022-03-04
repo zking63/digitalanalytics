@@ -374,10 +374,10 @@ public class WordUtil {
 			emaildonationsrun.setText(String.valueOf(emailgroups.get(i).getGroupdonationcount()));
 			if (emailgroups.get(i).getTandemrevenue() != null && emailgroups.get(i).getTandemrevenue() != 0.0) {
 				emailrevenuerun.addBreak();
-				tandemrevenuerun.setText("Tandem: " + getRevenueFormatted(emailgroups.get(i).getGroupsum()));
+				tandemrevenuerun.setText("Tandem: " + getRevenueFormatted(emailgroups.get(i).getTandemrevenue()));
 				
 				emaildonationsrun.addBreak();
-				tandemdonationsrun.setText("Tandem: " + String.valueOf(emailgroups.get(i).getGroupdonationcount()));
+				tandemdonationsrun.setText("Tandem: " + String.valueOf(emailgroups.get(i).getTandemdonations()));
 			}
 			emaildonationsopensrun.setText(getRateFormatted(emailgroups.get(i).getGroupdonationsOpens()));
 			emailaveragerun.setText(getAverageFormatted(emailgroups.get(i).getGroupaverage()));

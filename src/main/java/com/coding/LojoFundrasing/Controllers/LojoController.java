@@ -52,6 +52,7 @@ import com.coding.LojoFundrasing.Models.Donation;
 import com.coding.LojoFundrasing.Models.Donor;
 import com.coding.LojoFundrasing.Models.EmailGroup;
 import com.coding.LojoFundrasing.Models.Emails;
+import com.coding.LojoFundrasing.Models.Link;
 import com.coding.LojoFundrasing.Models.User;
 import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Services.CommitteeService;
@@ -60,6 +61,7 @@ import com.coding.LojoFundrasing.Services.DonorService;
 import com.coding.LojoFundrasing.Services.EmailGroupService;
 import com.coding.LojoFundrasing.Services.EmailService;
 import com.coding.LojoFundrasing.Services.ExcelService;
+import com.coding.LojoFundrasing.Services.LinkService;
 import com.coding.LojoFundrasing.Services.TestService;
 import com.coding.LojoFundrasing.Services.UserService;
 import com.coding.LojoFundrasing.Services.WordService;
@@ -100,6 +102,9 @@ public class LojoController {
 	
 	@Autowired
 	private WordService wservice;
+	
+	@Autowired
+	private LinkService lservice;
 	
 	@RequestMapping("/")
 	public String index(@ModelAttribute("user")User user, Model model) {
@@ -1659,6 +1664,22 @@ public class LojoController {
 			 }
 			return "redirect:/home";
 		}
+		@RequestMapping("/rundata/links")
+		public String runLinkdata(HttpSession session) {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 Committees committee = cservice.findbyId(committee_id);
+			 
+			 List<Link> links = lservice.findall(committee_id);
+			 for (int i = 0; i < links.size(); i++) {
+				 Link link = links.get(i);
+				 lservice.CalculateLinkData(link, committee_id);
+			 }
+			return "redirect:/home";
+		}
 		/*@RequestMapping("/export/report")
 		public String createReport(HttpSession session, HttpServletRequest request,   
 				 HttpServletResponse response) throws IOException, InvalidFormatException {
@@ -1698,4 +1719,5 @@ public class LojoController {
 			 }
 			 return "/emails/renderemail.jsp";
 		 }
+		 
 }

@@ -33,11 +33,11 @@ public class WordService {
     	System.out.println("word service");
         response.setContentType("application/octet-stream");
         //MediaType.APPLICATION_JSON
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH");
         String currentDateTime = dateFormatter.format(new Date());
          
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=tests_" + currentDateTime + ".docx";
+        String headerValue = "attachment; filename=Top10Bottom10_" + currentDateTime + ".docx";
         response.setHeader(headerKey, headerValue);
         String word = "hello world";
         

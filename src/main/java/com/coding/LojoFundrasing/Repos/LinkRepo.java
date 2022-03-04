@@ -13,14 +13,15 @@ import com.coding.LojoFundrasing.Models.test;
 
 @Repository
 public interface LinkRepo extends CrudRepository<Link, Long>{
-	List<Link>findAll();
+	@Query(value = "SELECT * FROM links WHERE committees_id = :committee_id", nativeQuery = true)
+	List<Link>findAll(Long committee_id);
 	
 	//find link
 	@Query(value = "SELECT * FROM links WHERE committees_id = :committee_id AND linkname = :linkname", nativeQuery = true)
 	Link findLinkbyNameandCommittee(String linkname, Long committee_id);
 	
 	//number of emails using link
-	@Query(value = "SELECT COUNT(DISTINCT id) FROM emails WHERE committees_id = :committee_id AND link_id = :linkid", nativeQuery = true)
+	@Query(value = "SELECT COUNT(DISTINCT emailgroup_id) FROM emails WHERE committees_id = :committee_id AND link_id = :linkid", nativeQuery = true)
 	Long emailscount(Long linkid, Long committee_id);
 	
 	//clicks from email

@@ -41,13 +41,13 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
 	Integer countEmailsinEmailGroup(Long groupid, Long committee_id);
 	
 	//find full send emails with group 
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%full%' and email_name LIKE '%) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%full%' OR list like '%Full%') and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%donor%' and email_name LIKE '%) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%donor%' OR list like '%Donor%') and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithdonorremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND list like '%prospect%' and email_name LIKE '%) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%prospect%' OR list like '%Prospect%')  and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithprospectremainder(Long emailgroupid, Long committee_id);
 	
 	//find email group

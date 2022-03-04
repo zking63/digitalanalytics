@@ -31,6 +31,9 @@ public class LinkService {
 	public Link updateLink(Link link) {
 		return lrepo.save(link);
 	}
+	public List<Link> findall(Long committee_id) {
+		return lrepo.findAll(committee_id);
+	}
 	
 	public Link findAndSetUpLinkfromUpload(String emaillink, Committees committee) {
 		Link link = null;
