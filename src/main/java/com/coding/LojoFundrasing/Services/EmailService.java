@@ -70,9 +70,9 @@ public class EmailService {
 		return erepo.findAll();
 	}
 	
-	public void findEmailById(List<Long> id) {
+	public void findEmailByName(List<String> names) {
 		System.out.println("in service");
-		List<Emails> emails = erc.findEmailById(id);
+		List<Emails> emails = erc.findEmailByName(names);
 		System.out.println("Email size " + emails.size());
 		for (Emails email: emails) {
 			System.out.println("Email" + email.getEmailName());

@@ -1728,11 +1728,11 @@ public class LojoController {
 				 Long committee_id = (Long)session.getAttribute("committee_id");
 				 Committees committee = cservice.findbyId(committee_id);
 				 System.out.println("here");
-				 List<Long> ids = new ArrayList<Long>();
-				 ids.add((long) 2574);
-				 ids.add((long) 2661);
-				 System.out.println("ids " + ids.size());
-				 eservice.findEmailById(ids);
+				 List<String> names = new ArrayList<String>();
+				 names.add("Sotomayor");
+				 names.add("abortion");
+				 System.out.println("names size " + names.size());
+				 eservice.findEmailByName(names);
 				return "redirect:/home";
 			}	 
 }
