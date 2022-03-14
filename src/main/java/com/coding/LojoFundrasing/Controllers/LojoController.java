@@ -1719,5 +1719,20 @@ public class LojoController {
 			 }
 			 return "/emails/renderemail.jsp";
 		 }
-		 
+			@RequestMapping("/testquery")
+			public String testquery(HttpSession session, HttpServletRequest request) {
+				 Long user_id = (Long)session.getAttribute("user_id");
+				 if (user_id == null) {
+					 return "redirect:/";
+				 }
+				 Long committee_id = (Long)session.getAttribute("committee_id");
+				 Committees committee = cservice.findbyId(committee_id);
+				 System.out.println("here");
+				 List<Long> ids = new ArrayList<Long>();
+				 ids.add((long) 2574);
+				 ids.add((long) 2661);
+				 System.out.println("ids " + ids.size());
+				 eservice.findEmailById(ids);
+				return "redirect:/home";
+			}	 
 }

@@ -1,9 +1,11 @@
 package com.coding.LojoFundrasing.Repos;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,12 +16,14 @@ import org.springframework.stereotype.Repository;
 
 import com.coding.LojoFundrasing.Models.Emails;
 
-
+@Primary
 @Repository
-public interface EmailRepo extends CrudRepository<Emails, Long>, JpaRepository<Emails, Long>, JpaSpecificationExecutor<Emails>{
+public interface EmailRepo extends CrudRepository<Emails, Long>, EmailRepositoryCustom, JpaRepository<Emails, Long>, JpaSpecificationExecutor<Emails>{
 	
 	List<Emails> findAll();
 	Emails findByemailRefcode1(String emailRefcode1);
+	Optional<Emails> findById(Long id);
+
 	//find emails without group 
 	@Query(value = "SElECT * FROM emails where committees_id = :committee_id and emailgroup_id is NULL AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY)", nativeQuery = true)
 	List <Emails> findemailswithoutGroup(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 

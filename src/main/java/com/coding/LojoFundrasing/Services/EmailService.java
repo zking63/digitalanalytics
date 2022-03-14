@@ -31,6 +31,7 @@ import com.coding.LojoFundrasing.Models.User;
 //import com.coding.LojoFundrasing.Repos.DataRepo;
 import com.coding.LojoFundrasing.Repos.DonationRepo;
 import com.coding.LojoFundrasing.Repos.EmailRepo;
+import com.coding.LojoFundrasing.Repos.EmailRepositoryCustom;
 
 @Service
 public class EmailService {
@@ -54,6 +55,9 @@ public class EmailService {
 	@Autowired
 	private CommitteeService cservice;
 	
+	@Autowired
+	private EmailRepositoryCustom erc;
+	
 	public Emails createEmail(Emails email) {
 		return erepo.save(email);
 	}
@@ -64,6 +68,15 @@ public class EmailService {
 	
 	public List<Emails> allEmails(){
 		return erepo.findAll();
+	}
+	
+	public void findEmailById(List<Long> id) {
+		System.out.println("in service");
+		List<Emails> emails = erc.findEmailById(id);
+		System.out.println("Email size " + emails.size());
+		for (Emails email: emails) {
+			System.out.println("Email" + email.getEmailName());
+		}
 	}
 	
 	public Emails findEmailbyId(long id) {
