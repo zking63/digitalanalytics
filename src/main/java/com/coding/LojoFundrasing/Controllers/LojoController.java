@@ -1727,12 +1727,18 @@ public class LojoController {
 				 }
 				 Long committee_id = (Long)session.getAttribute("committee_id");
 				 Committees committee = cservice.findbyId(committee_id);
+				 String type = "Refcode 1";
+				 String operator = "Equals";
+				 String operand = "88, 09";
 				 System.out.println("here");
-				 List<String> names = new ArrayList<String>();
+				
+				 eservice.CustomEmailListForExport(committee_id, type, operator, operand);
+				 
+				 /*List<String> names = new ArrayList<String>();
 				 names.add("Sotomayor");
 				 names.add("abortion");
 				 System.out.println("names size " + names.size());
-				 eservice.findEmailByName(names);
+				 eservice.findEmailByName(names);*/
 				return "redirect:/home";
 			}	 
 }

@@ -79,6 +79,15 @@ public class EmailService {
 		}
 	}
 	
+	public void CustomEmailListForExport(Long committee_id, String type, String operator, String operand)  {
+		System.out.println("in service");
+		List<Emails> emails = erc.CustomEmailListForExport(committee_id, type, operator, operand);
+		System.out.println("Email size " + emails.size());
+		for (Emails email: emails) {
+			System.out.println("Email" + email.getEmailRefcode1());
+		}
+	}
+	
 	public Emails findEmailbyId(long id) {
 		return erepo.findById(id).orElse(null);
 	}
@@ -316,24 +325,24 @@ public class EmailService {
 		while (refcodesFiled == false) {
 			if (refcode2 == null || refcode2.isEmpty() || refcode2 == " ") {
 				if (refcode == null || refcode.isEmpty() || refcode == " ") {
-					//System.out.println("no refcodes");
+					System.out.println("no refcodes");
 					//make a find by name/date with null refcodes
 					refcodesFiled = true;
 				}
 				else {
-					//System.out.println("refcode2 == null && refcode != null");
+					System.out.println("refcode2 == null && refcode != null");
 					email = findEmailbyOneRefcodeandCommittee(refcode, committee);
 					refcodesFiled = true;
 				}
 			}
 			else {
 				if (refcode == null || refcode.isEmpty() || refcode == " ") {
-					//System.out.println("refcode2 != null && refcode == null");
+					System.out.println("refcode2 != null && refcode == null");
 					email = findEmailbyRefcodeTWOandCommittee(refcode2, committee);
 					refcodesFiled = true;
 				}
 				else {
-					//System.out.println("refcode2 != null && refcode != null");
+					System.out.println("refcode2 != null && refcode != null");
 					email = findEmailbyRefcodeandCommittee(refcode, refcode2, committee);
 					refcodesFiled = true;
 				}
