@@ -1740,9 +1740,9 @@ public class LojoController {
 				 }
 				 Long committee_id = (Long)session.getAttribute("committee_id");
 				 Committees committee = cservice.findbyId(committee_id);
-				 String type = "Title";
-				 String operator = "Contains";
-				 String operand = "Sotomayor";
+				 String type = "Refcode 1";
+				 String operator = "Equals";
+				 String operand = "a20435331";
 				 
 			    	List<String> operands = new ArrayList<String>();
 			    	if (operand.contains(", ")) {
@@ -1755,7 +1755,7 @@ public class LojoController {
 			    		operands.add(operand);
 			    	}
 			    	System.out.println("operands: " + operands);
-			    	String startdateD = "2022-02-12";
+			    	String startdateD = "2022-03-12";
 			    	String enddateD = "2022-03-13";
 				egservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
 				//eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);

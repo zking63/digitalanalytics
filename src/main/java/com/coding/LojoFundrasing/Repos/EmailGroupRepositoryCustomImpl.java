@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -54,13 +55,13 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 	        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 	        CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
 	        Root<EmailGroup> groups = query.from(EmailGroup.class);
-	        //Join<EmailGroup, Emails> emails = groups.join("Emails");
+	        Join<EmailGroup, Emails> emails = groups.join("Emails");
 	        
 	  
 	        Path<String> groupPath = groups.get("emailgroupName");
 	        if (type.contentEquals("Refcode 1")) {
 	        	System.out.println("emailRefcode1");
-	        	groupPath = groups.get("emailRefcode1");
+	        	groupPath = emails.get("emailRefcode1");
 	        }
 	        if (type.contentEquals("Refcode 2")) {
 	        	
@@ -144,8 +145,14 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 			}
 			predicates.add(committeePredicate);
 			predicates.add(datePredicate);
-	        query.select(groups).where(predicates.toArray(new Predicate[predicates.size()]));
-	        System.out.println("preds   " + predicates.size());
+	        //query.select(groups).where(predicates.toArray(new Predicate[predicates.size()]));
+			query
+			        .select(groups)
+			        .where(predicates.toArray(new Predicate[] {}))
+			        .orderBy(cb.asc(groups.get("id")))
+			        .distinct(true);
+			
+			System.out.println("preds   " + predicates.size());
 
 	       // List<Emails> emails = entityManager.createQuery(query)
 	           // .getResultList();
