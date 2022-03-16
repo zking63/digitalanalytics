@@ -140,7 +140,11 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 				//finalPredicates.add(equalPredicate);
 				finalP = cb.and(equalPredicate, committeePredicate, datePredicate);
 				//predicates = finalPredicates;
-		        query.select(groups).where(finalP);
+				query
+		        .select(groups)
+		        .where(finalP)
+		        .orderBy(cb.asc(groups.get("id")))
+		        .distinct(true);
 		        return entityManager.createQuery(query).getResultList();
 			}
 			predicates.add(committeePredicate);
