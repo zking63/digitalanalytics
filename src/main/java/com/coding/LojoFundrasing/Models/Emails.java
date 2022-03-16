@@ -21,6 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.criteria.Path;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

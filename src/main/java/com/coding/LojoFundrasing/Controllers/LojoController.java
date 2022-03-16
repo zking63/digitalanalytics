@@ -1381,9 +1381,10 @@ public class LojoController {
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
 				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("range") Integer range, @RequestParam("type") String type, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam(value = "input", required = false) List<String> input, 
-				 HttpServletResponse response) throws IOException, InvalidFormatException {
+				 HttpServletResponse response) throws IOException, InvalidFormatException, ParseException {
 			Long user_id = (Long)session.getAttribute("user_id");
 	    	Long committee_id = (Long)session.getAttribute("committee_id");
+	    	Committees committee = cservice.findbyId(committee_id);
 	    	User user = uservice.findUserbyId(user_id);
 	    	System.out.println("Start: " + startdateD);
 	    	System.out.println("End: " + enddateD);
@@ -1400,7 +1401,6 @@ public class LojoController {
 				 model.addAttribute("startdateD", startdateD);
 				 model.addAttribute("field", field);
 				 model.addAttribute("enddateD", enddateD);
-				 Committees committee = cservice.findbyId(committee_id);
 				 model.addAttribute("committee", committee);
 				 model.addAttribute("user", user);
 				 return "exporter.jsp";
@@ -1419,7 +1419,19 @@ public class LojoController {
 			 //emails
 			 if (field == 1) {
 				 System.out.println("Emails");
-				 emails = eservice.EmailListForExport(startdateD, enddateD, committee_id, type, operator, operand);
+			    	List<String> operands = new ArrayList<String>();
+			    	if (operand.contains(", ")) {
+			    		operands = Arrays.asList(operand.split(", ", -1));
+			    	}
+			    	else if (operand.contains(",")) {
+			    		operands = Arrays.asList(operand.split(",", -1));
+			    	}
+			    	else {
+			    		operands.add(operand);
+			    	}
+			    	System.out.println("operands: " + operands);
+				emails = eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+				 //emails = eservice.EmailListForExport(startdateD, enddateD, committee_id, type, operator, operand);
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
 			 if (field == 0) {
@@ -1497,6 +1509,7 @@ public class LojoController {
 			 }
 			 if (field == 1) {
 				 System.out.println("Emails");
+				 
 				 List<Emails> emails = eservice.EmailTest(startdateD, enddateD, committee_id);
 				 excelService.exportEmailsToExcel(emails, input, response);
 			 }
@@ -1720,7 +1733,7 @@ public class LojoController {
 			 return "/emails/renderemail.jsp";
 		 }
 			@RequestMapping("/testquery")
-			public String testquery(HttpSession session, HttpServletRequest request) {
+			public String testquery(HttpSession session, HttpServletRequest request) throws ParseException {
 				 Long user_id = (Long)session.getAttribute("user_id");
 				 if (user_id == null) {
 					 return "redirect:/";
@@ -1729,14 +1742,36 @@ public class LojoController {
 				 Committees committee = cservice.findbyId(committee_id);
 				 String type = "Refcode 1";
 				 String operator = "Equals";
-				 String operand = "88, 09";
-				 System.out.println("here");
-				
-				 eservice.CustomEmailListForExport(committee_id, type, operator, operand);
+				 String operand = "a20435331";
 				 
-				 /*List<String> names = new ArrayList<String>();
-				 names.add("Sotomayor");
-				 names.add("abortion");
+			    	List<String> operands = new ArrayList<String>();
+			    	if (operand.contains(", ")) {
+			    		operands = Arrays.asList(operand.split(", ", -1));
+			    	}
+			    	else if (operand.contains(",")) {
+			    		operands = Arrays.asList(operand.split(",", -1));
+			    	}
+			    	else {
+			    		operands.add(operand);
+			    	}
+			    	System.out.println("operands: " + operands);
+			    	String startdateD = "2022-03-13";
+			    	String enddateD = "2022-03-13";
+				eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+				// String name = "0201, 0202";
+				/*List<String> names = new ArrayList<String>();
+		    	if (name.contains(", ")) {
+		    		names = Arrays.asList(name.split(", ", -1));
+		    	}
+		    	else if (name.contains(",")) {
+		    		names = Arrays.asList(name.split(",", -1));
+		    	}
+		    	else {
+		    		names.add(name);
+		    	}
+				 //names.add("Sotomayor");
+				// names.add("abortion");
+				System.out.println("names: " + names);
 				 System.out.println("names size " + names.size());
 				 eservice.findEmailByName(names);*/
 				return "redirect:/home";

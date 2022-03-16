@@ -18,6 +18,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Service;
 
 import com.coding.LojoFundrasing.Models.Committees;
@@ -74,18 +75,20 @@ public class EmailService {
 		System.out.println("in service");
 		List<Emails> emails = erc.findEmailByName(names);
 		System.out.println("Email size " + emails.size());
-		for (Emails email: emails) {
+		/*for (Emails email: emails) {
 			System.out.println("Email" + email.getEmailName());
-		}
+		}*/
 	}
 	
-	public void CustomEmailListForExport(Long committee_id, String type, String operator, String operand)  {
+	public List<Emails> CustomEmailListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException  {
 		System.out.println("in service");
-		List<Emails> emails = erc.CustomEmailListForExport(committee_id, type, operator, operand);
-		System.out.println("Email size " + emails.size());
+		List<Emails> emails = erc.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+		System.out.println("Email size in custom " + emails.size());
 		for (Emails email: emails) {
-			System.out.println("Email" + email.getEmailRefcode1());
+			System.out.println("Email: " + email.getEmailRefcode1());
 		}
+		return emails;
 	}
 	
 	public Emails findEmailbyId(long id) {
