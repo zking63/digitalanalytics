@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Service;
 
 import com.coding.LojoFundrasing.Models.Committees;
@@ -20,6 +21,8 @@ import com.coding.LojoFundrasing.Models.Link;
 import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Repos.DonationRepo;
 import com.coding.LojoFundrasing.Repos.EmailGroupRepo;
+import com.coding.LojoFundrasing.Repos.EmailGroupRepositoryCustom;
+//import com.coding.LojoFundrasing.Repos.EmailGroupRepositoryCustom;
 import com.coding.LojoFundrasing.Repos.EmailRepo;
 
 @Service
@@ -37,6 +40,9 @@ public class EmailGroupService {
 	private CommitteeService cservice;
 	
 	@Autowired
+	private EmailGroupRepositoryCustom egrcrepo;
+	
+	@Autowired
 	private EmailRepo erepo;
 	
 	Date date = new Date();
@@ -48,6 +54,17 @@ public class EmailGroupService {
 	
 	public List<EmailGroup> findgroupbytestid(Long testid, Long committee_id) {
 		return egrepo.findgroupbytestid(testid, committee_id);
+	}
+	
+	public List<EmailGroup> CustomEmailListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException  {
+		System.out.println("in service");
+		List<EmailGroup> groups = egrcrepo.CustomEmailGroupListForExport(startdateD, enddateD, committee, type, operator, operands);
+		System.out.println("Group size in custom " + groups.size());
+		for (EmailGroup group: groups) {
+			System.out.println("Group: " + group.getEmailgroupName());
+		}
+		return groups;
 	}
 	
 	public EmailGroup createEmailGroup(EmailGroup emailgroup) {

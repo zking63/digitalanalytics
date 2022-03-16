@@ -2,6 +2,9 @@ package com.coding.LojoFundrasing.Repos;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,8 +14,9 @@ import org.springframework.stereotype.Repository;
 import com.coding.LojoFundrasing.Models.EmailGroup;
 import com.coding.LojoFundrasing.Models.Emails;
 
+@Primary
 @Repository
-public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>{
+public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>, EmailGroupRepositoryCustom, JpaRepository<EmailGroup, Long>, JpaSpecificationExecutor<EmailGroup>{
 	List<EmailGroup> findAll();
 	@Query(value = "SELECT * FROM emailgroups WHERE emailgroups.id = :id and committees_id = :committee_id", nativeQuery = true)
 	EmailGroup findbyIdandCommittee(Long id, Long committee_id);
