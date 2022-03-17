@@ -1742,7 +1742,10 @@ public class LojoController {
 				 Committees committee = cservice.findbyId(committee_id);
 				 String type = "Content";
 				 String operator = "Contains";
-				 String operand1 = "Biden & Joe";
+				 String operand = "Biden & President";
+				 //String operand = "Biden & (approv/grade/support) & President";
+				 egservice.GetOperands(operand);
+				 /*String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
 				 String operand3 = "fundraiser";
 				 
@@ -1760,14 +1763,11 @@ public class LojoController {
 				    	}
 				    	else {
 				    		operands1.add(operand1);
-				    	}*/
-			    	}
-			    	else if (operand1.contains("/")) {
-			    		operands1 = Arrays.asList(operand1.split("/", -1));
+				    	}
 			    	}
 			    	System.out.println("operands: " + operands1);
 			    	String startdateD = "2022-02-12";
-			    	String enddateD = "2022-03-13";
+			    	String enddateD = "2022-03-13";*/
 				//egservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
 				//eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
 				// String name = "0201, 0202";

@@ -56,6 +56,100 @@ public class EmailGroupService {
 		return egrepo.findgroupbytestid(testid, committee_id);
 	}
 	
+	public void GetOperands2(String operand) {
+		//String operand = "Biden & (approv/grade/support) & President";
+		//base case = all contain operands logged, 3 for now
+		//process: get first operand, bring it to predicate, come back and recall getoperands
+		List<String> operands = new ArrayList<String>();
+		int index = 0;
+		int finalindex = -1;
+		String separator = " ";
+		System.out.println("length " + operand.length());
+		String sub = operand;
+		if (operand.length() <= 0) {
+			System.out.println("DONE");
+			return;
+		}
+		
+		//if (operand.contains("&")) {
+			finalindex = sub.indexOf("&");
+			if (finalindex == 0 || finalindex == 1) {
+				index = finalindex +1;
+				finalindex = operand.length();
+				//operand = operand.substring(index, finalindex);
+				//GetOperands(operand);
+			}
+			System.out.println("finalindex " + finalindex);
+			sub = sub.substring(index, finalindex);
+			sub = sub.trim();
+			System.out.println("sub:" + sub + ".");
+			operands.add(sub);
+			operand = operand.substring(finalindex, operand.length());
+			System.out.println("operand:" + operand + ".");
+			GetOperands2(operand);
+		/*}
+		if (operand.contains("/")) {
+			
+		}
+		if (operand.contains("(")) {
+			
+		}
+		else {
+			operands.add(sub);
+			operand = operand.substring(finalindex, operand.length());
+		}*/
+	}
+	
+	public void GetOperands(String operand) {
+		//String operand = "Biden & (approv/grade/support) & President";
+		//base case = all contain operands logged, 3 for now
+		//process: get first operand, bring it to predicate, come back and recall getoperands
+		List<String> operands = new ArrayList<String>();
+		int index = 0;
+		int finalindex = -1;
+		String separator = " ";
+		System.out.println("length " + operand.length());
+		String sub = operand;
+		if (operand.length() <= 0) {
+			System.out.println("operands:" + operands);
+			System.out.println("DONE");
+			return;
+		}
+		
+		if (operand.contains("&")) {
+			finalindex = sub.indexOf("&");
+			if (finalindex == 0 || finalindex == 1) {
+				index = finalindex +1;
+				finalindex = operand.length();
+			}
+			System.out.println("finalindex " + finalindex);
+			sub = sub.substring(index, finalindex);
+			sub = sub.trim();
+			System.out.println("sub:" + sub + ".");
+			operands.add(sub);
+			System.out.println("operands in sub:" + operands);
+			operand = operand.substring(finalindex, operand.length());
+			System.out.println("operand:" + operand + ".");
+			GetOperands(operand);
+			return;
+		}
+		if (operand.contains("/")) {
+			
+		}
+		if (operand.contains("(")) {
+			
+		}
+		else {
+			operands.add(sub);
+			operand = operand.substring(finalindex, operand.length());
+		}
+		System.out.println("operands:" + operands);
+	}
+	
+	public void Operand(List<String> operands) {
+		System.out.println("operands: " + operands);
+	}
+	
 	public List<EmailGroup> CustomEmailListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException  {
 		System.out.println("in service");
