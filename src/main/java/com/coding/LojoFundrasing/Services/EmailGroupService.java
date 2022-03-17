@@ -61,9 +61,9 @@ public class EmailGroupService {
 		System.out.println("in service");
 		List<EmailGroup> groups = egrcrepo.CustomEmailGroupListForExport(startdateD, enddateD, committee, type, operator, operands);
 		System.out.println("Group size in custom " + groups.size());
-		for (EmailGroup group: groups) {
+		/*for (EmailGroup group: groups) {
 			System.out.println("Group: " + group.getEmailgroupName());
-		}
+		}*/
 		return groups;
 	}
 	

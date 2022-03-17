@@ -1740,24 +1740,35 @@ public class LojoController {
 				 }
 				 Long committee_id = (Long)session.getAttribute("committee_id");
 				 Committees committee = cservice.findbyId(committee_id);
-				 String type = "Refcode 1";
-				 String operator = "Equals";
-				 String operand = "a20435331";
+				 String type = "Content";
+				 String operator = "Contains";
+				 String operand1 = "Biden & Joe";
+				 String operand2 = "approve / grade / support";
+				 String operand3 = "fundraiser";
 				 
-			    	List<String> operands = new ArrayList<String>();
-			    	if (operand.contains(", ")) {
-			    		operands = Arrays.asList(operand.split(", ", -1));
+				 
+			    	List<String> operands1 = new ArrayList<String>();
+			    	List<String> operands2 = new ArrayList<String>();
+			    	List<String> operands3 = new ArrayList<String>();
+			    	if (operand1.contains("&")) {
+			    		operands1 = Arrays.asList(operand1.split("&", -1));
+				    	/*if (operand1.contains("& ")) {
+				    		operands1 = Arrays.asList(operand1.split("& ", -1));
+				    	}
+				    	else if (operand1.contains("&")) {
+				    		operands1 = Arrays.asList(operand1.split("&", -1));
+				    	}
+				    	else {
+				    		operands1.add(operand1);
+				    	}*/
 			    	}
-			    	else if (operand.contains(",")) {
-			    		operands = Arrays.asList(operand.split(",", -1));
+			    	else if (operand1.contains("/")) {
+			    		operands1 = Arrays.asList(operand1.split("/", -1));
 			    	}
-			    	else {
-			    		operands.add(operand);
-			    	}
-			    	System.out.println("operands: " + operands);
-			    	String startdateD = "2022-03-12";
+			    	System.out.println("operands: " + operands1);
+			    	String startdateD = "2022-02-12";
 			    	String enddateD = "2022-03-13";
-				egservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+				//egservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
 				//eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
 				// String name = "0201, 0202";
 				/*List<String> names = new ArrayList<String>();

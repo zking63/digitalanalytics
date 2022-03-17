@@ -86,7 +86,8 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 	        	
 	        }
 	        if (type.contentEquals("Content")) {
-	        	
+	        	System.out.println("content");
+	        	groupPath = emails.get("content");
 	        }
 	       // if (!search.contentEquals("search")) {
 	        	
