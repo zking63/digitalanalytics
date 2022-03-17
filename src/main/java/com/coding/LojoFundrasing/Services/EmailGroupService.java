@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -115,17 +116,72 @@ public class EmailGroupService {
 			System.out.println("DONE");
 			return;
 		}
-		
+		if (operand.contains("/")) {
+			if (operand.contains("(")) {
+				index = operand.indexOf("(") +1;
+				finalindex = operand.indexOf(")");
+				sub = operand.substring(index, finalindex);
+				System.out.println("SUB:" + sub);
+			}
+			/*if (sub.contains("&") 
+					|| sub.contains("(") || sub.contains(")")) {
+				System.out.println("sub flagged for containing stuff in &:" + sub + ".");
+				if (sub.contains("&") && (sub.indexOf("&") == 0 || sub.indexOf("&") == 1)) {
+					System.out.println("& index:" + sub.indexOf("&") + ".");
+				}
+				
+				
+				//GetOperands(sub);
+				
+				return;
+			}*/
+			operands = Arrays.asList(sub.split("/", -1));
+			for (String op: operands) {
+				op = op.trim();
+				System.out.println("op:" + op);
+			}
+			System.out.println("operands in /:" + operands);
+			System.out.println("operand after /:" + operand);
+			if (sub.length() == operand.length()) {
+				return;
+			}
+			finalindex = operand.indexOf(sub)-1;
+			System.out.println("sub len:" + sub.length() +".");
+			System.out.println("other sub len:" + operand.indexOf(sub) +".");
+			index = sub.length()+(operand.indexOf(sub));
+			System.out.println("index:" + index +".");
+			String x = operand.substring(0, finalindex);
+			System.out.println("x:" + x +".");
+			String y = operand.substring(index+1, operand.length());
+	
+			System.out.println("y:" + y +".");
+			
+			operand = x.concat(y);
+			System.out.println("operand after concat:" + operand);
+			//operand = operand.substring(finalindex, operand.length());
+			GetOperands(operand);
+			return;
+		}
 		if (operand.contains("&")) {
+			System.out.println("operand has &: " + sub + ".");
 			finalindex = sub.indexOf("&");
+			System.out.println("finalindex " + finalindex);
 			if (finalindex == 0 || finalindex == 1) {
 				index = finalindex +1;
 				finalindex = operand.length();
 			}
 			System.out.println("finalindex " + finalindex);
+			System.out.println("index " + index);
 			sub = sub.substring(index, finalindex);
 			sub = sub.trim();
 			System.out.println("sub:" + sub + ".");
+			if (sub.contains("&") || sub.contains("/") 
+					|| sub.contains("(") || sub.contains(")")) {
+				System.out.println("sub flagged for containing stuff in &:" + sub + ".");
+				GetOperands(sub);
+				
+				return;
+			}
 			operands.add(sub);
 			System.out.println("operands in sub:" + operands);
 			operand = operand.substring(finalindex, operand.length());
@@ -133,17 +189,12 @@ public class EmailGroupService {
 			GetOperands(operand);
 			return;
 		}
-		if (operand.contains("/")) {
-			
-		}
-		if (operand.contains("(")) {
-			
-		}
-		else {
+		/*else {
 			operands.add(sub);
-			operand = operand.substring(finalindex, operand.length());
-		}
-		System.out.println("operands:" + operands);
+			operand = operand.substring(finalindex, sub.length()-1);
+			GetOperands(operand);
+			return;
+		}*/
 	}
 	
 	public void Operand(List<String> operands) {
