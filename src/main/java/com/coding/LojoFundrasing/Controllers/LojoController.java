@@ -1743,7 +1743,7 @@ public class LojoController {
 				 String type = "Content";
 				 String operator = "Contains";
 				 //String operand = "Biden & President";
-				 String operand = "(Biden/President) & (approv/grade/support)";
+				 String operand = "Biden & President & (approv/grade/support)";
 				 egservice.GetOperands(operand);
 				 /*String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
