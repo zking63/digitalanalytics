@@ -17,6 +17,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -1743,8 +1744,11 @@ public class LojoController {
 				 String type = "Content";
 				 String operator = "Contains";
 				 //String operand = "Biden & President";
-				 String operand = "Biden & President & (approv/grade/support)";
-				 egservice.GetOperands(operand);
+				 String operand = "Biden & (approv/grade/support)";
+			    	String startdateD = "2022-02-12";
+			    	String enddateD = "2022-03-13";
+			    	List<Predicate> predicates = new ArrayList<>();
+				 egservice.GetOperands(predicates, startdateD, enddateD, committee, type, operator,operand);
 				 /*String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
 				 String operand3 = "fundraiser";

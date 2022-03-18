@@ -16,6 +16,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -25,10 +26,23 @@ import com.coding.LojoFundrasing.Models.EmailGroup;
 import com.coding.LojoFundrasing.Models.Emails;
 
 public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCustom {
-    @PersistenceContext
+	@PersistenceContext
     private EntityManager entityManager;
 
     @Override
+    public List<EmailGroup> PredPlugin(List<Predicate>predicates){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
+        Root<EmailGroup> groups = query.from(EmailGroup.class);
+        
+		query
+        .select(groups)
+        .where(predicates.toArray(new Predicate[] {}))
+        .orderBy(cb.asc(groups.get("id")))
+        .distinct(true);
+		
+		return entityManager.createQuery(query).getResultList();
+    }
 	public List<EmailGroup> CustomEmailGroupListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee,
 			String type, String operator, List<String> operands) throws ParseException {
@@ -114,6 +128,7 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 				if (operator.contentEquals("Equals")) {
 					System.out.println("operator " + operator);
 					predicates.add(cb.equal(groupPath, finaloperand));
+					
 				}
 				else if (operator.contentEquals("Contains")) {
 					System.out.println("operator contain " + operator);
