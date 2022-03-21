@@ -34,7 +34,9 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
         Root<EmailGroup> groups = query.from(EmailGroup.class);
+        groups.alias("groups");
         Join<EmailGroup, Emails> emails = groups.join("Emails");
+        emails.alias("emails");
         
 		query
         .select(groups)
@@ -44,7 +46,7 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 		
 		return entityManager.createQuery(query).getResultList();
     }
-	public List<EmailGroup> CustomEmailGroupListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+	/*public List<EmailGroup> CustomEmailGroupListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee,
 			String type, String operator, List<String> operands) throws ParseException {
 	    
@@ -79,26 +81,32 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 	        	groupPath = emails.get("emailRefcode1");
 	        }
 	        if (type.contentEquals("Refcode 2")) {
-	        	
+	        	System.out.println("emailRefcode2");
+	        	groupPath = emails.get("emailRefcode2");
 	        }
 	        if (type.contentEquals("Title")) {
 	        	System.out.println("emailgroupName");
 	        	groupPath = groups.get("emailgroupName");
 	        }
 	        if (type.contentEquals("Category")) {
-	        	
+	        	System.out.println("emailCategory");
+	        	groupPath = emails.get("emailCategory");
 	        }
 	        if (type.contentEquals("Subject")) {
-	        	
+	        	System.out.println("subjectLine");
+	        	groupPath = emails.get("subjectLine");
 	        }
 	        if (type.contentEquals("Sender")) {
-	        	
+	        	System.out.println("sender");
+	        	groupPath = emails.get("sender");
 	        }
 	        if (type.contentEquals("Testing")) {
-	        	
+	        	System.out.println("testing");
+	        	groupPath = emails.get("testing");
 	        }
 	        if (type.contentEquals("Link")) {
-	        	
+	        	System.out.println("link");
+	        	groupPath = emails.get("link");
 	        }
 	        if (type.contentEquals("Content")) {
 	        	System.out.println("content");
@@ -122,7 +130,7 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 	        for (int i = 0; i < operands.size(); i++) {
 	        	/*if (i > 0) {
 	        		finaloperand = finaloperand + " && " + "%" + operands.get(i) + "%";
-	        	}*/
+	        	}
 	        	String finaloperand = operands.get(i);
 	        	System.out.println("finaloperand  " + finaloperand);
 	        	//System.out.println("emailPath  " + emailPath);
@@ -179,5 +187,5 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 	           // .getResultList();
 
 	        return entityManager.createQuery(query).getResultList();
-	}
+	}*/
 }

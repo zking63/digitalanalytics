@@ -14,8 +14,8 @@ import com.coding.LojoFundrasing.Models.EmailGroup;
 
 public interface EmailGroupRepositoryCustom {
 
-	List<EmailGroup> CustomEmailGroupListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException;
+	//List<EmailGroup> CustomEmailGroupListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+		//	 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException;
 
 	List<EmailGroup> PredPlugin(List<Predicate> predicates);
 }

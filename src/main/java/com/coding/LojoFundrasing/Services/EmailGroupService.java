@@ -69,17 +69,6 @@ public class EmailGroupService {
 		return egrepo.findgroupbytestid(testid, committee_id);
 	}
 	
-	public List<EmailGroup> CustomEmailListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException  {
-		System.out.println("in service");
-		List<EmailGroup> groups = egrcrepo.CustomEmailGroupListForExport(startdateD, enddateD, committee, type, operator, operands);
-		System.out.println("Group size in custom " + groups.size());
-		/*for (EmailGroup group: groups) {
-			System.out.println("Group: " + group.getEmailgroupName());
-		}*/
-		return groups;
-	}
-	
 	public EmailGroup createEmailGroup(EmailGroup emailgroup) {
 		emailgroup.setCreatedAt(date);
 		return egrepo.save(emailgroup);
@@ -647,19 +636,45 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		int index = 0;
 		int finalindex = -1;
 		String sub = operand;
-		Boolean readyforExport = false;
-		if (operand.length() <= 0 || operand.isEmpty() || operand == null) {
+
+		if (operand.length() <= 0 || operand.isEmpty() || operand == null 
+				|| operand.contentEquals("()") || operand.contentEquals("(  )")) {
 			System.out.println("DONE");
-			readyforExport = true;
+			finalindex = operand.length();
+			if (operand.contains("(")) {
+				index = operand.indexOf("(");
+			}
+			if (operand.contains(")")) {
+				finalindex = operand.indexOf(")");
+			}
+			sub = operand.substring(index, finalindex);
+			System.out.println("sub" + sub);
+			operand = null;
 			PredicateCreator(predicates, startdate, enddate, committee, type, operator, operands, operand);
 			return;
 		}
-		if (operand != null && operand.contains("/") || operand.contains("&")) {
-			if (operand.contains("/")) {
+		if (operand != null && (operand.contains("'/") || operand.contains("' /") || 
+				operand.contains("'&") || operand.contains("' &"))) {
+			if (operand.contains("'/") || operand.contains("' /")) {
 				System.out.println("operand contains /: ");
-				if (operand.contains("(")) {
-					index = operand.indexOf("(") +1;
-					finalindex = operand.indexOf(")");
+				if (operand.contains("('")) {
+					index = operand.indexOf("('") +2;
+					if (operand.contains("')")) {
+						finalindex = operand.indexOf("')");
+					}
+					if (operand.contains("' )")) {
+						finalindex = operand.indexOf("' )");
+					}
+					sub = operand.substring(index, finalindex);
+				}
+				else if (operand.contains("( '")) {
+					index = operand.indexOf("( '") +3;
+					if (operand.contains("')")) {
+						finalindex = operand.indexOf("')");
+					}
+					if (operand.contains("' )")) {
+						finalindex = operand.indexOf("' )");
+					}
 					sub = operand.substring(index, finalindex);
 				}
 				/*if (sub.contains("&") 
@@ -675,7 +690,12 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					return;
 				}*/
 				System.out.println("out of if ");
-				operands = Arrays.asList(sub.split("/", -1));
+				if (operand.contains("' / '")) {
+					operands = Arrays.asList(sub.split("' / '", -1));
+				}
+				if (operand.contains("'/'")) {
+					operands = Arrays.asList(sub.split("'/'", -1));
+				}
 				for (String op: operands) {
 					op = op.trim();
 				}
@@ -696,17 +716,17 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				//GetOperands(startdate, enddate, committee, type, operator, operand);
 				return;
 			}
-			else if (operand.contains("&")) {
-				finalindex = sub.indexOf("&");
+			else if (operand.contains("!&")) {
+				finalindex = sub.indexOf("!&");
 				if (finalindex == 0 || finalindex == 1) {
-					index = finalindex +1;
+					index = finalindex +2;
 					finalindex = operand.length();
 				}
 				sub = sub.substring(index, finalindex);
 				System.out.println("sub1" +sub);
 				sub = sub.trim();
-				if (sub.contains("&") || sub.contains("/") 
-						|| sub.contains("(") || sub.contains(")")) {
+				if (sub.contains("!&") || sub.contains("!/") 
+						|| sub.contains("!(") || sub.contains("!)")) {
 					System.out.println("sub" +sub);
 					operand = sub;
 					System.out.println("operand" +operand +".");
@@ -722,14 +742,13 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			}
 		}
 		else {
-			if (operand.contains(",")) {
+			if (operand.contains("!,")) {
 				operands = Arrays.asList(operand.split(",", -1));
 				for (String op:operands) {
 					op = op.trim();
 				}
 			}
 			else {
-				operand = operand.trim();
 				operands.add(operand);
 			}
 			operand = null;
@@ -774,42 +793,37 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	        	groupPath = emails.get("emailRefcode1");
 	        }
 	        if (type.contentEquals("Refcode 2")) {
-	        	
+	        	System.out.println("emailRefcode2");
+	        	groupPath = emails.get("emailRefcode2");
 	        }
 	        if (type.contentEquals("Title")) {
 	        	System.out.println("emailgroupName");
 	        	groupPath = groups.get("emailgroupName");
 	        }
 	        if (type.contentEquals("Category")) {
-	        	
+	        	System.out.println("emailCategory");
+	        	groupPath = emails.get("emailCategory");
 	        }
 	        if (type.contentEquals("Subject")) {
-	        	
+	        	System.out.println("subjectLine");
+	        	groupPath = emails.get("subjectLine");
 	        }
 	        if (type.contentEquals("Sender")) {
-	        	
+	        	System.out.println("sender");
+	        	groupPath = emails.get("sender");
 	        }
 	        if (type.contentEquals("Testing")) {
-	        	
+	        	System.out.println("testing");
+	        	groupPath = emails.get("testing");
 	        }
 	        if (type.contentEquals("Link")) {
-	        	
+	        	System.out.println("link");
+	        	groupPath = emails.get("link");
 	        }
 	        if (type.contentEquals("Content")) {
 	        	System.out.println("content");
-	        	//if (predicates.size() == 0) {
-	        		groupPath = emails.get("content");
-	        	/*}
-	        	else {
-	        		groupPath = predicates.get(0).getAlias();
-	        	}*/
-	        	
+	        	groupPath = emails.get("content");
 	        }
-	       // if (!search.contentEquals("search")) {
-	        	
-	       // }
-	       // else {
-	       // }
 	       
 	        List<Predicate> finalPredicates = new ArrayList<>();
 	        List<Predicate> temppreds = new ArrayList<>();
@@ -818,16 +832,16 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			// String finaloperand = "%" + operands.get(0) + "%";
 	        for (int i = 0; i < operands.size(); i++) {
 	        	String finaloperand = operands.get(i);
-	        	Predicate temppredicate = cb.like(groupPath, finaloperand);
+	        	Predicate temppredicate = cb.equal(groupPath, finaloperand);
 	        	/*if (i > 0) {
 	        		finaloperand = finaloperand + " && " + "%" + operands.get(i) + "%";
 	        	}*/
-	        	System.out.println("finaloperand  " + finaloperand);
+	        	System.out.println("finaloperand" + finaloperand +".");
 	        	System.out.println("operands size in pred  " + operands.size());
 	        	//System.out.println("emailPath  " + emailPath);
 				if (operator.contentEquals("Equals")) {
 					System.out.println("operator " + operator);
-					predicates.add(cb.equal(groupPath, finaloperand));
+					temppredicate = cb.equal(groupPath, finaloperand);
 					System.out.println("preds   " + predicates.size());
 					if (operands.size() > 1) {
 						temppreds.add(temppredicate);
@@ -844,6 +858,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					}
 					else {
 						predicates.add(temppredicate);
+						System.out.println("preds after else  " + predicates.size());
 					}
 				}
 				else if (operator.contentEquals("Contains")) {
@@ -896,21 +911,31 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				predicates.add(committeePredicate);
 				predicates.add(datePredicate);
 				System.out.println("preds after com/date " + predicates.size());
-				query
+				List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+				System.out.println("Emailgroup size in custom " + emailgroups.size());
+				/*for (EmailGroup group: emailgroups) {
+					System.out.println("Group: " + group.getEmailgroupName());
+				}
+				/*query
 		        .select(groups)
 		        .where(predicates.toArray(new Predicate[] {}))
 		        .orderBy(cb.asc(groups.get("id")))
 		        .distinct(true);
 				
 				List<EmailGroup> emailgroups = entityManager.createQuery(query).getResultList();
-				System.out.println("Emailgroup size in custom " + emailgroups.size());
+				System.out.println("Emailgroup size in custom " + emailgroups.size());*/
 			}
 		}
 		else {
 			predicates.add(committeePredicate);
 			predicates.add(datePredicate);
 			System.out.println("********FINAL PREDS:   " + predicates.size());
-			query
+			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+			System.out.println("Emailgroup size in custom " + emailgroups.size());
+			/*for (EmailGroup group: emailgroups) {
+				System.out.println("Group: " + group.getEmailgroupName());
+			}
+			/*query
 	        .select(groups)
 	        .where(predicates.toArray(new Predicate[] {}))
 	        .orderBy(cb.asc(groups.get("id")))
@@ -926,7 +951,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 	}
 	
-	public void CustomEmaiGroupListForExport(String startdate, String enddate, 
+	/*public void CustomEmaiGroupListForExport(String startdate, String enddate, 
 			Committees committee, String type, String operator, List<String> operands) throws ParseException {
 		System.out.println("BREAK");
 		if (operands.size() > 0 && !operands.get(0).isEmpty()) {
@@ -936,7 +961,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				System.out.println("Group: " + group.getEmailgroupName());
 			}
 		}
-	}
+	}*/
 	public List<EmailGroup> EmailGroupExporter(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
 	@DateTimeFormat(pattern ="yyyy-MM-dd") String enddateE, Long committee_id, String type, String operator, String operand){
 		if (type.contentEquals("Refcode 1")) {
