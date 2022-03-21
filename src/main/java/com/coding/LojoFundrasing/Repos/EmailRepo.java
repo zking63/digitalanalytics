@@ -62,7 +62,7 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, EmailRepository
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%full%' or list like '%Full%')and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
 	
-	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid and email_name LIKE '%) remainder%'", nativeQuery = true)
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid and email_name LIKE '%) remainder%' LIMIT 1", nativeQuery = true)
 	Emails emailwithremainder(Long emailgroupid, Long committee_id);
 	
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%donor%' or list like '%Donor%') and email_name LIKE '%) remainder%'", nativeQuery = true)

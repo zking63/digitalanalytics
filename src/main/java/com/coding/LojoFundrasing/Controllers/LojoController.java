@@ -1739,17 +1739,17 @@ public class LojoController {
 				 if (user_id == null) {
 					 return "redirect:/";
 				 }
-				 List<String> operandsList = new ArrayList<>();
 				 Long committee_id = (Long)session.getAttribute("committee_id");
 				 Committees committee = cservice.findbyId(committee_id);
 				 String type = "Content";
 				 String operator = "Contains";
 				 //String operand = "Biden & President";
-				 String operand = "( 'approv' / 'suppport' / 'grade' )";
+				 String operand = "('approv'/'support'/'grade') + 'President' + 'Biden'";
 			    	String startdateD = "2022-02-12";
 			    	String enddateD = "2022-03-13";
 			    	List<Predicate> predicates = new ArrayList<>();
-				 egservice.GetOperands(predicates, startdateD, enddateD, committee, type, operator,operand);
+			    	List<String> operandsList = new ArrayList<>();
+				 egservice.GetOperands(operandsList, predicates, startdateD, enddateD, committee, type, operator,operand);
 				 /*String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
 				 String operand3 = "fundraiser";
