@@ -698,11 +698,18 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					finalindex = operand.length();
 				}
 				sub = sub.substring(index, finalindex);
+				System.out.println("sub1" +sub);
 				sub = sub.trim();
 				if (sub.contains("&") || sub.contains("/") 
 						|| sub.contains("(") || sub.contains(")")) {
 					System.out.println("sub" +sub);
-					operand = operand.substring(finalindex, operand.length());
+					finalindex = sub.indexOf("&");
+					index = 0;
+					if (finalindex == 0 || finalindex == 1) {
+						index = finalindex +1;
+						finalindex = operand.length();
+					}
+					operand = sub.substring(index, finalindex);
 					System.out.println("operand" +operand +".");
 					GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
 					return;
