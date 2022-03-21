@@ -244,25 +244,38 @@ public class EmailGroupService {
 				}
 			}
 			else {
-				if (erepo.emailwithprospectremainder(emailGroupId, committee_id) != null) {
-					Emails email = erepo.emailwithprospectremainder(emailGroupId, committee_id);
-					if (email.getVariant() != null) {
-						fullsendvariantprospects = email.getVariant();
+				if (erepo.emailwithprospectremainder(emailGroupId, committee_id) != null || 
+						erepo.emailwithdonorremainder(emailGroupId, committee_id) != null) {
+					if (erepo.emailwithprospectremainder(emailGroupId, committee_id) != null) {
+						Emails email = erepo.emailwithprospectremainder(emailGroupId, committee_id);
+						if (email.getVariant() != null) {
+							fullsendvariantprospects = email.getVariant();
+						}
+					}
+					if (erepo.emailwithdonorremainder(emailGroupId, committee_id) != null) {
+						Emails email = erepo.emailwithdonorremainder(emailGroupId, committee_id);
+						if (email.getVariant() != null) {
+							fullsendvariantdonors = email.getVariant();
+							category = email.getEmailCategory();
+						}
+						if (email.getLink() != null) {
+							link = email.getLink();
+						}
+					}
+					if (fullsendvariantprospects != null && fullsendvariantdonors != null) {
+						if (fullsendvariantprospects.contentEquals(fullsendvariantdonors)) {
+							fullsendvariant = fullsendvariantprospects;
+						}
 					}
 				}
-				if (erepo.emailwithdonorremainder(emailGroupId, committee_id) != null) {
-					Emails email = erepo.emailwithdonorremainder(emailGroupId, committee_id);
+				else if (erepo.emailwithremainder(emailGroupId, committee_id) != null){
+					Emails email = erepo.emailwithfulllistremainder(emailGroupId, committee_id);
 					if (email.getVariant() != null) {
-						fullsendvariantdonors = email.getVariant();
+						fullsendvariant = email.getVariant();
 						category = email.getEmailCategory();
 					}
 					if (email.getLink() != null) {
 						link = email.getLink();
-					}
-				}
-				if (fullsendvariantprospects != null && fullsendvariantdonors != null) {
-					if (fullsendvariantprospects.contentEquals(fullsendvariantdonors)) {
-						fullsendvariant = fullsendvariantprospects;
 					}
 				}
 			}
@@ -713,8 +726,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				operand = operand.trim();
 				operands.add(operand);
 			}
+			operand = null;
 			PredicateCreator(predicates, startdate, enddate, committee, type, operator, operands, operand);
-			System.out.println("operands: " +operands);
+			//System.out.println("operands: " +operands);
 			//GetOperands(startdate, enddate, committee, type, operator, operand);
 			return;
 		}
@@ -724,11 +738,14 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException {
 		System.out.println("pred create");
 		System.out.println("operand: " +operand);
+		System.out.println("operands size in pred first " + operands.size());
 		
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
         Root<EmailGroup> groups = query.from(EmailGroup.class);
+        groups.alias("groups");
         Join<EmailGroup, Emails> emails = groups.join("Emails");
+        emails.alias("emails");
 		
 		//date/committee preds
     	enddateD = enddateD + " 23:59:59";
@@ -736,8 +753,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(enddateD);
         Predicate committeePredicate = cb.equal(groups.get("committee"), committee);
         Predicate datePredicate =  cb.between(groups.<Date>get("date"), start, end);
-		
-		if (operands.size() > 0 && !operands.get(0).isEmpty()) {
+        
+		if (operands.size() > 0 && !operands.get(0).isEmpty() 
+				&& !operands.get(0).contentEquals(" ")) {
 	    	System.out.println("type:   " + type);
 	    	System.out.println("operator:   " + operator);
 	    	
@@ -773,7 +791,13 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	        }
 	        if (type.contentEquals("Content")) {
 	        	System.out.println("content");
-	        	groupPath = emails.get("content");
+	        	//if (predicates.size() == 0) {
+	        		groupPath = emails.get("content");
+	        	/*}
+	        	else {
+	        		groupPath = predicates.get(0).getAlias();
+	        	}*/
+	        	
 	        }
 	       // if (!search.contentEquals("search")) {
 	        	
@@ -782,44 +806,71 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	       // }
 	       
 	        List<Predicate> finalPredicates = new ArrayList<>();
+	        List<Predicate> temppreds = new ArrayList<>();
 	        Predicate finalP = cb.equal(groups.get("committee"), committee);
 			Predicate orPredicate = cb.or(predicates.toArray(new Predicate[predicates.size()]));
-	      // String finaloperand = "%" + operands.get(0) + "%";
+			// String finaloperand = "%" + operands.get(0) + "%";
 	        for (int i = 0; i < operands.size(); i++) {
+	        	String finaloperand = operands.get(i);
+	        	Predicate temppredicate = cb.like(groupPath, finaloperand);
 	        	/*if (i > 0) {
 	        		finaloperand = finaloperand + " && " + "%" + operands.get(i) + "%";
 	        	}*/
-	        	String finaloperand = operands.get(i);
 	        	System.out.println("finaloperand  " + finaloperand);
+	        	System.out.println("operands size in pred  " + operands.size());
 	        	//System.out.println("emailPath  " + emailPath);
 				if (operator.contentEquals("Equals")) {
 					System.out.println("operator " + operator);
 					predicates.add(cb.equal(groupPath, finaloperand));
-					GetOperands(predicates, startdateD, enddateD, committee, type, operator, operand);
-					
+					System.out.println("preds   " + predicates.size());
+					if (operands.size() > 1) {
+						temppreds.add(temppredicate);
+						System.out.println("CONTAINS OR");
+						if (i == operands.size() -1) {
+								orPredicate
+								  = cb.or(temppreds.toArray(new Predicate[temppreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+								finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
+					}
+					else {
+						predicates.add(temppredicate);
+					}
 				}
 				else if (operator.contentEquals("Contains")) {
 					System.out.println("operator contain " + operator);
 					finaloperand = "%" + operands.get(i) + "%";
+					temppredicate = cb.like(groupPath, finaloperand);
+					System.out.println("temp pred alias " + temppredicate.getAlias());
+					System.out.println("temp pred expression " + temppredicate.getExpressions());
+					System.out.println("final op " + finaloperand);
 					if (operands.size() > 1) {
-							orPredicate
-							  = cb.or(predicates.toArray(new Predicate[predicates.size()]));
-							
-							//finalPredicates.add(equalPredicate);
-							finalP = cb.and(orPredicate);
-							//predicates = finalPredicates;
-							predicates.add(finalP);
+						temppreds.add(temppredicate);
+						System.out.println("CONTAINS OR");
+						if (i == operands.size() -1) {
+							System.out.println("last op filed " + finaloperand);
+							System.out.println("temp size " + temppreds.size());
+								orPredicate
+								  = cb.or(temppreds.toArray(new Predicate[temppreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+								finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
 					}
 					else {
-						predicates.add(cb.like(groupPath, finaloperand));
+						predicates.add(temppredicate);
 					}
-					
-					GetOperands(predicates, startdateD, enddateD, committee, type, operator, operand);
+					System.out.println("preds   " + predicates.size());
 				}
 				else if (operator.contentEquals("Is blank")) {
 					System.out.println("operator blank " + operator);
 					predicates.add(cb.isNull(groupPath));
-					GetOperands(predicates, startdateD, enddateD, committee, type, operator, operand);
+					System.out.println("preds   " + predicates.size());
 				}
 				else {
 					System.out.println("operator else " + operator);
@@ -828,25 +879,41 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					System.out.println("preds   " + predicates.size());
 				}
 			}
-	        System.out.println("preds before equal:   " + predicates.size());
-			if (operator.contentEquals("Equals")) {
-				orPredicate
-				  = cb.or(predicates.toArray(new Predicate[predicates.size()]));
-				
-				//finalPredicates.add(equalPredicate);
-				finalP = cb.and(orPredicate, committeePredicate, datePredicate);
-				//predicates = finalPredicates;
+			if (operand != null && !operand.contentEquals(" ") && !operand.isEmpty()) { 
+				System.out.println("preds before reload operands " + predicates.size());
+				System.out.println("operand:" + operand +".");
+				GetOperands(predicates, startdateD, enddateD, committee, type, operator, operand);
 			}
-			predicates.add(committeePredicate);
-			predicates.add(datePredicate);
-	        //query.select(groups).where(predicates.toArray(new Predicate[predicates.size()]));
-			
-			System.out.println("preds   " + predicates.size());
+			else {
+				System.out.println("OPERANDS FOUND ");
+				System.out.println("preds after  " + predicates.size());
+				predicates.add(committeePredicate);
+				predicates.add(datePredicate);
+				System.out.println("preds after com/date " + predicates.size());
+				query
+		        .select(groups)
+		        .where(predicates.toArray(new Predicate[] {}))
+		        .orderBy(cb.asc(groups.get("id")))
+		        .distinct(true);
+				
+				List<EmailGroup> emailgroups = entityManager.createQuery(query).getResultList();
+				System.out.println("Emailgroup size in custom " + emailgroups.size());
+			}
 		}
 		else {
+			predicates.add(committeePredicate);
+			predicates.add(datePredicate);
 			System.out.println("********FINAL PREDS:   " + predicates.size());
-			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+			query
+	        .select(groups)
+	        .where(predicates.toArray(new Predicate[] {}))
+	        .orderBy(cb.asc(groups.get("id")))
+	        .distinct(true);
+			
+			List<EmailGroup> emailgroups = entityManager.createQuery(query).getResultList();
 			System.out.println("Emailgroup size in custom " + emailgroups.size());
+			//List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+			//System.out.println("Emailgroup size in custom " + emailgroups.size());
 			/*for (EmailGroup group: emailgroups) {
 				System.out.println("Group: " + group.getEmailgroupName());
 			}*/

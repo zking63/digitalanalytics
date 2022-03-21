@@ -45,6 +45,9 @@ public interface EmailGroupRepo extends CrudRepository<EmailGroup, Long>, EmailG
 	Integer countEmailsinEmailGroup(Long groupid, Long committee_id);
 	
 	//find full send emails with group 
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid and email_name LIKE '%) remainder%' LIMIT 1", nativeQuery = true)
+	Emails emailwithremainder(Long emailgroupid, Long committee_id);
+	
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%full%' OR list like '%Full%') and email_name LIKE '%) remainder%'", nativeQuery = true)
 	Emails emailwithfulllistremainder(Long emailgroupid, Long committee_id);
 	

@@ -34,6 +34,7 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
         Root<EmailGroup> groups = query.from(EmailGroup.class);
+        Join<EmailGroup, Emails> emails = groups.join("Emails");
         
 		query
         .select(groups)
