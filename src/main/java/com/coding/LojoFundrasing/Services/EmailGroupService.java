@@ -703,13 +703,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				if (sub.contains("&") || sub.contains("/") 
 						|| sub.contains("(") || sub.contains(")")) {
 					System.out.println("sub" +sub);
-					finalindex = sub.indexOf("&");
-					index = 0;
-					if (finalindex == 0 || finalindex == 1) {
-						index = finalindex +1;
-						finalindex = operand.length();
-					}
-					operand = sub.substring(index, finalindex);
+					operand = sub;
 					System.out.println("operand" +operand +".");
 					GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
 					return;

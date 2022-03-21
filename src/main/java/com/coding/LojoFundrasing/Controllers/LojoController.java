@@ -1744,7 +1744,7 @@ public class LojoController {
 				 String type = "Content";
 				 String operator = "Contains";
 				 //String operand = "Biden & President";
-				 String operand = "Biden & President & (approv/grade/support)";
+				 String operand = "Biden & (approv/grade/support) & President";
 			    	String startdateD = "2022-02-12";
 			    	String enddateD = "2022-03-13";
 			    	List<Predicate> predicates = new ArrayList<>();
