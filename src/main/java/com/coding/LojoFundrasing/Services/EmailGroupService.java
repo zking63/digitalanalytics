@@ -654,8 +654,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			PredicateCreator(predicates, startdate, enddate, committee, type, operator, operands, operand);
 			return;
 		}
-		if (operand.contains("/") || operand.contains("&")) {
+		if (operand != null && operand.contains("/") || operand.contains("&")) {
 			if (operand.contains("/")) {
+				System.out.println("operand contains /: ");
 				if (operand.contains("(")) {
 					index = operand.indexOf("(") +1;
 					finalindex = operand.indexOf(")");
@@ -673,11 +674,15 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					
 					return;
 				}*/
+				System.out.println("out of if ");
 				operands = Arrays.asList(sub.split("/", -1));
 				for (String op: operands) {
 					op = op.trim();
 				}
 				if (sub.length() == operand.length()) {
+					System.out.println("sub = operand ");
+					operand = null;
+					PredicateCreator(predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				finalindex = operand.indexOf(sub)-1;
