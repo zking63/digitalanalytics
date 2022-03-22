@@ -7,13 +7,11 @@
 <html>   
 <head>
 	<meta charset="ISO-8859-1">
-	    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" 
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" 
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
 		crossorigin="anonymous">
 	<link rel="stylesheet" href="/css/main.css"/>
-	<title>Donors</title>
-	
-
+	<title>Emails</title>
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -29,565 +27,504 @@
 		     $("#field").submit();
 		  });
 		});
+		$(document).ready(function () {
+			  $('#dtBasicExample').DataTable();
+			  $('.dataTables_length').addClass('bs-select');
+			});
 	</script>
 </head>
-
 <body>
-     <div class="navbar">
-     <h1 class="titles"><a href="/home">LoJo Fundraising</a></h1>
-	    <form:form method="POST" action="/committees/select" class="p-4">
-	    <input type="hidden" name="page" value="${page}">
-	        <p>
-		        <label for="committee"></label>
-				<select onchange="this.form.submit()" id="committee" name="committee">
-					<option class="currentcommittee" value="${ committee.id }">${ committee.getCommitteeName() }</option>
-				  	<c:forEach items="${ committees }" var="e">
-			        	<option value="${ e.id }">${ e.getCommitteeName() }</option>
-			        </c:forEach>
-				</select>
-	        </p>
-	    </form:form>
-        <ul class="navbarmenu">
-            <li>
-            <button class="btn btn-secondary main">
-			<a href="/home">Home</a>
-			</button>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Donations
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				  	<a class="dropdown-item" href="/home">Donations</a>
-				    <a class="dropdown-item" href="/newdonation">New donation</a>
-				    <a class="dropdown-item" href="/import/donations">Import donations</a>
-				    <a class="dropdown-item" href="/export">Export donations</a>
-				 	</div>
-				</div>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Donors
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				  	<a class="dropdown-item" href="/donors">Donors page</a>
-				    <a class="dropdown-item" href="/newdonor">New donor</a>
-				    <a class="dropdown-item" href="/import/donations">Import donors by donations</a>
-				    <a class="dropdown-item" href="/export">Export donors</a>
-				 	</div>
-				</div>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Emails
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				 	<a class="dropdown-item" href="/emails">Emails</a>
-				    <a class="dropdown-item" href="/newemail">New email</a>
-				    <a class="dropdown-item" href="/import/emails">Import emails</a>
-				    <a class="dropdown-item" href="/export">Export</a>
-				 	</div>
-				</div>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    <img src="/images/usericon.png" alt="User">
-				  </button>
-				  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-				  	<p>${ user.firstName } ${ user.lastName }</p>
-					<form:form method="POST" action="/committees/select" class="dropdown-item formclass">
-				    <input type="hidden" name="page" value="${page}">
-				        <p>
-					        <label for="committee"></label>
-							<select onchange="this.form.submit()" id="committee" name="committee">
-								<option class="currentcommittee" value="${ committee.id }">${ committee.getCommitteeName() }</option>
-							  	<c:forEach items="${ committees }" var="e">
-						        	<option value="${ e.id }">${ e.getCommitteeName() }</option>
-						        </c:forEach>
-							</select>
-				        </p>
-				    </form:form>
-				    <div class="dropdown-divider"></div>
-				    <a class="dropdown-item" href="/logout">Logout</a>
-				 </div>
-				</div>
-            </li>
-        </ul>
-        </div>
-        <style type="text/css">/* standard resets */
-
-div, p, a, li, td {
-  -webkit-text-size-adjust: none;
-  -ms-text-size-adjust: none;
-}
-body {
-  margin: 0;
-  padding: 0;
-}
-table td {
-  border-collapse: collapse;
-}
-table th {
-  margin: 0 !important;
-  padding: 0 !important;
-  vertical-align: top;
-  font-weight: normal;
-}
-div[style*="margin: 16px 0"] {
-  margin: 0 !important;
-}
-.ExternalClass {
-  width: 100%;
-}
-.ExternalClass * {
-  line-height: 110%
-}
-img {
-  -ms-interpolation-mode: bicubic;
-}
-.appleLinksgrey a {
-  color: #9ca299 !important;
-  text-decoration: none;
-}
-
-/* control text changed to links by phones */
-
-@media only screen {
-body {
-  width: 100% !important;
-  min-width: 100% !important;
-}
-a[x-apple-data-detectors] {
-  color: inherit !important;
-  text-decoration: none !important;
-  font-size: inherit !important;
-  font-family: inherit !important;
-  font-weight: inherit !important;
-  line-height: inherit !important;
-}
-}
-
-/* Yahoo and apple mail reset on desktop */
-
-@media screen and (min-width: 600px) {
-.wrapto680px {
-  width: 670px !important;
-  height: auto !important;
-}
-}
-
-@media screen and (max-device-width: 640px), screen and (max-width: 640px) {
-/* responsive rules */
-.wrapto100pc {
-  width: 100% !important;
-  height: auto !important;
-}
-.wrapto100pc-allowheight {
-  width: 100% !important;
-}
-*[class=wrapto100pc-pt20] {
-  width: 100% !important;
-  height: auto !important;
-  margin-top: 20px !important;
-}
-*[class=colsplit] {
-  width: 100% !important;
-  height: auto !important;
-  display: block !important;
-  float: left !important;
-}
-*[class=hero-image] {
-  width: 100% !important;
-  height: auto !important;
-  padding-top: 20px !important;
-  padding-bottom: 20px !important;
-}
-*[class=wrapto100pc-max480] {
-  width: 100% !important;
-  height: auto !important;
-  max-width: 480px !important;
-}
-*[class=wrapto100pc-max320] {
-  width: 100% !important;
-  height: auto !important;
-  max-width: 320px !important;
-}
-*[class=height-auto] {
-  height: auto !important;
-}
-*[class=nomob] {
-  display: none !important;
-  width: 0px !important;
-  height: 0px !important;
-}
-th[class=footer-button] {
-  float: left !important;
-  display: block !important;
-  width: 100% !important;
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-}
-/* fonts */
-*[class=center-text] {
-  text-align: center !important;
-}
-*[class=fontsize15] {
-  font-size: 15px !important;
-  line-height: 20px !important;
-}
-/* reverse stacking */
-*[class=table] {
-  display: table !important;
-  width: 100% !important;
-}
-*[class=foot] {
-  display: table-footer-group!important;
-  width: 100% !important;
-}
-*[class=head] {
-  display: table-header-group!important;
-  width: 100% !important;
-}
-}
-</style>
-<table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-	
-		<tr>
-			<td align="center"><!--[if (gte mso 9)|(IE)]><table border="0" cellspacing="0" cellpadding="0" width="680" role="presentation"><tr><td align="center"><![endif]-->
-			<table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" class="wrapto680px-off" role="presentation" style="max-width:680px;" width="100%">
-				
-					<tr>
-						<td width="20"><img alt="" border="0" height="1"  src="https://als-totem.s3.amazonaws.com/core/spacer.gif" style="display: block;" width="20" /></td>
-						<td align="center" valign="top">
-						<table cellpadding="0" cellspacing="0" id="email-contents" role="presentation" style="max-width: 100%; font-size: 21px; text-align: center; font-family: Arial,sans-serif; line-height: 1.2; " width="100%">
-							
-								<tr>
-									<td>&nbsp;</td>
-								</tr>
-								<tr>
-									<td bgcolor="#ffffff" style="text-align: left;">
-									<center><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX1%%" name="donate_actblue_com" ><img alt="&quot;Chip in to elect Democratic governors across the country.&quot; - Chair Roy Cooper" border="0"    src='https://contentz.mkt10784.com/ra/2022/41528/01/20127817/20211216%20Roy%20Cooper%20Chip%20In%20300x300.gif' style="max-width: 100% !important; border: 0; display: block;" title="&quot;Chip in to elect Democratic governors across the country.&quot; - Chair Roy Cooper"  /></a></center>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#ffffff" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;text-align:left;font-size:20px;text-align:left;">Hi, %%DC::FN LOWER::FIRSTNAME TEAM LOWER%%. I&rsquo;m Roy Cooper, governor of North Carolina, and I have a critical update on what&rsquo;s happening in the fight against voter suppression.</p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#ffffff" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;text-align:left;font-size:20px;text-align:left;">Republicans have been executing a coordinated attack on voting rights ever since Joe Biden was elected in 2020. In 2021 alone, Republicans supported more than 440 bills that would make it harder to vote &ndash; especially for people of color. And just this month, voting reform legislation was blocked after every single Republican senator voted no.</p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#ffffff" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0px; font-size: 20px;text-align:left;">But there is hope. This battle is now being waged in the states, where Democratic governors are working to expand access to the ballot box and protect voting rights. <strong>We must protect our Democratic firewall to save our democracy. <a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX2%%" name="donate_actblue_com_1" >Will you chip in $%%HPCX2%%, or whatever you can, before midnight tonight to defeat Republican voter suppression nationwide? All donations up to our $50,000 end-of-month goal will be matched.</a></strong></p>
-									</td>
-								</tr>
-								<tr>
-									<td>
-									<center>
-									<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-										
-											<tr>
-												<td style="text-align: center;" width="100%">
-												<div class="wrapto100pc" style="display: inline-block;">
-												<center>
-												<table border="0" cellpadding="10" cellspacing="0" class="wrapto100pc" role="presentation" width="100%">
-													
-														<tr>
-															<td>
-															<center>
-															<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																
-																	<tr>
-																		<td align="center" bgcolor="#eb3218" class="email-button" style="padding:8px;border-width:0px;border-radius:6px;border-color:#8c1919;color:#ffffff;font-size:20px;font-family:Arial,sans-serif;border-radius:6px; border-bottom: 4px solid #8c1919;" width="300"><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX1%%" name="secure_actblue_com_contri_2" style="line-height:39px; display: inline-block; width: 100%; height: 100%; text-decoration: none; font-weight: bold;color:#ffffff;" ><span style="font-size:22px;">DONATE $%%HPCX1%% (and have it DOUBLED)</span></a></td>
-																	</tr>
-																
-															</table>
-															</center>
-															</td>
-														</tr>
-													
-												</table>
-												</center>
-												</div>
-												</td>
-											</tr>
-										
-									</table>
-									</center>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#FFFFFF" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;font-size:20px;text-align:left;">While Congress fails to act or the Supreme Court leaves unjust laws on the books, Democratic governors are the last line of defense to protect our democracy and our best chance for progress.</p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#FFFFFF" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;font-size:20px;text-align:left;">In states like Michigan, Nevada, and Wisconsin, Democratic governors have taken action, issued vetoes, and stopped reckless voter suppression laws. Here in North Carolina, my vetoes have stopped Republican schemes to impose bad voter laws, and our state courts struck down a GOP voter ID law citing &ldquo;persuasive evidence&rdquo; that it made it harder for black voters to cast ballots.</p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#FFFFFF" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;font-size:20px;text-align:left;"><b>I&rsquo;m proud of our efforts to stop this shameful attack on our democracy, but the fight is far from over. And I need backup. </b></p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#FFFFFF" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;font-size:20px;text-align:left;"><b>So please, %%DC::FN LOWER::FIRSTNAME TEAM LOWER%%, act now. <a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX2%%" name="secure_actblue_com_contri_1" >Will you invest $%%HPCX2%% before tomorrow&rsquo;s midnight deadline &ndash; while all donations are being DOUBLED up to our goal &ndash; to to protect our progress, elect Democratic governors, and defeat extremist Republicans nationwide? </a></b></p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#ffffff" style="">
-									<center>
-									<p style="font-size: 16px; margin: 1em auto;"><em edit="block.disclaimer">If you&#39;ve saved payment information with ActBlue Express, your donation will go through immediately:</em></p>
-									</center>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#FFFFFF" style="">
-									<center>
-									<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-										
-											<tr>
-												<td style="text-align: center;" width="100%">
-												<div class="wrapto100pc" style="display: inline-block;">
-												<center>
-												<table border="0" cellpadding="7" cellspacing="0" class="wrapto100pc" role="presentation" width="100%">
-													
-														<tr>
-															<td>
-															<center>
-															<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																
-																	<tr>
-																		<td align="center" bgcolor="#236092" class="email-button" style="padding:8px;border-width:0px;border-radius:6px;border-color:#2d3038;color:#ffffff;font-size:20px;font-family:Arial,sans-serif;border-radius:6px; border-bottom: 4px solid #2d3038;" width="350"><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX1%%&express_lane=true" name="secure_actblue_com_contribute_page__2" style="line-height:49px; display: inline-block; width: 100%; height: 100%; text-decoration: none; font-weight: bold;color:#ffffff;" ><span style="font-size:20px;">Donate $%%HPCX1%% (becomes $%%HPCX2MATCH%%)</span></a></td>
-																	</tr>
-																
-															</table>
-															</center>
-															</td>
-														</tr>
-													
-												</table>
-												</center>
-												</div>
-												</td>
-											</tr>
-											<tr>
-												<td style="text-align: center;" width="100%">
-												<div class="wrapto100pc" style="display: inline-block;">
-												<center>
-												<table border="0" cellpadding="7" cellspacing="0" class="wrapto100pc" role="presentation" width="100%">
-													
-														<tr>
-															<td>
-															<center>
-															<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																
-																	<tr>
-																		<td align="center" bgcolor="#eb3218" class="email-button" style="padding:8px;border-width:0px;border-radius:6px;border-color:#8c1919;color:#ffffff;font-size:20px;font-family:Arial,sans-serif;border-radius:6px; border-bottom: 4px solid #8c1919;" width="350"><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX2%%&express_lane=true" name="secure_actblue_com_contri_3" style="line-height:49px; display: inline-block; width: 100%; height: 100%; text-decoration: none; font-weight: bold;color:#ffffff;" ><span style="font-size:20px;">Donate $%%HPCX2%% (becomes $%%HPCX4MATCH%%)</span></a></td>
-																	</tr>
-																
-															</table>
-															</center>
-															</td>
-														</tr>
-													
-												</table>
-												</center>
-												</div>
-												</td>
-											</tr>
-											<tr>
-												<td style="text-align: center;" width="100%">
-												<div class="wrapto100pc" style="display: inline-block;">
-												<center>
-												<table border="0" cellpadding="7" cellspacing="0" class="wrapto100pc" role="presentation" width="100%">
-													
-														<tr>
-															<td>
-															<center>
-															<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																
-																	<tr>
-																		<td align="center" bgcolor="#236092" class="email-button" style="padding:8px;border-width:0px;border-radius:6px;border-color:#2d3038;color:#ffffff;font-size:20px;font-family:Arial,sans-serif;border-radius:6px; border-bottom: 4px solid #2d3038;" width="350"><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX4%%&express_lane=true" name="secure_actblue_com_contribute_page__4" style="line-height:49px; display: inline-block; width: 100%; height: 100%; text-decoration: none; font-weight: bold;color:#ffffff;" ><span style="font-size:20px;">Donate $%%HPCX4%% (becomes $%%HPCX8MATCH%%)</span></a></td>
-																	</tr>
-																
-															</table>
-															</center>
-															</td>
-														</tr>
-													
-												</table>
-												</center>
-												</div>
-												</td>
-											</tr>
-											<tr>
-												<td style="text-align: center;" width="100%">
-												<div class="wrapto100pc" style="display: inline-block;">
-												<center>
-												<table border="0" cellpadding="7" cellspacing="0" class="wrapto100pc" role="presentation" width="100%">
-													
-														<tr>
-															<td>
-															<center>
-															<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																
-																	<tr>
-																		<td align="center" bgcolor="#236092" class="email-button" style="padding:8px;border-width:0px;border-radius:6px;border-color:#2d3038;color:#ffffff;font-size:20px;font-family:Arial,sans-serif;border-radius:6px; border-bottom: 4px solid #2d3038;" width="350"><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807" name="secure_actblue_com_contribute_page__5" style="line-height:49px; display: inline-block; width: 100%; height: 100%; text-decoration: none; font-weight: bold;color:#ffffff;" ><span style="font-size:20px;">Or donate other amount</span></a></td>
-																	</tr>
-																
-															</table>
-															</center>
-															</td>
-														</tr>
-													
-												</table>
-												</center>
-												</div>
-												</td>
-											</tr>
-										
-									</table>
-									</center>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#FFFFFF" style="padding-top:10px;padding-right:5px;padding-bottom:10px;padding-left:5px;">
-									<p style="margin: 0;font-size:20px;text-align:left;">Thank you for everything you do,<br />
-									<br />
-									Roy Cooper<br />
-									Governor of North Carolina<br />
-									Chair, Democratic Governors Association</p>
-									</td>
-								</tr>
-								<tr>
-									<td bgcolor="#ffffff" style="padding-top:20px;padding-right:5%;padding-bottom:20px;padding-left:5%;">
-									<table background="" border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-radius: 0px; min-height:50px;border-style:solid;border-width:5px;border-color:#000000;padding:5px;font-family: Arial,sans-serif; line-height: 1.3;" width="100%">
-										
-											<tr>
-												<td>
-												<div class="block-parent box" collapsed="false" expand-on-hover="false">
-												<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 100%; font-size: 21px; text-align: center; font-family: Arial,sans-serif; line-height: 1.2;" width="100%">
-													
-														<tr>
-															<td bgcolor="" style="padding-top:10px;padding-right:3%;padding-bottom:10px;padding-left:3%;">
-															<p style="margin: 0;text-align:left;font-size:20px;font-size:20px;text-align:left;">Roy Cooper was reelected to a second term as governor because he&rsquo;s building a North Carolina where people are better educated, healthier, and have more money in their pockets. He&rsquo;s the kind of commonsense leader we can count on to protect democracy from Republican attacks. This year, he&rsquo;s leading the DGA to reelect Democratic governors and flip red states blue all over the country.</p>
-															</td>
-														</tr>
-														<tr>
-															<td bgcolor="" style="padding-top:10px;padding-right:3%;padding-bottom:10px;padding-left:3%;">
-															<p style="margin: 0;text-align:left;font-size:20px;font-size:20px;text-align:left;">Will you answer his call to action?</p>
-															</td>
-														</tr>
-														<tr>
-															<td>
-															<center>
-															<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																
-																	<tr>
-																		<td style="text-align: center;" width="100%">
-																		<div class="wrapto100pc" style="display: inline-block;">
-																		<center>
-																		<table border="0" cellpadding="10" cellspacing="0" class="wrapto100pc" role="presentation" width="100%">
-																			
-																				<tr>
-																					<td>
-																					<center>
-																					<table border="0" cellpadding="0" cellspacing="0" role="presentation">
-																						
-																							<tr>
-																								<td align="center" bgcolor="#eb3218" class="email-button" style="padding:8px;border-width:0px;border-radius:6px;border-color:#8c1919;color:#ffffff;font-size:20px;font-family:Arial,sans-serif;border-radius:6px; border-bottom: 4px solid #8c1919;" width="200"><a href="https://secure.actblue.com/contribute/page/%%ENTITYDESIGNATION%%-digital-2022q1?refcode2=jtk8807&amount=%%HPCX1%%" name="secure_actblue_com_contri_2" style="line-height:39px; display: inline-block; width: 100%; height: 100%; text-decoration: none; font-weight: bold;color:#ffffff;" ><span style="font-size:22px;">DONATE </span></a></td>
-																							</tr>
-																						
-																					</table>
-																					</center>
-																					</td>
-																				</tr>
-																			
-																		</table>
-																		</center>
-																		</div>
-																		</td>
-																	</tr>
-																
-															</table>
-															</center>
-															</td>
-														</tr>
-													
-												</table>
-												</div>
-												</td>
-											</tr>
-										
-									</table>
-									</td>
-								</tr>
-							
-						</table>
-						</td>
-						<td width="20"><img alt="" border="0" height="1"  src="https://als-totem.s3.amazonaws.com/core/spacer.gif" style="display: block;" width="20" /></td>
-					</tr>
-					<tr>
-						<td width="20"><img alt="" border="0" height="1"  src="https://als-totem.s3.amazonaws.com/core/spacer.gif" style="display: block;" width="20" /></td>
-						<td>
-						<div id="footer" style="margin: 4em auto 2em auto; font-size: 12px; font-family: sans-serif;">
-						<center>
-						<p style="margin: 1em auto;"><br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						<br />
-						This email was sent to %%EMAIL%%.<br />
-						To unsubscribe from the DGA email list, <a href="https://action.democraticgovernors.org/unsubscribe?m=%%MAILING_ID%%&r=%%RECIPIENT_ID%%&j=%%JOB_ID_CODE%%&l=%%LIST_ID%%&e=%%EMAIL%%" id="unsubscribe" name="optout" target="_blank" >click here</a>.</p>
-
-						<p style="margin: 1em auto;text-align: center;">&nbsp;</p>
-
-						<table border="0" cellpadding="0" cellspacing="0" style="max-width: 380px;" width="100%">
-							
-								<tr>
-									<td style="padding: 10px">
-									<table cellpadding="8" cellspacing="0" style="border: 1px solid black; text-align: center; max-width: 360px; font-family: Arial,sans-serif; font-size: 12px; line-height: 1em;" width="100%">
-										
-											<tr>
-												<td id="disclaimer">%%DC::ENTITYDESIGNATION::DISCLAIMER%%</td>
-											</tr>
-										
-									</table>
-									</td>
-								</tr>
-							
-						</table>
-
-						<p id="post-disclaimer" style="margin: 1em auto;text-align: center;">Contributions or gifts to %%DC::ENTITYDESIGNATION::FOOTER%% are not tax deductible.</p>
-
-						<p style="margin: 1em auto;text-align: center;"><span id="email-specific-post-disclaimer"></span></p>
-						</center>
-						</div>
-						</td>
-						<td width="20"><img alt="" border="0" height="1"  src="https://als-totem.s3.amazonaws.com/core/spacer.gif" style="display: block;" width="20" /></td>
-					</tr>
-				
-			</table>
-			<!--[if (gte mso 9)|(IE)]></td></tr></table><![endif]--></td>
-		</tr>
-	
+<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
+  <thead>
+    <tr>
+      <th class="th-sm">Name
+      </th>
+      <th class="th-sm">Position
+      </th>
+      <th class="th-sm">Office
+      </th>
+      <th class="th-sm">Age
+      </th>
+      <th class="th-sm">Start date
+      </th>
+      <th class="th-sm">Salary
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Tiger Nixon</td>
+      <td>System Architect</td>
+      <td>Edinburgh</td>
+      <td>61</td>
+      <td>2011/04/25</td>
+      <td>$320,800</td>
+    </tr>
+    <tr>
+      <td>Garrett Winters</td>
+      <td>Accountant</td>
+      <td>Tokyo</td>
+      <td>63</td>
+      <td>2011/07/25</td>
+      <td>$170,750</td>
+    </tr>
+    <tr>
+      <td>Ashton Cox</td>
+      <td>Junior Technical Author</td>
+      <td>San Francisco</td>
+      <td>66</td>
+      <td>2009/01/12</td>
+      <td>$86,000</td>
+    </tr>
+    <tr>
+      <td>Cedric Kelly</td>
+      <td>Senior Javascript Developer</td>
+      <td>Edinburgh</td>
+      <td>22</td>
+      <td>2012/03/29</td>
+      <td>$433,060</td>
+    </tr>
+    <tr>
+      <td>Airi Satou</td>
+      <td>Accountant</td>
+      <td>Tokyo</td>
+      <td>33</td>
+      <td>2008/11/28</td>
+      <td>$162,700</td>
+    </tr>
+    <tr>
+      <td>Brielle Williamson</td>
+      <td>Integration Specialist</td>
+      <td>New York</td>
+      <td>61</td>
+      <td>2012/12/02</td>
+      <td>$372,000</td>
+    </tr>
+    <tr>
+      <td>Herrod Chandler</td>
+      <td>Sales Assistant</td>
+      <td>San Francisco</td>
+      <td>59</td>
+      <td>2012/08/06</td>
+      <td>$137,500</td>
+    </tr>
+    <tr>
+      <td>Rhona Davidson</td>
+      <td>Integration Specialist</td>
+      <td>Tokyo</td>
+      <td>55</td>
+      <td>2010/10/14</td>
+      <td>$327,900</td>
+    </tr>
+    <tr>
+      <td>Colleen Hurst</td>
+      <td>Javascript Developer</td>
+      <td>San Francisco</td>
+      <td>39</td>
+      <td>2009/09/15</td>
+      <td>$205,500</td>
+    </tr>
+    <tr>
+      <td>Sonya Frost</td>
+      <td>Software Engineer</td>
+      <td>Edinburgh</td>
+      <td>23</td>
+      <td>2008/12/13</td>
+      <td>$103,600</td>
+    </tr>
+    <tr>
+      <td>Jena Gaines</td>
+      <td>Office Manager</td>
+      <td>London</td>
+      <td>30</td>
+      <td>2008/12/19</td>
+      <td>$90,560</td>
+    </tr>
+    <tr>
+      <td>Quinn Flynn</td>
+      <td>Support Lead</td>
+      <td>Edinburgh</td>
+      <td>22</td>
+      <td>2013/03/03</td>
+      <td>$342,000</td>
+    </tr>
+    <tr>
+      <td>Charde Marshall</td>
+      <td>Regional Director</td>
+      <td>San Francisco</td>
+      <td>36</td>
+      <td>2008/10/16</td>
+      <td>$470,600</td>
+    </tr>
+    <tr>
+      <td>Haley Kennedy</td>
+      <td>Senior Marketing Designer</td>
+      <td>London</td>
+      <td>43</td>
+      <td>2012/12/18</td>
+      <td>$313,500</td>
+    </tr>
+    <tr>
+      <td>Tatyana Fitzpatrick</td>
+      <td>Regional Director</td>
+      <td>London</td>
+      <td>19</td>
+      <td>2010/03/17</td>
+      <td>$385,750</td>
+    </tr>
+    <tr>
+      <td>Michael Silva</td>
+      <td>Marketing Designer</td>
+      <td>London</td>
+      <td>66</td>
+      <td>2012/11/27</td>
+      <td>$198,500</td>
+    </tr>
+    <tr>
+      <td>Paul Byrd</td>
+      <td>Chief Financial Officer (CFO)</td>
+      <td>New York</td>
+      <td>64</td>
+      <td>2010/06/09</td>
+      <td>$725,000</td>
+    </tr>
+    <tr>
+      <td>Gloria Little</td>
+      <td>Systems Administrator</td>
+      <td>New York</td>
+      <td>59</td>
+      <td>2009/04/10</td>
+      <td>$237,500</td>
+    </tr>
+    <tr>
+      <td>Bradley Greer</td>
+      <td>Software Engineer</td>
+      <td>London</td>
+      <td>41</td>
+      <td>2012/10/13</td>
+      <td>$132,000</td>
+    </tr>
+    <tr>
+      <td>Dai Rios</td>
+      <td>Personnel Lead</td>
+      <td>Edinburgh</td>
+      <td>35</td>
+      <td>2012/09/26</td>
+      <td>$217,500</td>
+    </tr>
+    <tr>
+      <td>Jenette Caldwell</td>
+      <td>Development Lead</td>
+      <td>New York</td>
+      <td>30</td>
+      <td>2011/09/03</td>
+      <td>$345,000</td>
+    </tr>
+    <tr>
+      <td>Yuri Berry</td>
+      <td>Chief Marketing Officer (CMO)</td>
+      <td>New York</td>
+      <td>40</td>
+      <td>2009/06/25</td>
+      <td>$675,000</td>
+    </tr>
+    <tr>
+      <td>Caesar Vance</td>
+      <td>Pre-Sales Support</td>
+      <td>New York</td>
+      <td>21</td>
+      <td>2011/12/12</td>
+      <td>$106,450</td>
+    </tr>
+    <tr>
+      <td>Doris Wilder</td>
+      <td>Sales Assistant</td>
+      <td>Sidney</td>
+      <td>23</td>
+      <td>2010/09/20</td>
+      <td>$85,600</td>
+    </tr>
+    <tr>
+      <td>Angelica Ramos</td>
+      <td>Chief Executive Officer (CEO)</td>
+      <td>London</td>
+      <td>47</td>
+      <td>2009/10/09</td>
+      <td>$1,200,000</td>
+    </tr>
+    <tr>
+      <td>Gavin Joyce</td>
+      <td>Developer</td>
+      <td>Edinburgh</td>
+      <td>42</td>
+      <td>2010/12/22</td>
+      <td>$92,575</td>
+    </tr>
+    <tr>
+      <td>Jennifer Chang</td>
+      <td>Regional Director</td>
+      <td>Singapore</td>
+      <td>28</td>
+      <td>2010/11/14</td>
+      <td>$357,650</td>
+    </tr>
+    <tr>
+      <td>Brenden Wagner</td>
+      <td>Software Engineer</td>
+      <td>San Francisco</td>
+      <td>28</td>
+      <td>2011/06/07</td>
+      <td>$206,850</td>
+    </tr>
+    <tr>
+      <td>Fiona Green</td>
+      <td>Chief Operating Officer (COO)</td>
+      <td>San Francisco</td>
+      <td>48</td>
+      <td>2010/03/11</td>
+      <td>$850,000</td>
+    </tr>
+    <tr>
+      <td>Shou Itou</td>
+      <td>Regional Marketing</td>
+      <td>Tokyo</td>
+      <td>20</td>
+      <td>2011/08/14</td>
+      <td>$163,000</td>
+    </tr>
+    <tr>
+      <td>Michelle House</td>
+      <td>Integration Specialist</td>
+      <td>Sidney</td>
+      <td>37</td>
+      <td>2011/06/02</td>
+      <td>$95,400</td>
+    </tr>
+    <tr>
+      <td>Suki Burks</td>
+      <td>Developer</td>
+      <td>London</td>
+      <td>53</td>
+      <td>2009/10/22</td>
+      <td>$114,500</td>
+    </tr>
+    <tr>
+      <td>Prescott Bartlett</td>
+      <td>Technical Author</td>
+      <td>London</td>
+      <td>27</td>
+      <td>2011/05/07</td>
+      <td>$145,000</td>
+    </tr>
+    <tr>
+      <td>Gavin Cortez</td>
+      <td>Team Leader</td>
+      <td>San Francisco</td>
+      <td>22</td>
+      <td>2008/10/26</td>
+      <td>$235,500</td>
+    </tr>
+    <tr>
+      <td>Martena Mccray</td>
+      <td>Post-Sales support</td>
+      <td>Edinburgh</td>
+      <td>46</td>
+      <td>2011/03/09</td>
+      <td>$324,050</td>
+    </tr>
+    <tr>
+      <td>Unity Butler</td>
+      <td>Marketing Designer</td>
+      <td>San Francisco</td>
+      <td>47</td>
+      <td>2009/12/09</td>
+      <td>$85,675</td>
+    </tr>
+    <tr>
+      <td>Howard Hatfield</td>
+      <td>Office Manager</td>
+      <td>San Francisco</td>
+      <td>51</td>
+      <td>2008/12/16</td>
+      <td>$164,500</td>
+    </tr>
+    <tr>
+      <td>Hope Fuentes</td>
+      <td>Secretary</td>
+      <td>San Francisco</td>
+      <td>41</td>
+      <td>2010/02/12</td>
+      <td>$109,850</td>
+    </tr>
+    <tr>
+      <td>Vivian Harrell</td>
+      <td>Financial Controller</td>
+      <td>San Francisco</td>
+      <td>62</td>
+      <td>2009/02/14</td>
+      <td>$452,500</td>
+    </tr>
+    <tr>
+      <td>Timothy Mooney</td>
+      <td>Office Manager</td>
+      <td>London</td>
+      <td>37</td>
+      <td>2008/12/11</td>
+      <td>$136,200</td>
+    </tr>
+    <tr>
+      <td>Jackson Bradshaw</td>
+      <td>Director</td>
+      <td>New York</td>
+      <td>65</td>
+      <td>2008/09/26</td>
+      <td>$645,750</td>
+    </tr>
+    <tr>
+      <td>Olivia Liang</td>
+      <td>Support Engineer</td>
+      <td>Singapore</td>
+      <td>64</td>
+      <td>2011/02/03</td>
+      <td>$234,500</td>
+    </tr>
+    <tr>
+      <td>Bruno Nash</td>
+      <td>Software Engineer</td>
+      <td>London</td>
+      <td>38</td>
+      <td>2011/05/03</td>
+      <td>$163,500</td>
+    </tr>
+    <tr>
+      <td>Sakura Yamamoto</td>
+      <td>Support Engineer</td>
+      <td>Tokyo</td>
+      <td>37</td>
+      <td>2009/08/19</td>
+      <td>$139,575</td>
+    </tr>
+    <tr>
+      <td>Thor Walton</td>
+      <td>Developer</td>
+      <td>New York</td>
+      <td>61</td>
+      <td>2013/08/11</td>
+      <td>$98,540</td>
+    </tr>
+    <tr>
+      <td>Finn Camacho</td>
+      <td>Support Engineer</td>
+      <td>San Francisco</td>
+      <td>47</td>
+      <td>2009/07/07</td>
+      <td>$87,500</td>
+    </tr>
+    <tr>
+      <td>Serge Baldwin</td>
+      <td>Data Coordinator</td>
+      <td>Singapore</td>
+      <td>64</td>
+      <td>2012/04/09</td>
+      <td>$138,575</td>
+    </tr>
+    <tr>
+      <td>Zenaida Frank</td>
+      <td>Software Engineer</td>
+      <td>New York</td>
+      <td>63</td>
+      <td>2010/01/04</td>
+      <td>$125,250</td>
+    </tr>
+    <tr>
+      <td>Zorita Serrano</td>
+      <td>Software Engineer</td>
+      <td>San Francisco</td>
+      <td>56</td>
+      <td>2012/06/01</td>
+      <td>$115,000</td>
+    </tr>
+    <tr>
+      <td>Jennifer Acosta</td>
+      <td>Junior Javascript Developer</td>
+      <td>Edinburgh</td>
+      <td>43</td>
+      <td>2013/02/01</td>
+      <td>$75,650</td>
+    </tr>
+    <tr>
+      <td>Cara Stevens</td>
+      <td>Sales Assistant</td>
+      <td>New York</td>
+      <td>46</td>
+      <td>2011/12/06</td>
+      <td>$145,600</td>
+    </tr>
+    <tr>
+      <td>Hermione Butler</td>
+      <td>Regional Director</td>
+      <td>London</td>
+      <td>47</td>
+      <td>2011/03/21</td>
+      <td>$356,250</td>
+    </tr>
+    <tr>
+      <td>Lael Greer</td>
+      <td>Systems Administrator</td>
+      <td>London</td>
+      <td>21</td>
+      <td>2009/02/27</td>
+      <td>$103,500</td>
+    </tr>
+    <tr>
+      <td>Jonas Alexander</td>
+      <td>Developer</td>
+      <td>San Francisco</td>
+      <td>30</td>
+      <td>2010/07/14</td>
+      <td>$86,500</td>
+    </tr>
+    <tr>
+      <td>Shad Decker</td>
+      <td>Regional Director</td>
+      <td>Edinburgh</td>
+      <td>51</td>
+      <td>2008/11/13</td>
+      <td>$183,000</td>
+    </tr>
+    <tr>
+      <td>Michael Bruce</td>
+      <td>Javascript Developer</td>
+      <td>Singapore</td>
+      <td>29</td>
+      <td>2011/06/27</td>
+      <td>$183,000</td>
+    </tr>
+    <tr>
+      <td>Donna Snider</td>
+      <td>Customer Support</td>
+      <td>New York</td>
+      <td>27</td>
+      <td>2011/01/25</td>
+      <td>$112,000</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>Name
+      </th>
+      <th>Position
+      </th>
+      <th>Office
+      </th>
+      <th>Age
+      </th>
+      <th>Start date
+      </th>
+      <th>Salary
+      </th>
+    </tr>
+  </tfoot>
 </table>
-<grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration>
 </body>
 </html>

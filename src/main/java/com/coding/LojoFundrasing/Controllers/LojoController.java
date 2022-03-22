@@ -1067,7 +1067,7 @@ public class LojoController {
 			return "redirect:/home";
 		}
 		@RequestMapping("/tester")
-		public String tester(Model model, HttpSession session, HttpServletRequest request) {
+		public String tester(Model model, HttpSession session, HttpServletRequest request) throws ParseException {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 String pagename = request.getRequestURL().toString();
 			 System.out.println("page: " + pagename);
@@ -1084,7 +1084,20 @@ public class LojoController {
 			for (int i = 0; i < committees.size(); i++) {
 				System.out.println("committees: " + committees.get(i).getCommitteeName());
 			}
+			 String type = "Content";
+			 String operator = "Contains";
+			 //String operand = "Biden & President";
+			 String operand = "'approv'/'grade'/'support'";
+		    	String startdateD = "2022-02-12";
+		    	String enddateD = "2022-03-13";
+		    	List<Predicate> predicates = new ArrayList<>();
+		    	List<String> operandsList = new ArrayList<>();
+		    	List<EmailGroup> email = new ArrayList<>();
+		    	List<String> operands = new ArrayList<String>();
+		    	email = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	System.out.println("Emailgroup size in controller " + email.size());
 			model.addAttribute("user", user);
+			model.addAttribute("email", email);
 			return "test.jsp";
 		}
 	    @RequestMapping("/export")

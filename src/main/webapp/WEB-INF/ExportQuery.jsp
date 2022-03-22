@@ -243,6 +243,7 @@
 											<option value="Sender">Sender</option>
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
+											<option value="Content">Content</option>
 											<option value="All emails">All emails</option>
 						</select>
 				        </div>
@@ -347,6 +348,7 @@
 											<option value="Sender">Sender</option>
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
+											<option value="Content">Content</option>
 											<option value="All emails">All emails</option>
 						</select>
 				        </div>
