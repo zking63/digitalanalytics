@@ -1445,7 +1445,12 @@ public class LojoController {
 					 
 				 //}
 				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
-				emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
+				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
+		    	List<Predicate> predicates = new ArrayList<Predicate>();
+		    	List<String> operandsList = new ArrayList<String>();
+		    	List<String> operands = new ArrayList<String>();
+		    	emailgroups = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	System.out.println("Emailgroup size in controller " + emailgroups.size());
 				excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			 }
 			 if (field == 5) {
@@ -1744,13 +1749,17 @@ public class LojoController {
 				 String type = "Content";
 				 String operator = "Contains";
 				 //String operand = "Biden & President";
-				 String operand = "('approv'/'support'/'grade') + 'President' + 'Biden'";
+				 String operand = "'approv'/'grade'/'support'";
 			    	String startdateD = "2022-02-12";
 			    	String enddateD = "2022-03-13";
 			    	List<Predicate> predicates = new ArrayList<>();
 			    	List<String> operandsList = new ArrayList<>();
-				 egservice.GetOperands(operandsList, predicates, startdateD, enddateD, committee, type, operator,operand);
-				 /*String operand1 = "Biden & Joe";
+			    	List<EmailGroup> emailgroups = new ArrayList<>();
+			    	List<String> operands = new ArrayList<String>();
+			    	emailgroups = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+			    	System.out.println("Emailgroup size in controller " + emailgroups.size());
+			    	
+			    	/*String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
 				 String operand3 = "fundraiser";
 				 
