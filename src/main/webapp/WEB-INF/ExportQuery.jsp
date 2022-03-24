@@ -116,7 +116,7 @@
             </li>
         </ul>
         </div>
-    <form method="get" id="input-form" action="/export/query/options/range">
+    <form method="get" id="input-form" action="/export/query">
     				<input type="hidden" name="page" value="${page}">
 				    <input type="hidden" name="operator" value="${operator}">
 				    <input type="hidden" name="operand" value="${operand}">

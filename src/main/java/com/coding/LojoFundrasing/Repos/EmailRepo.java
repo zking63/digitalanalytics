@@ -23,7 +23,10 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, EmailRepository
 	List<Emails> findAll();
 	Emails findByemailRefcode1(String emailRefcode1);
 	Optional<Emails> findById(Long id);
-
+	
+	@Query(value = "SElECT * FROM emails where committees_id = 2 LIMIT 10", nativeQuery = true)
+	List<Emails>findsome();
+	
 	//find emails without group 
 	@Query(value = "SElECT * FROM emails where committees_id = :committee_id and emailgroup_id is NULL AND emails.Emaildate >= DATE(:startdateE) and emails.Emaildate < DATE_ADD(DATE(:enddateE), INTERVAL 1 DAY)", nativeQuery = true)
 	List <Emails> findemailswithoutGroup(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, 

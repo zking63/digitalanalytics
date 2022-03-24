@@ -1100,7 +1100,7 @@ public class LojoController {
 			model.addAttribute("email", email);
 			return "test.jsp";
 		}
-	    @RequestMapping("/export")
+	    /*@RequestMapping("/export")
 	    public String exportPage(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, HttpServletRequest request,   
 				 HttpServletResponse response) throws IOException {
@@ -1132,9 +1132,9 @@ public class LojoController {
 			 model.addAttribute("field", field);
 			 model.addAttribute("user", user);
 	        return "exporter.jsp";
-	    } 
-	    @RequestMapping("/export/query")
-	    public String exportqueryPage(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+	    } */
+	    @RequestMapping("/export")
+	    public String exportqueryPage(HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, HttpServletRequest request,   
 				 HttpServletResponse response) throws IOException {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1161,21 +1161,21 @@ public class LojoController {
 			 model.addAttribute("message", message);
 			 Integer field = 4;
 			 String type = "Select";
-			 String typelabel = "Select";
 			 String operator = "Select";
 			 String operand = "Operand";
+			 List<String> categories = new ArrayList<>();
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
 			 model.addAttribute("type", type);
-			 model.addAttribute("typelabel", typelabel);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
+			 model.addAttribute("categories", categories);
 	        return "ExportQuery.jsp";
-	    } 
-	    @GetMapping("/export/select")
+	    }
+	   /* @GetMapping("/export/select")
 	    public String exportType(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, HttpServletRequest request,  
 				 HttpServletResponse response) throws IOException {
@@ -1256,9 +1256,9 @@ public class LojoController {
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
 	        return "ExportQuery.jsp";
-	    } 
-	    @GetMapping("/export/query/options/range")
-	    public String exportQueryRange(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+	    } */
+	    @GetMapping("/export/query")
+	    public String exportQueryRange(@RequestParam(value = "category", required = false) List<String> categories, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam("type") String type, HttpServletRequest request,  
 				 HttpServletResponse response) throws IOException {
@@ -1391,7 +1391,7 @@ public class LojoController {
 	        return "ExportQuery.jsp";
 	    } */
 	    @GetMapping("/export/query/excel")
-	    public String exportQueryToExcel(Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+	    public String exportQueryToExcel(@RequestParam(value = "category", required = false) List<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
 				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("type") String type, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam(value = "input", required = false) List<String> input, 
@@ -1408,6 +1408,7 @@ public class LojoController {
 	    	//lists
 	    	List<Emails> emails = new ArrayList<Emails>();
 	    	 System.out.println("type: " + type);
+	    	 System.out.println("categories: " + categories);
 	    	
 			 if (field == 4) {
 				 String message = "Please select a category to export.";
@@ -1417,7 +1418,7 @@ public class LojoController {
 				 model.addAttribute("enddateD", enddateD);
 				 model.addAttribute("committee", committee);
 				 model.addAttribute("user", user);
-				 return "exporter.jsp";
+				 return "ExportQuery.jsp";
 			 }
 	    	if (field == 3) {
 				 System.out.println("Donors");
@@ -1512,7 +1513,7 @@ public class LojoController {
 				 Committees committee = cservice.findbyId(committee_id);
 				 model.addAttribute("committee", committee);
 				 model.addAttribute("user", user);
-				 return "exporter.jsp";
+				 return "ExportQuery.jsp";
 			 }
 	    	if (field == 3) {
 				 System.out.println("Donors");
