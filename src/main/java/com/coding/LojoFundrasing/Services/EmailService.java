@@ -79,7 +79,9 @@ public class EmailService {
 			System.out.println("Email" + email.getEmailName());
 		}*/
 	}
-	
+	public List<Emails> listemails() {
+		return erepo.findsome();
+	}
 	public List<Emails> CustomEmailListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException  {
 		System.out.println("in service");

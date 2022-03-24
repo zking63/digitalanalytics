@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -68,6 +69,9 @@ import com.coding.LojoFundrasing.Services.UserService;
 import com.coding.LojoFundrasing.Services.WordService;
 import com.coding.LojoFundrasing.Validation.DonorValidation;
 import com.coding.LojoFundrasing.Validation.UserValidation;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
 
 @Controller
 public class LojoController {
@@ -1084,22 +1088,43 @@ public class LojoController {
 			for (int i = 0; i < committees.size(); i++) {
 				System.out.println("committees: " + committees.get(i).getCommitteeName());
 			}
-			 String type = "Content";
-			 String operator = "Contains";
-			 //String operand = "Biden & President";
-			 String operand = "'approv'/'grade'/'support'";
-		    	String startdateD = "2022-02-12";
-		    	String enddateD = "2022-03-13";
-		    	List<Predicate> predicates = new ArrayList<>();
-		    	List<String> operandsList = new ArrayList<>();
-		    	List<EmailGroup> email = new ArrayList<>();
-		    	List<String> operands = new ArrayList<String>();
-		    	email = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-		    	System.out.println("Emailgroup size in tester " + email.size());
-			model.addAttribute("user", user);
-			model.addAttribute("email", email);
 			return "test.jsp";
 		}
+		@PostMapping(path = "/tabletest", produces = "application/json")
+		public List<Emails> gettable(Model model, HttpSession session, HttpServletRequest request) throws ParseException {
+			System.out.println("CALLED");
+		    	List<Emails> emails = eservice.listemails();
+			model.addAttribute("emails", emails);
+			JsonArray recordsArray = new JsonArray();
+			for (Emails email: emails) {
+				String currentRecord;
+				currentRecord = email.toJson();
+				currentRecord = email.toJson();
+				currentRecord.add("Id", new JsonPrimitive(email.getId());
+				currentRecord.add("Name", new JsonPrimitive(email.getString("emailName")));
+				currentRecord.add("LastName", new JsonPrimitive(employees.getString("LastName")));
+				currentRecord.add("Title", new JsonPrimitive(employees.getString("Title")));
+				currentRecord.add("BirthDate", new JsonPrimitive(employees.getString("BirthDate")));
+				if (totalRecordsAdded == false) {
+					// add the number of filtered records to the first record for client-side use
+					currentRecord.add("totalRecords", new JsonPrimitive(totalRecords));
+					totalRecordsAdded = true;
+				}
+				recordsArray.add(currentRecord);
+		    return emails;
+		}
+		/*@RequestMapping(path = "/tabletest", method = RequestMethod.GET, produces = "application/json")
+		@ResponseBody
+		public String gettable(Model model, HttpSession session, HttpServletRequest request) throws ParseException {
+			System.out.println("CALLED");
+		    	List<String> emails = new ArrayList<String>();	
+		    	emails.add("hello");
+		    	emails.add("hi");
+		    	emails.add("bye");
+			model.addAttribute("emails", emails);
+
+		    return "test.jsp";
+		}*/
 	    /*@RequestMapping("/export")
 	    public String exportPage(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, HttpServletRequest request,   
