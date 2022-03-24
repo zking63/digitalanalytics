@@ -1095,7 +1095,7 @@ public class LojoController {
 		    	List<EmailGroup> email = new ArrayList<>();
 		    	List<String> operands = new ArrayList<String>();
 		    	email = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-		    	System.out.println("Emailgroup size in controller " + email.size());
+		    	System.out.println("Emailgroup size in tester " + email.size());
 			model.addAttribute("user", user);
 			model.addAttribute("email", email);
 			return "test.jsp";
@@ -1160,14 +1160,19 @@ public class LojoController {
 			 String message = "What are you exporting?";
 			 model.addAttribute("message", message);
 			 Integer field = 4;
-			 Integer range = 0;
-			 Integer type = 0;
-			 model.addAttribute("type", type);
+			 String type = "Select";
+			 String typelabel = "Select";
+			 String operator = "Select";
+			 String operand = "Operand";
+			 model.addAttribute("message", message);
 			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("field", field);
-			 model.addAttribute("range", range);
+			 model.addAttribute("type", type);
+			 model.addAttribute("typelabel", typelabel);
+			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
 	        return "ExportQuery.jsp";
 	    } 
 	    @GetMapping("/export/select")
@@ -1238,7 +1243,6 @@ public class LojoController {
 				 return "ExportQuery.jsp";
 			 }
 			 String type = "Select";
-			 Integer range = 0;
 			 String typelabel = "Select";
 			 String operator = "Select";
 			 String operand = "Operand";
@@ -1246,7 +1250,6 @@ public class LojoController {
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
 			 model.addAttribute("type", type);
-			 model.addAttribute("range", range);
 			 model.addAttribute("typelabel", typelabel);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
@@ -1256,7 +1259,7 @@ public class LojoController {
 	    } 
 	    @GetMapping("/export/query/options/range")
 	    public String exportQueryRange(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("range") Integer range, @RequestParam("operator") String operator, 
+				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam("type") String type, HttpServletRequest request,  
 				 HttpServletResponse response) throws IOException {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1286,9 +1289,7 @@ public class LojoController {
 				 model.addAttribute("message", message);
 				 return "ExportQuery.jsp";
 			 }
-			 if(range == 0) {
-				 message = "Please select range.";
-			 }
+
 			 String select = "Select";
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateD", startdateD);
@@ -1296,7 +1297,6 @@ public class LojoController {
 			 model.addAttribute("type", type);
 			 System.out.println("type in range: " + type);
 			 model.addAttribute("Select", select);
-			 model.addAttribute("range", range);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
@@ -1393,7 +1393,7 @@ public class LojoController {
 	    @GetMapping("/export/query/excel")
 	    public String exportQueryToExcel(Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
-				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("range") Integer range, @RequestParam("type") String type, @RequestParam("operator") String operator, 
+				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("type") String type, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam(value = "input", required = false) List<String> input, 
 				 HttpServletResponse response) throws IOException, InvalidFormatException, ParseException {
 			Long user_id = (Long)session.getAttribute("user_id");
@@ -1483,7 +1483,6 @@ public class LojoController {
 			 }
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
-			 model.addAttribute("range", range);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
 			 model.addAttribute("type", type);

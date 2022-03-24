@@ -116,7 +116,11 @@
             </li>
         </ul>
         </div>
-    <form method="get" id="input-form" action="/export/query/options">
+    <form method="get" id="input-form" action="/export/query/options/range">
+    				<input type="hidden" name="page" value="${page}">
+				    <input type="hidden" name="operator" value="${operator}">
+				    <input type="hidden" name="operand" value="${operand}">
+				    <input type="hidden" name="type" value="${type}">
    	<div id="export-first-question">
         <label for="field">What are you exporting?</label>
 		<select onchange="this.form.submit()" id="field" name="field">
@@ -124,32 +128,28 @@
 			<c:when test="${ field == 0}">
 				<option name="field" value="0">Email groups</option>
 				<option name="field" value="1">Emails</option>
-		        <option name="field" value="2">Donations</option>
-		        <option name="field" value="3">Donors</option>
+		        <option name="field" value="2">Links</option>
 		        <option name="field" value="5">Tests</option>
 		        <option name="field" value="6">Top 10 Report</option>
 			</c:when>
 			<c:when test="${ field == 1}">
 				<option name="field" value="1">Emails</option>
-		        <option name="field" value="2">Donations</option>
-		        <option name="field" value="3">Donors</option>
+				<option name="field" value="2">Links</option>
 		        <option name="field" value="5">Tests</option>
 		        <option name="field" value="6">Top 10 Report</option>
 		        <option name="field" value="0">Email groups</option>
 			</c:when>
 			<c:when test="${ field == 2}">
-				<option name="field" value="2">Donations</option>
+				<option name="field" value="2">Links</option>
 				<option name="field" value="1">Emails</option>
 				<option name="field" value="0">Email groups</option>
-		        <option name="field" value="3">Donors</option>
 		        <option name="field" value="5">Tests</option>
 		        <option name="field" value="6">Top 10 Report</option>
 			</c:when>
 			<c:when test="${ field == 3}">
-				<option name="field" value="3">Donors</option>
 				<option name="field" value="0">Email groups</option>
 				<option name="field" value="1">Emails</option>
-				<option name="field" value="2">Donations</option>
+				<option name="field" value="2">Links</option>
 				<option name="field" value="5">Tests</option>
 				<option name="field" value="6">Top 10 Report</option>
 			</c:when>
@@ -157,24 +157,21 @@
 				<option name="field" value="5">Tests</option>
 				<option name="field" value="0">Email groups</option>
 				<option name="field" value="1">Emails</option>
-				<option name="field" value="2">Donations</option>
-				<option name="field" value="3">Donors</option>
+				<option name="field" value="2">Links</option>
 				<option name="field" value="6">Top 10 Report</option>
 			</c:when>
 			<c:when test="${ field == 6}">
 				<option name="field" value="6">Top 10 Report</option>
 				<option name="field" value="0">Email groups</option>
 				<option name="field" value="1">Emails</option>
-				<option name="field" value="2">Donations</option>
-				<option name="field" value="3">Donors</option>
+				<option name="field" value="2">Links</option>
 				<option name="field" value="5">Tests</option>
 			</c:when>
 			<c:otherwise>
 				<option name="field" value="4">Select</option>
 				<option name="field" value="0">Email groups</option>
 				<option name="field" value="1">Emails</option>
-		        <option name="field" value="2">Donations</option>
-		        <option name="field" value="3">Donors</option>
+		        <option name="field" value="2">Links</option>
 		        <option name="field" value="5">Tests</option>
 		        <option name="field" value="6">Top 10 Report</option>
 			</c:otherwise>
@@ -183,54 +180,45 @@
     </div>
     </form>
  <div class="export-body">
-  <div class="export-body-operators">
-    <c:choose>
-    <c:when test="${ field != 4}">
-					<form:form method="get" action="/export/query/options/range" id="input-form">
-					<div id="parameter-choices">
-				    <input type="hidden" name="page" value="${page}">
-				    <input type="hidden" name="field" value="${field}">
-				    <input type="hidden" name="operator" value="${operator}">
-				    <input type="hidden" name="operand" value="${operand}">
-				    <input type="hidden" name="type" value="${type}">
-				        <label for="range">Time period:</label>
-							<select onchange="this.form.submit()" id="range" name="range">
-							<c:choose>
-								<c:when test="${ range == 0}">
-									<option name="range" value="0">Select</option>
-							  		<option name="range" value="1">Within range</option>
-							  		<option name="range" value="2">All time</option>
-							  	</c:when>
-							  	<c:when test="${ range == 1}">
-							  		<option name="range" value="1">Within range</option>
-							  		<option name="range" value="2">All time</option>
-							  	</c:when>
-							  	<c:otherwise>
-							  		<option name="range" value="2">All time</option>
-							  		<option name="range" value="1">Within range</option>
-							  	</c:otherwise>
-							</c:choose>
-							</select>
-				        </div>
-				    </form:form>	
-							</c:when>
-			</c:choose>
 <form method="get" action="/export/query/excel" id="input-form">
 				    <input type="hidden" name="page" value="${page}">
 				    <input type="hidden" name="field" value="${field}">
-				    <input type="hidden" name="range" value="${range}">
-    					    	<c:if test="${ range == 1 }">
-						    	<div id="parameter-choices">
-						  		    <div id="date-choice">
+    					    	<div id="export-first-question" style="margin-left:455px;" >
+    					    	<c:if test="${ field != 4 }">
+						    	
+				
+						  		    <div  id="date-choice">
+						  		    	
 										<input type="date" value="${startdateD}" name="startdateD"/>
+				
 									</div>
-									<div id="date-choice">
+									
+									<div  id="date-choice">
+								
 										<input type="date" value="${enddateD}" name="enddateD"/>
 									</div>
-								</div>
+								
 					    	</c:if>
+					    	</div>
+			<div class="export-body-operators">
 			<c:choose>
 			<c:when test="${field == 1}">
+							        <div style="display:inline-block;max-width:400px;margin-bottom: 10px;margin-top: 0px;margin-left: 200px;"id="parameter-choices">
+					       <p style="margin-bottom: 0px;"> <label for="operator">Select category:</label></p>
+					        <div style="display:inline-block;max-width:200px; max-length:20px; margin: 3px; margin-top: 0px; vertical-align: top;">
+				        				<input type="checkbox" id="input" name="category" value="Fundraiser">
+										<label for="input">Fundraiser</label><br>
+										<input type="checkbox" id="input" name="category" value="Survey">
+										<label for="input">Survey</label><br>
+										</div>
+										<div style="display:inline-block;max-width:200px; max-length:10px; margin: 3px; margin-top: 0px; vertical-align: top;">
+										<input type="checkbox" id="input" name="category" value="Petition">
+										<label for="input">Petition</label><br>
+										<input type="checkbox" id="input" name="category" value="Other">
+										<label for="input">Other</label><br>
+										</div>
+			
+				        </div>
 					<div id="parameter-choices">
 				        <label for="type">Select search factor:</label>
 				        <select id="type" name="type">
@@ -259,6 +247,8 @@
 				        <div id="parameter-choices">
 					        <label for="operand"></label>
 									<textarea name="operand" placeholder="${operand }"></textarea>
+									<p style="font-size: 11px;">Place each operand in single quote marks. To include operrands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
+									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
 				        </div>
 				        <div id="export-choices-box">
@@ -336,6 +326,22 @@
 								</div>
 				</c:when>
 				<c:when test="${field == 0}">
+								        <div style="display:inline-block;max-width:400px;margin-bottom: 10px;margin-top: 0px;margin-left: 200px;"id="parameter-choices">
+					       <p style="margin-bottom: 0px;"> <label for="operator">Select category:</label></p>
+					        <div style="display:inline-block;max-width:200px; max-length:20px; margin: 3px; margin-top: 0px; vertical-align: top;">
+				        				<input type="checkbox" id="input" name="category" value="Fundraiser">
+										<label for="input">Fundraiser</label><br>
+										<input type="checkbox" id="input" name="category" value="Survey">
+										<label for="input">Survey</label><br>
+										</div>
+										<div style="display:inline-block;max-width:200px; max-length:10px; margin: 3px; margin-top: 0px; vertical-align: top;">
+										<input type="checkbox" id="input" name="category" value="Petition">
+										<label for="input">Petition</label><br>
+										<input type="checkbox" id="input" name="category" value="Other">
+										<label for="input">Other</label><br>
+										</div>
+			
+				        </div>
 					<div id="parameter-choices">
 				        <label for="type">Select search factor:</label>
 				        <select id="type" name="type">
@@ -364,6 +370,10 @@
 				        <div id="parameter-choices">
 					        <label for="operand"></label>
 									<textarea name="operand" placeholder="${operand }"></textarea>
+						</div>
+						<div id="parameter-choices">
+									<p style="font-size: 11px;">Place each operand in single quote marks. To include operrands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
+									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
 				        </div>
 				        <div id="export-choices-box">
@@ -513,7 +523,7 @@
 				    <input type="hidden" name="type" value="${type}">
 				 </c:when>
 		</c:choose>
-			<button>Download</button>
+			<button style="display:inline-block;margin-top:110px;">Download</button>
 	</form>
 							        </div>
 </div>
