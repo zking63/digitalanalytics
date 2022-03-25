@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"
-    import="jquery.datatables.model.*"%>
+<%@ page import="java.lang.*"%>
+<%@ page import="java.sql.*"%>
+<%@ page import="com.google.gson.*"%>
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,7 +43,7 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/tester",
+            "url": "http://localhost:8080/tabletest",
             "type": "POST",
             "dataType": "json",
             "contentType": "application/json",
@@ -60,7 +60,7 @@ $(document).ready(function () {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/tabletest",
+            "url": "http://localhost:8080/tabletestt",
             "type": "POST",
             "dataType": "json",
             "contentType": "application/json",

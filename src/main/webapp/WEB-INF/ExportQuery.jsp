@@ -247,7 +247,7 @@
 				        <div id="parameter-choices">
 					        <label for="operand"></label>
 									<textarea name="operand" placeholder="${operand }"></textarea>
-									<p style="font-size: 11px;">Place each operand in single quote marks. To include operrands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
+									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
 									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
 				        </div>
@@ -372,7 +372,7 @@
 									<textarea name="operand" placeholder="${operand }"></textarea>
 						</div>
 						<div id="parameter-choices">
-									<p style="font-size: 11px;">Place each operand in single quote marks. To include operrands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
+									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
 									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
 				        </div>

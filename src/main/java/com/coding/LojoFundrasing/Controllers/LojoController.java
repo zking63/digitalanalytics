@@ -386,7 +386,7 @@ public class LojoController {
 		 this.eservice.CalculateEmailData(email, committee_id);
 		 return "redirect:/emails";
 	 }
-	 @RequestMapping("/emails")
+	 @RequestMapping("/query")
 	 public String Emailpage(Model model, HttpSession session,
 			 @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
 			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE, HttpServletRequest request, 
@@ -457,6 +457,52 @@ public class LojoController {
 		 model.addAttribute("field",field);
 		 return "emails.jsp";
 	 }
+	    @GetMapping("/query/search")
+	    public String Query(@RequestParam(value = "category", required = false) List<String> categories, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("operator") String operator, 
+				 @RequestParam("operand") String operand, @RequestParam("type") String type, HttpServletRequest request,  
+				 HttpServletResponse response) throws IOException {
+			 Long user_id = (Long)session.getAttribute("user_id");
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+			 User user = uservice.findUserbyId(user_id);
+			 model.addAttribute("user", user);
+			 Long committee_id = (Long)session.getAttribute("committee_id");
+			 String pagename = request.getRequestURL().toString();
+			 System.out.println("page: " + pagename);
+			 session.setAttribute("page", pagename);
+			 System.out.println("type: " + type);
+			 Committees committee = cservice.findbyId(committee_id);
+			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
+			 model.addAttribute("committee", committee);
+			model.addAttribute("committees", committees);
+			 if (startdateD == null) {
+				 startdateD = dateFormat();
+			 }
+			 if (enddateD == null) {
+				 enddateD = dateFormat();
+			 }
+			 String message = "What is your parameter";
+			 if(field == 4) {
+				 message = "Please select a category to export.";
+				 model.addAttribute("message", message);
+				 return "ExportQuery.jsp";
+			 }
+
+			 String select = "Select";
+			 model.addAttribute("message", message);
+			 model.addAttribute("startdateD", startdateD);
+			 model.addAttribute("field", field);
+			 model.addAttribute("type", type);
+			 System.out.println("type in range: " + type);
+			 model.addAttribute("Select", select);
+			 model.addAttribute("enddateD", enddateD);
+			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+	        return "ExportQuery.jsp";
+	    } 
 	 @RequestMapping("/emails/new/group")
 	 public String NewEmailGroup(@ModelAttribute("emailgroup") EmailGroup emailgroup, Model model, 
 			 HttpSession session, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
@@ -1090,14 +1136,18 @@ public class LojoController {
 			}
 			return "test.jsp";
 		}
-		@PostMapping(path = "/tabletest", produces = "application/json")
-		public List<Emails> gettable(Model model, HttpSession session, HttpServletRequest request) throws ParseException {
+		@RequestMapping(path = "/tabletest", method = RequestMethod.GET, produces = "application/json")
+		@ResponseBody
+		public List<Emails> gettable() {
 			System.out.println("CALLED");
 		    	List<Emails> emails = eservice.listemails();
-			model.addAttribute("emails", emails);
 			JsonArray recordsArray = new JsonArray();
-			for (Emails email: emails) {
+			/*for (Emails email: emails) {
 				String currentRecord;
+				Gson g = new Gson(); 
+				String str = g.toJson(email);
+				Emails p = g.fromJson(str, Emails.class);
+				
 				currentRecord = email.toJson();
 				currentRecord = email.toJson();
 				currentRecord.add("Id", new JsonPrimitive(email.getId());
@@ -1110,54 +1160,9 @@ public class LojoController {
 					currentRecord.add("totalRecords", new JsonPrimitive(totalRecords));
 					totalRecordsAdded = true;
 				}
-				recordsArray.add(currentRecord);
+				recordsArray.add(currentRecord);*/
 		    return emails;
 		}
-		/*@RequestMapping(path = "/tabletest", method = RequestMethod.GET, produces = "application/json")
-		@ResponseBody
-		public String gettable(Model model, HttpSession session, HttpServletRequest request) throws ParseException {
-			System.out.println("CALLED");
-		    	List<String> emails = new ArrayList<String>();	
-		    	emails.add("hello");
-		    	emails.add("hi");
-		    	emails.add("bye");
-			model.addAttribute("emails", emails);
-
-		    return "test.jsp";
-		}*/
-	    /*@RequestMapping("/export")
-	    public String exportPage(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, HttpServletRequest request,   
-				 HttpServletResponse response) throws IOException {
-			 Long user_id = (Long)session.getAttribute("user_id");
-			 if (user_id == null) {
-				 return "redirect:/";
-			 }
-			 User user = uservice.findUserbyId(user_id);
-			 model.addAttribute("user", user);
-			 Long committee_id = (Long)session.getAttribute("committee_id");
-			 String pagename = request.getRequestURL().toString();
-			 System.out.println("page: " + pagename);
-			 session.setAttribute("page", pagename);
-			 Committees committee = cservice.findbyId(committee_id);
-			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
-			 model.addAttribute("committee", committee);
-			model.addAttribute("committees", committees);
-			 if (startdateD == null) {
-				 startdateD = dateFormat();
-			 }
-			 if (enddateD == null) {
-				 enddateD = dateFormat();
-			 }
-			 String message = "What are you exporting?";
-			 model.addAttribute("message", message);
-			 Integer field = 4;
-			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("enddateD", enddateD);
-			 model.addAttribute("field", field);
-			 model.addAttribute("user", user);
-	        return "exporter.jsp";
-	    } */
 	    @RequestMapping("/export")
 	    public String exportqueryPage(HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, HttpServletRequest request,   
@@ -1200,88 +1205,6 @@ public class LojoController {
 			 model.addAttribute("categories", categories);
 	        return "ExportQuery.jsp";
 	    }
-	   /* @GetMapping("/export/select")
-	    public String exportType(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, HttpServletRequest request,  
-				 HttpServletResponse response) throws IOException {
-			 Long user_id = (Long)session.getAttribute("user_id");
-			 if (user_id == null) {
-				 return "redirect:/";
-			 }
-			 User user = uservice.findUserbyId(user_id);
-			 model.addAttribute("user", user);
-			 Long committee_id = (Long)session.getAttribute("committee_id");
-			 String pagename = request.getRequestURL().toString();
-			 System.out.println("page: " + pagename);
-			 session.setAttribute("page", pagename);
-			 Committees committee = cservice.findbyId(committee_id);
-			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
-			 model.addAttribute("committee", committee);
-			model.addAttribute("committees", committees);
-			 if (startdateD == null) {
-				 startdateD = dateFormat();
-			 }
-			 if (enddateD == null) {
-				 enddateD = dateFormat();
-			 }
-			 if(field == 4) {
-				 String message = "Please select a category to export.";
-				 model.addAttribute("message", message);
-				 return "exporter.jsp";
-			 }
-			 String message = "What are you exporting?";
-			 model.addAttribute("message", message);
-			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("field", field);
-			 model.addAttribute("enddateD", enddateD);
-			 model.addAttribute("user", user);
-	        return "exporter.jsp";
-	    } 
-	    @GetMapping("/export/query/options")
-	    public String exportQueryOptions(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, HttpServletRequest request,  
-				 HttpServletResponse response) throws IOException {
-			 Long user_id = (Long)session.getAttribute("user_id");
-			 if (user_id == null) {
-				 return "redirect:/";
-			 }
-			 User user = uservice.findUserbyId(user_id);
-			 model.addAttribute("user", user);
-			 Long committee_id = (Long)session.getAttribute("committee_id");
-			 String pagename = request.getRequestURL().toString();
-			 System.out.println("page: " + pagename);
-			 session.setAttribute("page", pagename);
-			 Committees committee = cservice.findbyId(committee_id);
-			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
-			 model.addAttribute("committee", committee);
-			model.addAttribute("committees", committees);
-			 if (startdateD == null) {
-				 startdateD = dateFormat();
-			 }
-			 if (enddateD == null) {
-				 enddateD = dateFormat();
-			 }
-			 String message = "What are you exporting?";
-			 if(field == 4) {
-				 message = "Please select a category to export.";
-				 model.addAttribute("message", message);
-				 return "ExportQuery.jsp";
-			 }
-			 String type = "Select";
-			 String typelabel = "Select";
-			 String operator = "Select";
-			 String operand = "Operand";
-			 model.addAttribute("message", message);
-			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("field", field);
-			 model.addAttribute("type", type);
-			 model.addAttribute("typelabel", typelabel);
-			 model.addAttribute("enddateD", enddateD);
-			 model.addAttribute("user", user);
-			 model.addAttribute("operator", operator);
-			 model.addAttribute("operand", operand);
-	        return "ExportQuery.jsp";
-	    } */
 	    @GetMapping("/export/query")
 	    public String exportQueryRange(@RequestParam(value = "category", required = false) List<String> categories, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("operator") String operator, 
