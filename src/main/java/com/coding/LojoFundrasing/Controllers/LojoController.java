@@ -455,7 +455,7 @@ public class LojoController {
 		 model.addAttribute("user", user);
 		 model.addAttribute("email", email);
 		 model.addAttribute("field",field);
-		 return "emails.jsp";
+		 return "query.jsp";
 	 }
 	    @GetMapping("/query/search")
 	    public String Query(@RequestParam(value = "category", required = false) List<String> categories, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
@@ -501,7 +501,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
-	        return "ExportQuery.jsp";
+	        return "query.jsp";
 	    } 
 	 @RequestMapping("/emails/new/group")
 	 public String NewEmailGroup(@ModelAttribute("emailgroup") EmailGroup emailgroup, Model model, 
