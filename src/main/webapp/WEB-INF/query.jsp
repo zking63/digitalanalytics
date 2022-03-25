@@ -197,7 +197,7 @@
 			<c:choose>
 			<c:when test="${field == 1}">
 							        <div style="display:inline-block;max-width:400px;margin-bottom: 10px;margin-top: 0px;margin-left: 0px;"id="online-parameter-choices">
-					       <p style="margin: 0px;vertical-align: top;"> <label for="operator">Select category:</label></p>
+					       <p style="margin: 0px;vertical-align: top;"> <label for="category">Select category:</label></p>
 					        <div style="display:inline-block;max-width:200px; max-length:20px; margin: 3px; margin-top: 0px; vertical-align: top;">
 				        				<input type="checkbox" id="input" name="category" value="Fundraiser">
 										<label for="input">Fundraiser</label><br>
@@ -274,7 +274,7 @@
 				</c:when>
 				<c:when test="${field == 0}">
 							        <div style="display:inline-block;max-width:400px;margin-bottom: 10px;margin-top: 0px;margin-left: 0px;"id="online-parameter-choices">
-					       <p style="margin: 0px;vertical-align: top;"> <label for="operator">Select category:</label></p>
+					       <p style="margin: 0px;vertical-align: top;"> <label for="category">Select category:</label></p>
 					        <div style="display:inline-block;max-width:200px; max-length:20px; margin: 3px; margin-top: 0px; vertical-align: top;">
 				        				<input type="checkbox" id="input" name="category" value="Fundraiser">
 										<label for="input">Fundraiser</label><br>
