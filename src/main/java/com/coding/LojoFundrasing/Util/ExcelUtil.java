@@ -2864,7 +2864,7 @@ public class ExcelUtil {
         workbook.write(outputStream);
         workbook.close();
          
-        outputStream.close();
+        outputStream.flush();
 	}
     public void Donationexporter(List<Donation> donations, HttpServletResponse response) throws IOException{
         this.donations = donations;
@@ -2930,6 +2930,8 @@ public class ExcelUtil {
         workbook.close();
          
         outputStream.close();
+        outputStream.flush();
+        return;
 	}
     
 	public void Testexporter(List<test> bigtest, List<String> input, HttpServletResponse response) throws IOException{

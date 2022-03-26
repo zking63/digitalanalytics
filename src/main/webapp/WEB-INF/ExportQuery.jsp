@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ page trimDirectiveWhitespaces="true" %>
 <!DOCTYPE html>
 <html>   
 <head>
@@ -121,6 +122,14 @@
 				    <input type="hidden" name="operator" value="${operator}">
 				    <input type="hidden" name="operand" value="${operand}">
 				    <input type="hidden" name="type" value="${type}">
+				    <input type="hidden" name="startdateD" value="${startdateD}">
+				    <input type="hidden" name="enddateD" value="${enddateD}">
+     	<c:if test="${ message != null }">
+				<p style="margin-left:470px;width:500px;text-align:center;"><b><span style="color:#FF0000;"><c:out value="${ message }" /></span></b></p>					
+	</c:if>
+	     	<c:if test="${ operandsList != null }">
+				<p style="margin-left:470px;width:500px;text-align:center;"><b><span style="color:#FF0000;"><c:out value="${ operandsList }" /></span></b></p>					
+	</c:if>
    	<div id="export-first-question">
         <label for="field">What are you exporting?</label>
 		<select onchange="this.form.submit()" id="field" name="field">
@@ -183,6 +192,7 @@
 <form method="get" action="/export/query/excel" id="input-form">
 				    <input type="hidden" name="page" value="${page}">
 				    <input type="hidden" name="field" value="${field}">
+				 
     					    	<div id="export-first-question" style="margin-left:455px;" >
     					    	<c:if test="${ field != 4 }">
 						    	
@@ -226,7 +236,6 @@
 											<option value="Refcode 1">Refcode 1</option>
 											<option value="Refcode 2">Refcode 2</option>
 											<option value="Title">Title</option>
-											<option value="Category">Category</option>
 											<option value="Subject">Subject line</option>
 											<option value="Sender">Sender</option>
 											<option value="Testing">Testing</option>
@@ -246,7 +255,7 @@
 				        </div>
 				        <div id="parameter-choices">
 					        <label for="operand"></label>
-									<textarea name="operand" placeholder="${operand }"></textarea>
+									<textarea name="operand" placeholder="Operand"></textarea>
 									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
 									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
@@ -349,7 +358,6 @@
 											<option value="Refcode 1">Refcode 1</option>
 											<option value="Refcode 2">Refcode 2</option>
 											<option value="Title">Title</option>
-											<option value="Category">Category</option>
 											<option value="Subject">Subject line</option>
 											<option value="Sender">Sender</option>
 											<option value="Testing">Testing</option>
@@ -369,7 +377,7 @@
 				        </div>
 				        <div id="parameter-choices">
 					        <label for="operand"></label>
-									<textarea name="operand" placeholder="${operand }"></textarea>
+									<textarea name="operand" placeholder="Operand"></textarea>
 						</div>
 						<div id="parameter-choices">
 									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
@@ -481,7 +489,7 @@
 				        </div>
 				        <div id="parameter-choices">
 					        <label for="operand"></label>
-									<textarea name="operand" placeholder="${operand }"></textarea>
+									<textarea name="operand" placeholder="Operand"></textarea>
 						</div>
 				        </div>
 			<div id="export-choices">
@@ -523,7 +531,10 @@
 				    <input type="hidden" name="type" value="${type}">
 				 </c:when>
 		</c:choose>
-			<button style="display:inline-block;margin-top:110px;">Download</button>
+		<c:if test="${ field != 4 }">
+			<button style="display:inline-block;margin-top:110px;">Download</button>					
+		</c:if>
+			
 	</form>
 							        </div>
 </div>

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.criteria.Predicate;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -64,6 +66,7 @@ import com.coding.LojoFundrasing.Services.EmailGroupService;
 import com.coding.LojoFundrasing.Services.EmailService;
 import com.coding.LojoFundrasing.Services.ExcelService;
 import com.coding.LojoFundrasing.Services.LinkService;
+import com.coding.LojoFundrasing.Services.QueryService;
 import com.coding.LojoFundrasing.Services.TestService;
 import com.coding.LojoFundrasing.Services.UserService;
 import com.coding.LojoFundrasing.Services.WordService;
@@ -110,6 +113,9 @@ public class LojoController {
 	
 	@Autowired
 	private LinkService lservice;
+	
+	@Autowired
+	private QueryService qservice;
 	
 	@RequestMapping("/")
 	public String index(@ModelAttribute("user")User user, Model model) {
@@ -487,7 +493,7 @@ public class LojoController {
 			 if(field == 4) {
 				 message = "Please select a category to export.";
 				 model.addAttribute("message", message);
-				 return "ExportQuery.jsp";
+				 return "query.jsp";
 			 }
 
 			 String select = "Select";
@@ -1187,7 +1193,7 @@ public class LojoController {
 			 if (enddateD == null) {
 				 enddateD = dateFormat();
 			 }
-			 String message = "What are you exporting?";
+			 String message = "";
 			 model.addAttribute("message", message);
 			 Integer field = 4;
 			 String type = "Select";
@@ -1214,6 +1220,11 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
+		    	System.out.println("Start: " + startdateD);
+		    	System.out.println("End: " + enddateD);
+		    	System.out.println("type: " + type);
+		    	System.out.println("operator: " + operator);
+		    	System.out.println("operand in quuery: " + operand);
 			 User user = uservice.findUserbyId(user_id);
 			 model.addAttribute("user", user);
 			 Long committee_id = (Long)session.getAttribute("committee_id");
@@ -1231,10 +1242,18 @@ public class LojoController {
 			 if (enddateD == null) {
 				 enddateD = dateFormat();
 			 }
-			 String message = "What is your parameter";
+			 String message = "";
 			 if(field == 4) {
-				 message = "Please select a category to export.";
+				 message = "Please select a field to export.";
 				 model.addAttribute("message", message);
+				 model.addAttribute("startdateD", startdateD);
+				 model.addAttribute("field", field);
+				 model.addAttribute("type", type);
+				 model.addAttribute("enddateD", enddateD);
+				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 model.addAttribute("categories", categories);
 				 return "ExportQuery.jsp";
 			 }
 
@@ -1243,144 +1262,145 @@ public class LojoController {
 			 model.addAttribute("startdateD", startdateD);
 			 model.addAttribute("field", field);
 			 model.addAttribute("type", type);
-			 System.out.println("type in range: " + type);
 			 model.addAttribute("Select", select);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
+			 model.addAttribute("categories", categories);
 	        return "ExportQuery.jsp";
 	    } 
-	  /*  @GetMapping("/export/query/options/type")
-	    public String setexportoneQueryRange(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("type") String type, @RequestParam("operator") String operator, 
-				 @RequestParam("operand") String operand, @RequestParam("range") Integer range, HttpServletRequest request,  
-				 HttpServletResponse response) throws IOException {
-			 Long user_id = (Long)session.getAttribute("user_id");
-			 if (user_id == null) {
-				 return "redirect:/";
-			 }
-			 User user = uservice.findUserbyId(user_id);
-			 model.addAttribute("user", user);
-			 Long committee_id = (Long)session.getAttribute("committee_id");
-			 String pagename = request.getRequestURL().toString();
-			 System.out.println("page: " + pagename);
-			 session.setAttribute("page", pagename);
-			 Committees committee = cservice.findbyId(committee_id);
-			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
-			 model.addAttribute("committee", committee);
-			model.addAttribute("committees", committees);
-			 if (startdateD == null) {
-				 startdateD = dateFormat();
-			 }
-			 if (enddateD == null) {
-				 enddateD = dateFormat();
-			 }
-			 String message = "What is your parameter";
-			 if(field == 4) {
-				 message = "Please select a category to export.";
-				 model.addAttribute("message", message);
-				 return "ExportQuery.jsp";
-			 }
-			 model.addAttribute("message", message);
-			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("field", field);
-			 model.addAttribute("range", range);
-			 model.addAttribute("operator", operator);
-			 model.addAttribute("operand", operand);
-			 model.addAttribute("type", type);
-			 System.out.println("type in typerange: " + type);
-			 model.addAttribute("enddateD", enddateD);
-			 model.addAttribute("user", user);
-	        return "ExportQuery.jsp";
-	    } */
-	   /* @GetMapping("/export/query/options/typerange")
-	    public String setexportQueryRange(@ModelAttribute("donor") Donor donor, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("type") String type, @RequestParam("range") Integer range, HttpServletRequest request,  
-				 HttpServletResponse response) throws IOException {
-			 Long user_id = (Long)session.getAttribute("user_id");
-			 if (user_id == null) {
-				 return "redirect:/";
-			 }
-			 User user = uservice.findUserbyId(user_id);
-			 model.addAttribute("user", user);
-			 Long committee_id = (Long)session.getAttribute("committee_id");
-			 String pagename = request.getRequestURL().toString();
-			 System.out.println("page: " + pagename);
-			 session.setAttribute("page", pagename);
-			 Committees committee = cservice.findbyId(committee_id);
-			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
-			 model.addAttribute("committee", committee);
-			model.addAttribute("committees", committees);
-			 if (startdateD == null) {
-				 startdateD = dateFormat();
-			 }
-			 if (enddateD == null) {
-				 enddateD = dateFormat();
-			 }
-			 String message = "What is your parameter";
-			 if(field == 4) {
-				 message = "Please select a category to export.";
-				 model.addAttribute("message", message);
-				 return "ExportQuery.jsp";
-			 }
-			 String operator = "Select";
-			 String operand = "Operand";
-			 model.addAttribute("message", message);
-			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("field", field);
-			 model.addAttribute("range", range);
-			 model.addAttribute("operator", operator);
-			 model.addAttribute("operand", operand);
-			 model.addAttribute("type", type);
-			 System.out.println("type in typerange: " + type);
-			 model.addAttribute("enddateD", enddateD);
-			 model.addAttribute("user", user);
-	        return "ExportQuery.jsp";
-	    } */
 	    @GetMapping("/export/query/excel")
 	    public String exportQueryToExcel(@RequestParam(value = "category", required = false) List<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
 				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("type") String type, @RequestParam("operator") String operator, 
 				 @RequestParam("operand") String operand, @RequestParam(value = "input", required = false) List<String> input, 
-				 HttpServletResponse response) throws IOException, InvalidFormatException, ParseException {
+				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			Long user_id = (Long)session.getAttribute("user_id");
 	    	Long committee_id = (Long)session.getAttribute("committee_id");
 	    	Committees committee = cservice.findbyId(committee_id);
 	    	User user = uservice.findUserbyId(user_id);
+			 String pagename = request.getRequestURL().toString();
+			 System.out.println("page: " + pagename);
 	    	System.out.println("Start: " + startdateD);
 	    	System.out.println("End: " + enddateD);
 	    	System.out.println("Commmittee: " + committee_id);
 	    	System.out.println("type: " + type);
+	    	System.out.println("operator: " + operator);
+	    	System.out.println("operand in excel: " + operand);
+	    	System.out.println("field in excel: " + field);
+	    	
+	    	if (categories !=null) {
+	    		System.out.println("categories: " + categories);
+	    	}
+			 if (type == null) {
+				 type = "Select";
+			 }
+			 if (operator == null) {
+				 operator = "Select";
+			 }
+			 List<Emails> emails = new ArrayList<Emails>();
+			 List<String> operandsList = new ArrayList<String>();
+			
 	    	
 	    	//lists
-	    	List<Emails> emails = new ArrayList<Emails>();
-	    	 System.out.println("type: " + type);
+	    	
+	    	System.out.println("type: " + type);
 	    	 System.out.println("categories: " + categories);
 	    	
 			 if (field == 4) {
-				 String message = "Please select a category to export.";
+				 String message = "Please select a field to export.";
 				 model.addAttribute("message", message);
 				 model.addAttribute("startdateD", startdateD);
 				 model.addAttribute("field", field);
+				 model.addAttribute("type", type);
+				 System.out.println("type in range: " + type);
 				 model.addAttribute("enddateD", enddateD);
-				 model.addAttribute("committee", committee);
 				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 model.addAttribute("categories", categories);
 				 return "ExportQuery.jsp";
 			 }
-	    	if (field == 3) {
+			 else if (operator.contentEquals("Select") && !type.contentEquals("Select")) {
+				 String message = "Please select an operator";
+				 model.addAttribute("message", message);
+				 model.addAttribute("startdateD", startdateD);
+				 model.addAttribute("field", field);
+				 model.addAttribute("type", type);
+				 System.out.println("type in range: " + type);
+				 model.addAttribute("enddateD", enddateD);
+				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 model.addAttribute("categories", categories);
+				 return "ExportQuery.jsp";
+			 }
+			 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") 
+					 && (operand == null || operand.isEmpty() || operand.contentEquals("Operand"))) {
+				 String message = "Please select an operand";
+				 model.addAttribute("message", message);
+				 model.addAttribute("startdateD", startdateD);
+				 model.addAttribute("field", field);
+				 model.addAttribute("type", type);
+				 model.addAttribute("enddateD", enddateD);
+				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 model.addAttribute("categories", categories);
+				 return "ExportQuery.jsp";
+			 }
+			 else if (operand != null && !operand.isEmpty() && 
+					 !operand.contentEquals("Operand") && (type.contentEquals("Select") || operator.contentEquals("Select")) ) {
+				 String message = null;
+				 if (type.contentEquals("Select")) {
+					 message = "Please select a search factor";
+					 if (operator.contentEquals("Select") ) {
+						 message = "Please select a search factor and operator";
+					 }
+				 }
+				 else if (operator.contentEquals("Select")){
+					message = "Please select an operator";
+				 }
+				 model.addAttribute("message", message);
+				 model.addAttribute("startdateD", startdateD);
+				 model.addAttribute("field", field);
+				 model.addAttribute("type", type);
+				 model.addAttribute("enddateD", enddateD);
+				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 model.addAttribute("categories", categories);
+				 return "ExportQuery.jsp";
+			 }
+			 else if (operand != null && !operand.isEmpty() && 
+					 !operand.contentEquals("Operand") && !operand.contains("'")){
+				 String message = "Please put singular quote marks around each of your operands. E.g. 'operand'";
+				 model.addAttribute("message", message);
+				 model.addAttribute("startdateD", startdateD);
+				 model.addAttribute("field", field);
+				 model.addAttribute("type", type);
+				 model.addAttribute("enddateD", enddateD);
+				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 model.addAttribute("categories", categories);
+				 return "ExportQuery.jsp";
+				 
+		 }
+			 else if (field == 3) {
 				 System.out.println("Donors");
 				 dservice.DonorsWithinRange(startdateD, enddateD, committee_id);
 				 List<Donor> donors = dservice.orderbyDonorDesc(startdateD, enddateD, committee_id);
 				 excelService.exportToExcel(donors, response);
 			 }
-			 if (field == 2) {
-				 System.out.println("Donations");
+			 else if (field == 2) {
+				 System.out.println("Links");
 				 List<Donation> donations = donservice.DonTest(startdateD, enddateD, committee_id);
 				 excelService.exportDonationsToExcel(donations, response);
 			 }
 			 //emails
-			 if (field == 1) {
+			 else if (field == 1) {
 				 System.out.println("Emails");
 			    	List<String> operands = new ArrayList<String>();
 			    	if (operand.contains(", ")) {
@@ -1397,7 +1417,7 @@ public class LojoController {
 				 //emails = eservice.EmailListForExport(startdateD, enddateD, committee_id, type, operator, operand);
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
-			 if (field == 0) {
+			 else if (field == 0) {
 				 System.out.println("Email Groups");
 				//egservice.SortEmailsandEmailGroupsId(startdateD, enddateD, committee_id);
 				 //List<String> types = egservice.SortEmailsandEmailGroupsCategory(committee_id);
@@ -1409,20 +1429,20 @@ public class LojoController {
 				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
 				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
 		    	List<Predicate> predicates = new ArrayList<Predicate>();
-		    	List<String> operandsList = new ArrayList<String>();
 		    	List<String> operands = new ArrayList<String>();
-		    	emailgroups = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	
+		    	operandsList = egservice.PredicateCreator(response, input, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 		    	System.out.println("Emailgroup size in controller " + emailgroups.size());
-				excelService.exportEmailGroupsToExcel(emailgroups, input, response);
+				//excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			 }
-			 if (field == 5) {
+			 else if (field == 5) {
 				 System.out.println("Test");
 			     List<test> tests = tservice.TestExporter(startdateD, enddateD, committee_id, type, operator, operand);
 				 System.out.println("Tests size " + tests.size());
 				 System.out.println("input " + input);
 				 excelService.exportTestToExcel(tests, input, response);
 			 }
-			 if (field == 6) {
+			 else if (field == 6) {
 				 System.out.println("Report");
 				 List<EmailGroup> top10revenue = egservice.top10byRevenue(startdateD, enddateD, committee_id);
 				 List<EmailGroup> bottom10revenue = egservice.bottom10byRevenue(startdateD, enddateD, committee_id);
@@ -1431,16 +1451,16 @@ public class LojoController {
 				 wservice.exportWord(top10GO, top10revenue, bottom10GO, bottom10revenue, response);
 			 }
 			 model.addAttribute("startdateD", startdateD);
+			 model.addAttribute("operandsList", operandsList);
 			 model.addAttribute("field", field);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
 			 model.addAttribute("type", type);
-			 System.out.println("type in typerange: " + type);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
 			 return "ExportQuery.jsp";
 	    } 
-	    @GetMapping("/export/excel")
+	   /* @GetMapping("/export/excel")
 	    public String exportToExcel(Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
 				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("type") Integer type, @RequestParam(value = "input", required = false) List<String> input, 
@@ -1515,7 +1535,7 @@ public class LojoController {
 			 model.addAttribute("committee", committee);
 			 model.addAttribute("user", user);
 			 return "export.jsp";
-	    } 
+	    } */
 		@RequestMapping(value="/import/test")
 		public String importTests(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1700,25 +1720,35 @@ public class LojoController {
 			 return "/emails/renderemail.jsp";
 		 }
 			@RequestMapping("/testquery")
-			public String testquery(HttpSession session, HttpServletRequest request) throws ParseException {
+			public void testquery(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ParseException, IOException {
 				 Long user_id = (Long)session.getAttribute("user_id");
 				 if (user_id == null) {
-					 return "redirect:/";
+					 response.sendRedirect("loginreg.jsp");
 				 }
 				 Long committee_id = (Long)session.getAttribute("committee_id");
 				 Committees committee = cservice.findbyId(committee_id);
 				 String type = "Content";
 				 String operator = "Contains";
 				 //String operand = "Biden & President";
-				 String operand = "'approv'/'grade'/'support'";
+				 System.out.println("resp " + response);
+				 String operand = "'Biden' + 'President' + ('approv'/'grade'/'support')";
 			    	String startdateD = "2022-02-12";
 			    	String enddateD = "2022-03-13";
 			    	List<Predicate> predicates = new ArrayList<>();
 			    	List<String> operandsList = new ArrayList<>();
 			    	List<EmailGroup> emailgroups = new ArrayList<>();
 			    	List<String> operands = new ArrayList<String>();
-			    	emailgroups = egservice.PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-			    	System.out.println("Emailgroup size in controller " + emailgroups.size());
+			    	List<String> categories = new ArrayList<String>();
+			    	categories.add("Fundraiser");
+			    	categories.add("Survey");
+			    	categories.add("Petition");
+			    	categories.add("Other");
+			    	List<String> inputs = new ArrayList<String>();
+			    	inputs.add("Recipients");
+			    	// System.out.println("op check: " + qservice.operandCheck(operand));
+			    	operandsList = egservice.PredicateCreator(response, inputs, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+			    	System.out.println("op check: " + operandsList);
+			    	//System.out.println("Emailgroup size in controller " + emailgroups.size());
 			    	
 			    	/*String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
@@ -1761,6 +1791,26 @@ public class LojoController {
 				System.out.println("names: " + names);
 				 System.out.println("names size " + names.size());
 				 eservice.findEmailByName(names);*/
-				return "redirect:/home";
+			        String page = "";
+			        try {
+
+			        } catch (Exception e) {
+			          page = "home.jsp";
+			        } finally {
+			          page = "home.jsp";
+			        }
+
+			    RequestDispatcher dd=request.getRequestDispatcher(page);
+			    try {
+					dd.forward(request, response);
+				} catch (ServletException e) {
+					
+					e.printStackTrace();
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+			    	
+			
 			}	 
 }

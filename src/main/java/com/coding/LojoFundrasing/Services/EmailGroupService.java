@@ -1,5 +1,6 @@
 package com.coding.LojoFundrasing.Services;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -57,6 +59,9 @@ public class EmailGroupService {
 	
 	@Autowired
 	private EmailRepo erepo;
+	
+	@Autowired
+	private ExcelService excelservice;
 	
 	Date date = new Date();
 	
@@ -245,6 +250,9 @@ public class EmailGroupService {
 						Emails email = erepo.emailwithdonorremainder(emailGroupId, committee_id);
 						if (email.getVariant() != null) {
 							fullsendvariantdonors = email.getVariant();
+							
+						}
+						if (email.getEmailCategory() != null) {
 							category = email.getEmailCategory();
 						}
 						if (email.getLink() != null) {
@@ -645,8 +653,8 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		System.out.println("emails size " + emails.size());
 		return emails;
 	}
-	public void GetOperands(List<String> operandsList, List<Predicate> predicates, String startdate, String enddate, Committees committee, 
-			String type, String operator, String operand) throws ParseException {
+	public void GetOperands(HttpServletResponse response, List<String> inputs, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdate, String enddate, Committees committee, 
+			String type, String operator, String operand) throws ParseException, IOException {
 		System.out.println("IN GET OPS");
 		List<String> operands = new ArrayList<String>();
 		int index = 0;
@@ -656,76 +664,70 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				|| operand.contentEquals("()") || operand.contentEquals("(  )")) {
 			System.out.println("DONE");
 			if (operand == null) {
-				PredicateCreator(operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				PredicateCreator(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 			finalindex = operand.length();
-			if (operand.contains("(")) {
-				index = operand.indexOf("(");
+			if (operand.contains("('")) {
+			    try {
+			    	index = operand.indexOf("('")-1;
+			      } catch (Exception e) {
+			        System.out.println("error with parenthesis ");
+			      }
 			}
-			if (operand.contains(")")) {
-				finalindex = operand.indexOf(")");
+			if (operand.contains("')")) {
+			    try {
+			    	finalindex = operand.indexOf("')")+1;
+			      } catch (Exception e) {
+			        System.out.println("error with parenthesis ");
+			      }
 			}
 			sub = operand.substring(index, finalindex);
 			System.out.println("sub" + sub);
 			operand = null;
-			PredicateCreator(operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+			PredicateCreator(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 			return;
 		}
 		if (operand != null && (operand.contains("/") || operand.contains("+"))) {
 			if (operand.contains("/")) {
-				if (operand.contains("(")) {
-					index = operand.indexOf("(");
-					finalindex = operand.indexOf(")");
+				if (operand.contains("('")) {
+				    try {
+				    	index = operand.indexOf("('")-1;
+				      } catch (Exception e) {
+				        System.out.println("error with parenthesis ");
+				      }
+				    try {
+				    	finalindex = operand.indexOf("')")+1;
+				      } catch (Exception e) {
+				        System.out.println("error with parenthesis ");
+				      }
 					sub = operand.substring(index, finalindex);
 				}
-			/*if (operand.contains("/") || operand.contains("' /")) {
-				System.out.println("operand contains /: ");
-				if (operand.contains("(")) {
-					index = operand.indexOf("('") +2;
-					if (operand.contains("')")) {
-						finalindex = operand.indexOf("')");
-					}
-					if (operand.contains("' )")) {
-						finalindex = operand.indexOf("' )");
-					}
-					sub = operand.substring(index, finalindex);
-				}
-				else if (operand.contains("( '")) {
-					index = operand.indexOf("( '") +3;
-					if (operand.contains("')")) {
-						finalindex = operand.indexOf("')");
-					}
-					if (operand.contains("' )")) {
-						finalindex = operand.indexOf("' )");
-					}
-					sub = operand.substring(index, finalindex);
-				}
-				/*if (sub.contains("&") 
-						|| sub.contains("(") || sub.contains(")")) {
-					System.out.println("sub flagged for containing stuff in &:" + sub + ".");
-					if (sub.contains("&") && (sub.indexOf("&") == 0 || sub.indexOf("&") == 1)) {
-						System.out.println("& index:" + sub.indexOf("&") + ".");
-					}
-					
-					
-					//GetOperands(sub);
-					
-					return;
-				}*/
 				System.out.println("out of if ");
 				List<String>ops = Arrays.asList(sub.split("/", -1));
-				for (String op: ops) {
+				for (int i = 0; i < ops.size(); i++) {
+					String op = ops.get(i);
 					op = op.trim();
-					op = op.substring(op.indexOf("'")+1);
-					op = op.substring(0, op.indexOf("'"));
-					operands.add(op);
-					System.out.println("op = " +op);
+				    try {
+				    	op = op.substring(op.indexOf("'")+1);
+				      } catch (Exception e) {
+				        System.out.println("sub in try /: " + op);
+				      }
+				    try {
+				    	op = op.substring(0, op.indexOf("'"));
+				      } catch (Exception e) {
+				        System.out.println("sub in try2 /: " + op);
+				      }
+				    if (op != null && !op.isEmpty()) {
+				    	System.out.println("op is not null /: " + op);
+				    	operands.add(op);
+				    }
+					
 				}
 				if (sub.length() == operand.length()) {
 					System.out.println("sub = operand ");
 					operand = null;
-					PredicateCreator(operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					PredicateCreator(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				finalindex = operand.indexOf(sub);
@@ -742,7 +744,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				
 				operand = x.concat(y);
 				System.out.println("operands: " +operands);
-				PredicateCreator(operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				PredicateCreator(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				//GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
 				return;
 			}
@@ -759,7 +761,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 						|| index > operand.length() || finalindex > operand.length()) {
 					System.out.println("index is less " + index);
 					operand = null;
-					GetOperands(operandsList, predicates, startdate, enddate, committee, type, operator, operand);
+					GetOperands(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operand);
 					return;
 				}
 				sub = sub.substring(index, finalindex);
@@ -770,18 +772,27 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					System.out.println("sub" +sub);
 					operand = sub;
 					//System.out.println("operand" +operand +".");
-					GetOperands(operandsList, predicates, startdate, enddate, committee, type, operator, operand);
+					GetOperands(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operand);
 					return;
 				}
-				sub = sub.substring(sub.indexOf("'")+1);
-				System.out.println("sub after: " + sub);
-				sub = sub.substring(0, sub.indexOf("'"));
-				System.out.println("sub after2 : " + sub);
+			    try {
+			    	sub = sub.substring(sub.indexOf("'")+1);
+			      } catch (Exception e) {
+			        System.out.println("sub in try: " + sub);
+			      }
+				System.out.println("sub after try1: " + sub);
+			    try {
+			    	sub = sub.substring(0, sub.indexOf("'"));
+			      } catch (Exception e) {
+			        System.out.println("sub in try 2: " + sub);
+			      }
+				
+				System.out.println("sub after try2 : " + sub);
 				operands.add(sub);
 				System.out.println("operands: " +operands);
 				operand = operand.substring(finalindex, operand.length());
 				System.out.println("operand : " + operand);
-				PredicateCreator(operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				PredicateCreator(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				//GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
 				return;
 			}
@@ -793,15 +804,15 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			System.out.println("sub after2 : " + sub);
 			operands.add(sub);
 			operand = null;
-			PredicateCreator(operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+			PredicateCreator(response, inputs, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 			//System.out.println("operands: " +operands);
 			//GetOperands(startdate, enddate, committee, type, operator, operand);
 			return;
 		}
 	}
 	
-	public List<EmailGroup> PredicateCreator(List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
-			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException {
+	public List<String> PredicateCreator(HttpServletResponse response, List<String> inputs,  List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
+			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
 		System.out.println("pred create");
 		System.out.println("operand: " +operand);
 		System.out.println("operands size in pred first " + operands.size());
@@ -812,19 +823,80 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
         groups.alias("groups");
         Join<EmailGroup, Emails> emails = groups.join("Emails");
         emails.alias("emails");
-		
+        Path<String> groupPath = groups.get("emailgroupName");
+        
 		//date/committee preds
     	enddateD = enddateD + " 23:59:59";
 		Date start = new SimpleDateFormat("yyyy-MM-dd").parse(startdateD);
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(enddateD);
         Predicate committeePredicate = cb.equal(groups.get("committee"), committee);
         Predicate datePredicate =  cb.between(groups.<Date>get("date"), start, end);
+        
+        if (operator.contentEquals("Select") || type.contentEquals("Select")) {
+        	System.out.println("select");
+        	predicates.add(datePredicate);
+        	predicates.add(committeePredicate);
+        	
+			if (categories != null && categories.size() > 0 && categories.size() < 5) {
+				groupPath = emails.get("emailCategory");
+				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
+		        List<Predicate> categorypreds = new ArrayList<>();
+				if (categories.size() > 1) {
+					for (int i = 0; i <categories.size(); i++) {
+						categoryPredicate = cb.equal(groupPath, categories.get(i));
+						if (categories.get(i).contentEquals("Other")) {
+							List<Predicate> otherPreds = new ArrayList<>();
+							categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Petition");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Survey");
+							otherPreds.add(categoryPredicate);	
+							Predicate other
+							  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+							categoryPredicate = cb.and(other);
+						}
+						categorypreds.add(categoryPredicate);
+						System.out.println("CONTAINS OR");
+						if (i == categories.size() -1) {
+							Predicate orPredicate
+								  = cb.or(categorypreds.toArray(new Predicate[categorypreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+							 Predicate finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
+					}
+				}
+				else {
+					if (categories.get(0).contentEquals("Other")) {
+						List<Predicate> otherPreds = new ArrayList<>();
+						categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Petition");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Survey");
+						otherPreds.add(categoryPredicate);	
+						Predicate other
+						  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+						categoryPredicate= cb.and(other);
+					}
+					predicates.add(categoryPredicate);
+					System.out.println("preds after else  " + predicates.size());
+				}
+			}
+			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+			excelservice.exportEmailGroupsToExcel(emailgroups, inputs, response);
+        	return operandsList;
+        }
+        
         if (predicates.size() == 0 && operand != null 
         		&& !operand.isEmpty() && operands.size() == 0) {
         	System.out.println("predicates:   " + predicates.size());
         	System.out.println("operands:   " + operands.size());
         	System.out.println("operand:   " + operand);
-        	GetOperands(operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+        	GetOperands(response, inputs, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
         	//return PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
         }
         
@@ -836,7 +908,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	    	System.out.println("operands size:   " + operands.size());
 
 	    
-	        Path<String> groupPath = groups.get("emailgroupName");
+	       
 	        if (type.contentEquals("Refcode 1")) {
 	        	System.out.println("emailRefcode1");
 	        	groupPath = emails.get("emailRefcode1");
@@ -945,20 +1017,18 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				}
 				else {
 					System.out.println("operator else " + operator);
-					predicates.add(committeePredicate);
-					predicates.add(datePredicate);
 					System.out.println("preds   " + predicates.size());
 				}
 			}
 			if (operand != null && !operand.contentEquals(" ") && !operand.isEmpty()) { 
 				System.out.println("preds before reload operands " + predicates.size());
 				System.out.println("operand:" + operand +".");
-				GetOperands(operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+				GetOperands(response, inputs, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
 				return null;
 			}
 			else {
 				operand = null;
-				GetOperands(operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+				GetOperands(response, inputs, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
 				return null;
 				/*System.out.println("OPERANDS FOUND ");
 				predicates.add(committeePredicate);
@@ -982,13 +1052,64 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			}
 		}
 		else {
+			//categoryPredicate
+			if (categories != null && categories.size() > 0 && categories.size() < 5) {
+				groupPath = emails.get("emailCategory");
+				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
+		        List<Predicate> categorypreds = new ArrayList<>();
+				if (categories.size() > 1) {
+					for (int i = 0; i <categories.size(); i++) {
+						categoryPredicate = cb.equal(groupPath, categories.get(i));
+						if (categories.get(i).contentEquals("Other")) {
+							List<Predicate> otherPreds = new ArrayList<>();
+							categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Petition");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Survey");
+							otherPreds.add(categoryPredicate);	
+							Predicate other
+							  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+							categoryPredicate = cb.and(other);
+						}
+						categorypreds.add(categoryPredicate);
+						System.out.println("CONTAINS OR");
+						if (i == categories.size() -1) {
+							Predicate orPredicate
+								  = cb.or(categorypreds.toArray(new Predicate[categorypreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+							 Predicate finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
+					}
+				}
+				else {
+					if (categories.get(0).contentEquals("Other")) {
+						List<Predicate> otherPreds = new ArrayList<>();
+						categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Petition");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Survey");
+						otherPreds.add(categoryPredicate);	
+						Predicate other
+						  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+						categoryPredicate= cb.and(other);
+					}
+					predicates.add(categoryPredicate);
+					System.out.println("preds after else  " + predicates.size());
+				}
+			}
 			predicates.add(committeePredicate);
 			predicates.add(datePredicate);
 			System.out.println("********FINAL PREDS:   " + predicates.size());
 			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
 			System.out.println("Emailgroup size in custom " + emailgroups.size());
 			System.out.println("operands list " + operandsList);
-			return emailgroups;
+			excelservice.exportEmailGroupsToExcel(emailgroups, inputs, response);
+			return operandsList;
 			/*for (EmailGroup group: emailgroups) {
 				System.out.println("Group: " + group.getEmailgroupName());
 			}

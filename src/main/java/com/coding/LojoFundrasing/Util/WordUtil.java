@@ -194,6 +194,12 @@ public class WordUtil {
 			subRun.addBreak();
 			int count = 1;
 		for (int i = 0; i <emailgroups.size(); i++) {
+			String fullsend = "";
+			if (emailgroups.get(i).getFullsendvariant() == null 
+					&& emailgroups.get(i).getFullsendvariantdonors() == null 
+					&& emailgroups.get(i).getFullsendvariantprospects() == null) {
+				fullsend = " (didn't full send)";
+			}
 			
 			String counter = String.valueOf(count);
 			
@@ -201,7 +207,7 @@ public class WordUtil {
 			paragraph.setAlignment(ParagraphAlignment.CENTER);
 			XWPFRun titleRun = paragraph.createRun();
 			titleRun.setBold(true);
-			titleRun.setText("#" + counter + ") " + emailgroups.get(i).getEmailgroupName());
+			titleRun.setText("#" + counter + ") " + emailgroups.get(i).getEmailgroupName() + fullsend);
 			XWPFTable table = document.createTable(2, 7);
 			//set title paragraphs
 			XWPFParagraph sender = table.getRow(0).getCell(0).getParagraphs().get(0);
@@ -293,17 +299,41 @@ public class WordUtil {
                 	if (emailgroups.get(i).getFullsendvariant() == null) {
                 		if (emailgroups.get(i).getFullsendvariantdonors() != null) {
                 			if (emailgroups.get(i).getFullsendvariantprospects() != null) {
-                				winningsender = "Donors: " + emailgroups.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
+                				//if winner for prospects and donors is the same
+                				//set winner and loser, if different just set winner
+                				if (emailgroups.get(i).getFullsendvariantdonors().contentEquals(emailgroups.get(i).getFullsendvariantprospects())) {
+                            		if (emailgroups.get(i).getVariantA().contentEquals(emailgroups.get(i).getFullsendvariantdonors())) {
+                            			winningsender = emailgroups.get(i).getVariantA(); 
+                            			losingsender = " " + emailgroups.get(i).getVariantB(); 
+                            		}
+                            		else {
+                            			winningsender = emailgroups.get(i).getVariantB(); 
+                            			losingsender = " " + emailgroups.get(i).getVariantA(); 
+                            		}
+                				}
+                				else {
+                    				winningsender = "Donors: " + emailgroups.get(i).getFullsendvariantdonors() 
+                    						+ "\n" + "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
+                				}
                 				
                 			}
                 			else {
                 				winningsender = emailgroups.get(i).getFullsendvariantdonors();
+                        		if (emailgroups.get(i).getVariantA().contentEquals(emailgroups.get(i).getFullsendvariantdonors())) {
+                        		
+                        			losingsender = " " + emailgroups.get(i).getVariantB(); 
+                        		}
+                        		else {
+                        		
+                        			losingsender = " " + emailgroups.get(i).getVariantA(); 
+                        		}
+                				
                 			}
                 			
                 		}
                 		else { 
-                			winningsender = "A (didn't full send): " + emailgroups.get(i).getVariantA();
-                			losingsender = "B (didn't full send): " + emailgroups.get(i).getVariantB();
+                			winningsender = emailgroups.get(i).getVariantA();
+                			losingsender = emailgroups.get(i).getVariantB();
                 		}
                 	}
                 	else {
@@ -325,17 +355,40 @@ public class WordUtil {
                 	if (emailgroups.get(i).getFullsendvariant() == null) {
                 		if (emailgroups.get(i).getFullsendvariantdonors() != null) {
                 			if (emailgroups.get(i).getFullsendvariantprospects() != null) {
-                				winningsubject = "Donors: " + emailgroups.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
+                				//if winner for prospects and donors is the same
+                				//set winner and loser, if different just set winner
+                				if (emailgroups.get(i).getFullsendvariantdonors().contentEquals(emailgroups.get(i).getFullsendvariantprospects())) {
+                            		if (emailgroups.get(i).getVariantA().contentEquals(emailgroups.get(i).getFullsendvariantdonors())) {
+                            			winningsubject = emailgroups.get(i).getVariantA(); 
+                            			losingsubject = " " + emailgroups.get(i).getVariantB(); 
+                            		}
+                            		else {
+                            			winningsubject = emailgroups.get(i).getVariantB(); 
+                            			losingsubject = " " + emailgroups.get(i).getVariantA(); 
+                            		}
+                				}
+                				else {
+                					winningsubject = "Donors: " + emailgroups.get(i).getFullsendvariantdonors() 
+                    						+ "\n" + "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
+                				}
                 				
                 			}
                 			else {
                 				winningsubject = emailgroups.get(i).getFullsendvariantdonors();
+                        		if (emailgroups.get(i).getVariantA().contentEquals(emailgroups.get(i).getFullsendvariantdonors())) {
+                            		
+                        			losingsubject = " " + emailgroups.get(i).getVariantB(); 
+                        		}
+                        		else {
+                        		
+                        			losingsubject = " " + emailgroups.get(i).getVariantA(); 
+                        		}
                 			}
                 			
                 		}
                 		else { 
-                			winningsubject = "A (didn't full send): " + emailgroups.get(i).getVariantA(); 
-                			losingsubject = "B (didn't full send): " + emailgroups.get(i).getVariantB();
+                			winningsubject = emailgroups.get(i).getVariantA(); 
+                			losingsubject = emailgroups.get(i).getVariantB();
                 		}
                 	}
                 	else {
@@ -354,18 +407,20 @@ public class WordUtil {
         		}
 			//write title text
             	emailsenderrun.setBold(true);
-            	if (winningsender.contains("A (didn't full send): ")) {
+            	if (fullsend.contains("didn't full send")) {
             		emailsenderrun.setBold(false);
             	}
     			emailsenderrun.setText(winningsender);
     			emailsenderrun.addBreak();
+    			emailsenderrun.addBreak();
             	emaillosingsenderrun.setBold(false);
     			emaillosingsenderrun.setText(losingsender);
     			emailsubjectrun.setBold(true);
-        		if (winningsubject.contains("A (didn't full send): ")) {
+        		if (fullsend.contains("didn't full send")) {
         			emailsubjectrun.setBold(false);
         		}
 			emailsubjectrun.setText(winningsubject);
+			emailsubjectrun.addBreak();
 			emailsubjectrun.addBreak();
 			emaillosingsubjectrun.setBold(false);
 			emaillosingsubjectrun.setText(losingsubject);
