@@ -43,7 +43,7 @@ public class EmailRepositoryCustomImpl implements EmailRepositoryCustom{
 		query
         .select(emails)
         .where(predicates.toArray(new Predicate[] {}))
-        .orderBy(cb.asc(emails.get("id")))
+        .orderBy(cb.asc(emails.get("Emaildate")))
         .distinct(true);
 		
 		return entityManager.createQuery(query).getResultList();

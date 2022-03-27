@@ -229,7 +229,7 @@
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
 											<option value="Content">Content</option>
-											<option value="All emails">All emails</option>
+											<option value="All">All emails</option>
 						</select>
 						</p>
 						</td>
@@ -306,7 +306,7 @@
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
 											<option value="Content">Content</option>
-											<option value="All emails">All emails</option>
+											<option value="All">All emails</option>
 						</select>
 						</p>
 						</td>
@@ -367,7 +367,7 @@
 											<option value="${type}">${type}</option>
 											<option value="Testing category">Testing category</option>
 											<option value="Specific test">Specific test</option>
-											<option value="All Tests">All tests</option>
+											<option value="All">All tests</option>
 						</select>
 				        </div>
 				        <div id="online-parameter-choices">

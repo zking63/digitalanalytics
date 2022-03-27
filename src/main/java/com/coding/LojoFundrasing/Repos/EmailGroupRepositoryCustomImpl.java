@@ -41,7 +41,7 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
 		query
         .select(groups)
         .where(predicates.toArray(new Predicate[] {}))
-        .orderBy(cb.asc(groups.get("id")))
+        .orderBy(cb.asc(groups.get("date")))
         .distinct(true);
 		
 		return entityManager.createQuery(query).getResultList();

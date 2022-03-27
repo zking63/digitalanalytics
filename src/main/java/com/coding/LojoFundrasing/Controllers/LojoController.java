@@ -1307,6 +1307,8 @@ public class LojoController {
 				 operator = "Select";
 				 operand = null;
 			 }
+			 String sort = "date";
+			 String direction = "asc";
 
 			 List<Emails> emails = new ArrayList<Emails>();
 			 List<String> operandsList = new ArrayList<String>();
@@ -1410,7 +1412,7 @@ public class LojoController {
 			 }
 			 //emails
 			 else if (field == 1) {
-				emails = eservice.PredicateCreator(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+				emails = eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 				System.out.println("Emails size in controller " + emails.size());
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
@@ -1426,7 +1428,7 @@ public class LojoController {
 				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
 				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
 		    	
-		    	emailgroups = egservice.PredicateCreator(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 		    	System.out.println("Emailgroup size in controller " + emailgroups.size());
 		    	 model.addAttribute("operandsList", operandsList);
 		    	excelService.exportEmailGroupsToExcel(emailgroups, input, response);

@@ -814,7 +814,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 	}*/
 	
-	public List<EmailGroup> PredicateCreator(Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
+	public List<EmailGroup> PredicateCreator(String sort, String direction, Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
 			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
 		System.out.println("pred create");
 		System.out.println("operand: " +operand);
@@ -944,7 +944,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
         	System.out.println("predicates:   " + predicates.size());
         	System.out.println("operands:   " + operands.size());
         	System.out.println("operand:   " + operand);
-        	queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+        	queryservice.GetOperands(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
         }
         
 		if (operands.size() > 0 && !operands.get(0).isEmpty() 
@@ -1033,12 +1033,12 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			if (operand != null && !operand.contentEquals(" ") && !operand.isEmpty()) { 
 				System.out.println("preds before reload operands " + predicates.size());
 				System.out.println("operand:" + operand +".");
-				queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+				queryservice.GetOperands(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
 				return null;
 			}
 			else {
 				operand = null;
-				queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+				queryservice.GetOperands(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
 				return null;
 			}
 		}

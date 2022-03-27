@@ -36,7 +36,7 @@ public class QueryService {
 	@Autowired
 	private LinkService lservice;
 	
-	public void GetOperands(Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdate, String enddate, Committees committee, 
+	public void GetOperands(String sort, String direction, Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdate, String enddate, Committees committee, 
 			String type, String operator, String operand) throws ParseException, IOException {
 		System.out.println("IN GET OPS");
 		List<String> operands = new ArrayList<String>();
@@ -48,11 +48,11 @@ public class QueryService {
 			System.out.println("DONE");
 			if (operand == null) {
 				if (field == 0) {
-					egservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				else if (field == 1) {
-					eservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				return;
@@ -76,11 +76,11 @@ public class QueryService {
 			System.out.println("sub" + sub);
 			operand = null;
 			if (field == 0) {
-				egservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 			else if (field == 1) {
-				eservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 		}
@@ -124,11 +124,11 @@ public class QueryService {
 					System.out.println("sub = operand ");
 					operand = null;
 					if (field == 0) {
-						egservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+						egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 						return;
 					}
 					else if (field == 1) {
-						eservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+						eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 						return;
 					}
 				}
@@ -147,11 +147,11 @@ public class QueryService {
 				operand = x.concat(y);
 				System.out.println("operands: " +operands);
 				if (field == 0) {
-					egservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				else if (field == 1) {
-					eservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				//GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
@@ -170,7 +170,7 @@ public class QueryService {
 						|| index > operand.length() || finalindex > operand.length()) {
 					System.out.println("index is less " + index);
 					operand = null;
-					GetOperands(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operand);
+					GetOperands(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operand);
 					return;
 				}
 				sub = sub.substring(index, finalindex);
@@ -181,7 +181,7 @@ public class QueryService {
 					System.out.println("sub" +sub);
 					operand = sub;
 					//System.out.println("operand" +operand +".");
-					GetOperands(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operand);
+					GetOperands(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operand);
 					return;
 				}
 			    try {
@@ -202,11 +202,11 @@ public class QueryService {
 				operand = operand.substring(finalindex, operand.length());
 				System.out.println("operand : " + operand);
 				if (field == 0) {
-					egservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				else if (field == 1) {
-					eservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				//GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
@@ -221,11 +221,11 @@ public class QueryService {
 			operands.add(sub);
 			operand = null;
 			if (field == 0) {
-				egservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 			else if (field == 1) {
-				eservice.PredicateCreator(field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 			//System.out.println("operands: " +operands);
