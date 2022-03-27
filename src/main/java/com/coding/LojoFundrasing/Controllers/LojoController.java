@@ -1302,6 +1302,12 @@ public class LojoController {
 			 if (operator == null) {
 				 operator = "Select";
 			 }
+			 if (type.contentEquals("All")) {
+				 type = "Select";
+				 operator = "Select";
+				 operand = null;
+			 }
+
 			 List<Emails> emails = new ArrayList<Emails>();
 			 List<String> operandsList = new ArrayList<String>();
 			

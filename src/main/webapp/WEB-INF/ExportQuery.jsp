@@ -241,7 +241,7 @@
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
 											<option value="Content">Content</option>
-											<option value="All emails">All emails</option>
+											<option value="All">All emails</option>
 						</select>
 				        </div>
 				        <div id="parameter-choices">
@@ -363,7 +363,7 @@
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
 											<option value="Content">Content</option>
-											<option value="All emails">All emails</option>
+											<option value="All">All emails</option>
 						</select>
 				        </div>
 				        <div id="parameter-choices">
