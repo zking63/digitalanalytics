@@ -834,8 +834,54 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(enddateD);
         Predicate committeePredicate = cb.equal(groups.get("committee"), committee);
         Predicate datePredicate =  cb.between(groups.<Date>get("date"), start, end);
+        if (type.contentEquals("Refcode 1")) {
+        	System.out.println("emailRefcode1");
+        	groupPath = emails.get("emailRefcode1");
+        }
+        if (type.contentEquals("Refcode 2")) {
+        	System.out.println("emailRefcode2");
+        	groupPath = emails.get("emailRefcode2");
+        }
+        if (type.contentEquals("Title")) {
+        	System.out.println("emailgroupName");
+        	groupPath = groups.get("emailgroupName");
+        }
+        if (type.contentEquals("Category")) {
+        	System.out.println("emailCategory");
+        	groupPath = emails.get("emailCategory");
+        }
+        if (type.contentEquals("Subject")) {
+        	System.out.println("subjectLine");
+        	groupPath = emails.get("subjectLine");
+        }
+        if (type.contentEquals("Sender")) {
+        	System.out.println("sender");
+        	groupPath = emails.get("sender");
+        }
+        if (type.contentEquals("Testing")) {
+        	System.out.println("testing");
+        	groupPath = emails.get("testing");
+        }
+        if (type.contentEquals("Link")) {
+        	System.out.println("link");
+        	groupPath = emails.get("link");
+        }
+        if (type.contentEquals("Content")) {
+        	System.out.println("content");
+        	groupPath = emails.get("content");
+        }
+        if (type.contentEquals("Select")) {
+        	System.out.println("type is Select");
+        	groupPath = emails.get("emailName");
+        }
         
-        if (operator.contentEquals("Select") || type.contentEquals("Select")) {
+        if (operator.contentEquals("Select") || type.contentEquals("Select") 
+        		|| operator.contentEquals("Is blank") ) {
+			if (operator.contentEquals("Is blank")) {
+				System.out.println("operator blank " + operator);
+				predicates.add(cb.isNull(groupPath));
+				System.out.println("preds   " + predicates.size());
+			}
         	System.out.println("select");
         	predicates.add(datePredicate);
         	predicates.add(committeePredicate);
@@ -865,9 +911,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 							Predicate orPredicate
 								  = cb.or(categorypreds.toArray(new Predicate[categorypreds.size()]));
 								
-								//finalPredicates.add(equalPredicate);
+					
 							 Predicate finalP = cb.and(orPredicate);
-								//predicates = finalPredicates;
+
 								predicates.add(finalP);
 						}
 					}
@@ -899,7 +945,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
         	System.out.println("operands:   " + operands.size());
         	System.out.println("operand:   " + operand);
         	queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
-        	//return PredicateCreator(operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
         }
         
 		if (operands.size() > 0 && !operands.get(0).isEmpty() 
@@ -910,43 +955,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	    	System.out.println("operands size:   " + operands.size());
 
 	    
-	       
-	        if (type.contentEquals("Refcode 1")) {
-	        	System.out.println("emailRefcode1");
-	        	groupPath = emails.get("emailRefcode1");
-	        }
-	        if (type.contentEquals("Refcode 2")) {
-	        	System.out.println("emailRefcode2");
-	        	groupPath = emails.get("emailRefcode2");
-	        }
-	        if (type.contentEquals("Title")) {
-	        	System.out.println("emailgroupName");
-	        	groupPath = groups.get("emailgroupName");
-	        }
-	        if (type.contentEquals("Category")) {
-	        	System.out.println("emailCategory");
-	        	groupPath = emails.get("emailCategory");
-	        }
-	        if (type.contentEquals("Subject")) {
-	        	System.out.println("subjectLine");
-	        	groupPath = emails.get("subjectLine");
-	        }
-	        if (type.contentEquals("Sender")) {
-	        	System.out.println("sender");
-	        	groupPath = emails.get("sender");
-	        }
-	        if (type.contentEquals("Testing")) {
-	        	System.out.println("testing");
-	        	groupPath = emails.get("testing");
-	        }
-	        if (type.contentEquals("Link")) {
-	        	System.out.println("link");
-	        	groupPath = emails.get("link");
-	        }
-	        if (type.contentEquals("Content")) {
-	        	System.out.println("content");
-	        	groupPath = emails.get("content");
-	        }
 	       
 	        List<Predicate> finalPredicates = new ArrayList<>();
 	        List<Predicate> temppreds = new ArrayList<>();
@@ -1032,25 +1040,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 				operand = null;
 				queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
 				return null;
-				/*System.out.println("OPERANDS FOUND ");
-				predicates.add(committeePredicate);
-				predicates.add(datePredicate);
-				System.out.println("preds after com/date " + predicates.size());
-				List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
-				System.out.println("Emailgroup size in custom " + emailgroups.size());
-				System.out.println("operands list " + operandsList);
-				return emailgroups;
-				/*for (EmailGroup group: emailgroups) {
-					System.out.println("Group: " + group.getEmailgroupName());
-				}
-				/*query
-		        .select(groups)
-		        .where(predicates.toArray(new Predicate[] {}))
-		        .orderBy(cb.asc(groups.get("id")))
-		        .distinct(true);
-				
-				List<EmailGroup> emailgroups = entityManager.createQuery(query).getResultList();
-				System.out.println("Emailgroup size in custom " + emailgroups.size());*/
 			}
 		}
 		else {
@@ -1111,22 +1100,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			System.out.println("Emailgroup size in custom " + emailgroups.size());
 			System.out.println("operands list " + operandsList);
 			return emailgroups;
-			/*for (EmailGroup group: emailgroups) {
-				System.out.println("Group: " + group.getEmailgroupName());
-			}
-			/*query
-	        .select(groups)
-	        .where(predicates.toArray(new Predicate[] {}))
-	        .orderBy(cb.asc(groups.get("id")))
-	        .distinct(true);
-			
-			List<EmailGroup> emailgroups = entityManager.createQuery(query).getResultList();
-			System.out.println("Emailgroup size in custom " + emailgroups.size());
-			//List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
-			//System.out.println("Emailgroup size in custom " + emailgroups.size());
-			/*for (EmailGroup group: emailgroups) {
-				System.out.println("Group: " + group.getEmailgroupName());
-			}*/
 		}
 	}
 	

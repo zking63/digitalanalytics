@@ -721,6 +721,7 @@ public class EmailService {
 			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
 		System.out.println("pred create");
 		System.out.println("operand: " +operand);
+		System.out.println("operator in pred: " +operator);
 		System.out.println("operands size in pred first " + operands.size());
 		
         CriteriaBuilder cb = entitymanager.getCriteriaBuilder();
@@ -736,11 +737,59 @@ public class EmailService {
         Predicate committeePredicate = cb.equal(emails.get("committee"), committee);
         Predicate datePredicate =  cb.between(emails.<Date>get("Emaildate"), start, end);
         
-        if (operator.contentEquals("Select") || type.contentEquals("Select")) {
+        if (type.contentEquals("Refcode 1")) {
+        	System.out.println("emailRefcode1");
+        	groupPath = emails.get("emailRefcode1");
+        }
+        if (type.contentEquals("Refcode 2")) {
+        	System.out.println("emailRefcode2");
+        	groupPath = emails.get("emailRefcode2");
+        }
+        if (type.contentEquals("Title")) {
+        	System.out.println("emailgroupName");
+        	groupPath = emails.get("emailName");
+        }
+        if (type.contentEquals("Category")) {
+        	System.out.println("emailCategory");
+        	groupPath = emails.get("emailCategory");
+        }
+        if (type.contentEquals("Subject")) {
+        	System.out.println("subjectLine");
+        	groupPath = emails.get("subjectLine");
+        }
+        if (type.contentEquals("Sender")) {
+        	System.out.println("sender");
+        	groupPath = emails.get("sender");
+        }
+        if (type.contentEquals("Testing")) {
+        	System.out.println("testing");
+        	groupPath = emails.get("testing");
+        }
+        if (type.contentEquals("Link")) {
+        	System.out.println("link");
+        	groupPath = emails.get("link");
+        }
+        if (type.contentEquals("Content")) {
+        	System.out.println("content");
+        	groupPath = emails.get("content");
+        }
+        if (type.contentEquals("Select")) {
+        	System.out.println("type is Select");
+        	groupPath = emails.get("emailName");
+        }
+        
+        if (operator.contentEquals("Select") || type.contentEquals("Select") 
+        		|| operator.contentEquals("Is blank") ) {
+			if (operator.contentEquals("Is blank")) {
+				System.out.println("operator blank " + operator);
+				predicates.add(cb.isNull(groupPath));
+				System.out.println("preds   " + predicates.size());
+			}
         	System.out.println("select");
         	predicates.add(datePredicate);
         	predicates.add(committeePredicate);
         	
+
 			if (categories != null && categories.size() > 0 && categories.size() < 5) {
 				groupPath = emails.get("emailCategory");
 				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
@@ -790,6 +839,7 @@ public class EmailService {
 					System.out.println("preds after else  " + predicates.size());
 				}
 			}
+			System.out.println("preds  " + predicates.size());
 			List<Emails> emaillist = erc.PredPlugin(predicates);
         	return emaillist;
         }
@@ -810,43 +860,6 @@ public class EmailService {
 	    	System.out.println("operands size:   " + operands.size());
 
 	    
-	       
-	        if (type.contentEquals("Refcode 1")) {
-	        	System.out.println("emailRefcode1");
-	        	groupPath = emails.get("emailRefcode1");
-	        }
-	        if (type.contentEquals("Refcode 2")) {
-	        	System.out.println("emailRefcode2");
-	        	groupPath = emails.get("emailRefcode2");
-	        }
-	        if (type.contentEquals("Title")) {
-	        	System.out.println("emailgroupName");
-	        	groupPath = emails.get("emailName");
-	        }
-	        if (type.contentEquals("Category")) {
-	        	System.out.println("emailCategory");
-	        	groupPath = emails.get("emailCategory");
-	        }
-	        if (type.contentEquals("Subject")) {
-	        	System.out.println("subjectLine");
-	        	groupPath = emails.get("subjectLine");
-	        }
-	        if (type.contentEquals("Sender")) {
-	        	System.out.println("sender");
-	        	groupPath = emails.get("sender");
-	        }
-	        if (type.contentEquals("Testing")) {
-	        	System.out.println("testing");
-	        	groupPath = emails.get("testing");
-	        }
-	        if (type.contentEquals("Link")) {
-	        	System.out.println("link");
-	        	groupPath = emails.get("link");
-	        }
-	        if (type.contentEquals("Content")) {
-	        	System.out.println("content");
-	        	groupPath = emails.get("content");
-	        }
 	       
 	        List<Predicate> finalPredicates = new ArrayList<>();
 	        List<Predicate> temppreds = new ArrayList<>();
@@ -910,11 +923,6 @@ public class EmailService {
 					else {
 						predicates.add(temppredicate);
 					}
-					System.out.println("preds   " + predicates.size());
-				}
-				else if (operator.contentEquals("Is blank")) {
-					System.out.println("operator blank " + operator);
-					predicates.add(cb.isNull(groupPath));
 					System.out.println("preds   " + predicates.size());
 				}
 				else {

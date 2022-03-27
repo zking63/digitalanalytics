@@ -1339,7 +1339,7 @@ public class LojoController {
 				 model.addAttribute("categories", categories);
 				 return "ExportQuery.jsp";
 			 }
-			 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") 
+			 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !operator.contentEquals("Is blank")
 					 && (operand == null || operand.isEmpty() || operand.contentEquals("Operand"))) {
 				 String message = "Please select an operand";
 				 model.addAttribute("message", message);
@@ -1376,7 +1376,7 @@ public class LojoController {
 				 model.addAttribute("categories", categories);
 				 return "ExportQuery.jsp";
 			 }
-			 else if (operand != null && !operand.isEmpty() && 
+			 else if (!operator.contentEquals("Is blank") && operand != null && !operand.isEmpty() && 
 					 !operand.contentEquals("Operand") && !operand.contains("'")){
 				 String message = "Please put singular quote marks around each of your operands. E.g. 'operand'";
 				 model.addAttribute("message", message);
@@ -1405,7 +1405,7 @@ public class LojoController {
 			 //emails
 			 else if (field == 1) {
 				emails = eservice.PredicateCreator(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-				 //emails = eservice.EmailListForExport(startdateD, enddateD, committee_id, type, operator, operand);
+				System.out.println("Emails size in controller " + emails.size());
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
 			 else if (field == 0) {
