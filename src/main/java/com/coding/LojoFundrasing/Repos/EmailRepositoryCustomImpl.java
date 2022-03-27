@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -24,6 +25,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import com.coding.LojoFundrasing.Models.Committees;
+import com.coding.LojoFundrasing.Models.EmailGroup;
 import com.coding.LojoFundrasing.Models.Emails;
 
 public class EmailRepositoryCustomImpl implements EmailRepositoryCustom{
@@ -32,6 +34,20 @@ public class EmailRepositoryCustomImpl implements EmailRepositoryCustom{
     private EntityManager entityManager;
 
     @Override
+    public List<Emails> PredPlugin(List<Predicate>predicates){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Emails> query = cb.createQuery(Emails.class);
+        Root<Emails> emails = query.from(Emails.class);
+        emails.alias("emails");
+        
+		query
+        .select(emails)
+        .where(predicates.toArray(new Predicate[] {}))
+        .orderBy(cb.asc(emails.get("id")))
+        .distinct(true);
+		
+		return entityManager.createQuery(query).getResultList();
+    }
     //where both parameters must be true
     public List<Emails> findEmailByName(List<String> names) {
     	System.out.println("in impl");

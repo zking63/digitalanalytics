@@ -1290,6 +1290,9 @@ public class LojoController {
 	    	System.out.println("operand in excel: " + operand);
 	    	System.out.println("field in excel: " + field);
 	    	
+	    	List<Predicate> predicates = new ArrayList<Predicate>();
+	    	List<String> operands = new ArrayList<String>();		  
+	    	
 	    	if (categories !=null) {
 	    		System.out.println("categories: " + categories);
 	    	}
@@ -1401,19 +1404,7 @@ public class LojoController {
 			 }
 			 //emails
 			 else if (field == 1) {
-				 System.out.println("Emails");
-			    	List<String> operands = new ArrayList<String>();
-			    	if (operand.contains(", ")) {
-			    		operands = Arrays.asList(operand.split(", ", -1));
-			    	}
-			    	else if (operand.contains(",")) {
-			    		operands = Arrays.asList(operand.split(",", -1));
-			    	}
-			    	else {
-			    		operands.add(operand);
-			    	}
-			    	System.out.println("operands: " + operands);
-				emails = eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+				emails = eservice.PredicateCreator(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 				 //emails = eservice.EmailListForExport(startdateD, enddateD, committee_id, type, operator, operand);
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
@@ -1428,12 +1419,11 @@ public class LojoController {
 				 //}
 				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
 				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
-		    	List<Predicate> predicates = new ArrayList<Predicate>();
-		    	List<String> operands = new ArrayList<String>();
 		    	
-		    	operandsList = egservice.PredicateCreator(response, input, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	emailgroups = egservice.PredicateCreator(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 		    	System.out.println("Emailgroup size in controller " + emailgroups.size());
-				//excelService.exportEmailGroupsToExcel(emailgroups, input, response);
+		    	 model.addAttribute("operandsList", operandsList);
+		    	excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			 }
 			 else if (field == 5) {
 				 System.out.println("Test");
@@ -1451,7 +1441,7 @@ public class LojoController {
 				 wservice.exportWord(top10GO, top10revenue, bottom10GO, bottom10revenue, response);
 			 }
 			 model.addAttribute("startdateD", startdateD);
-			 model.addAttribute("operandsList", operandsList);
+			// model.addAttribute("operandsList", operandsList);
 			 model.addAttribute("field", field);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
@@ -1746,8 +1736,8 @@ public class LojoController {
 			    	List<String> inputs = new ArrayList<String>();
 			    	inputs.add("Recipients");
 			    	// System.out.println("op check: " + qservice.operandCheck(operand));
-			    	operandsList = egservice.PredicateCreator(response, inputs, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-			    	System.out.println("op check: " + operandsList);
+			    	emailgroups = egservice.PredicateCreator(categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+			    	System.out.println("emailgroups: " + emailgroups);
 			    	//System.out.println("Emailgroup size in controller " + emailgroups.size());
 			    	
 			    	/*String operand1 = "Biden & Joe";

@@ -1,5 +1,6 @@
 package com.coding.LojoFundrasing.Services;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -12,6 +13,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -59,6 +62,9 @@ public class EmailService {
 	@Autowired
 	private EmailRepositoryCustom erc;
 	
+	@Autowired
+	private QueryService queryservice;
+	
 	public Emails createEmail(Emails email) {
 		return erepo.save(email);
 	}
@@ -70,27 +76,9 @@ public class EmailService {
 	public List<Emails> allEmails(){
 		return erepo.findAll();
 	}
-	
-	public void findEmailByName(List<String> names) {
-		System.out.println("in service");
-		List<Emails> emails = erc.findEmailByName(names);
-		System.out.println("Email size " + emails.size());
-		/*for (Emails email: emails) {
-			System.out.println("Email" + email.getEmailName());
-		}*/
-	}
+
 	public List<Emails> listemails() {
 		return erepo.findsome();
-	}
-	public List<Emails> CustomEmailListForExport(@Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-			 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, Committees committee, String type, String operator, List<String> operands) throws ParseException  {
-		System.out.println("in service");
-		List<Emails> emails = erc.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
-		System.out.println("Email size in custom " + emails.size());
-		for (Emails email: emails) {
-			System.out.println("Email: " + email.getEmailRefcode1());
-		}
-		return emails;
 	}
 	
 	public Emails findEmailbyId(long id) {
@@ -728,159 +716,285 @@ public class EmailService {
     			lservice.CalculateLinkData (email.getOveralllink(), committee_id);
     		}
 	}
-	/*public Data getEmailData(Emails email, Long committee_id) {
-		//need to make emaildata find by email id OR add email data to email
-		Data emaildata = datarepo.findEmailData(email.getId());
-		if (emaildata != null) {
-			System.out.println("email data: " + emaildata.getId());
-		}
-		//String refcode = email.getEmailRefcode();
-		//System.out.println("refcode: " + refcode);
-		Long id = email.getId();
-		Double esum = 0.00;
-		Double eaverage = 0.00;
-		Integer donationscount = 0;
-		Integer donorscount = 0;
-		Integer recurringDonorCount = 0;
-		Integer recurringDonationCount = 0;
-		Double recurringRevenue = 0.00;
-		Double unsubscribeRate = 0.00;
-		Double clickRate = 0.00;
-		Double openRate = 0.00;
-		Double bounceRate = 0.00;
-		Double donationsOpens = 0.00;
-		Double donationsClicks = 0.00;
-		Double donorsOpens = 0.00;
-		Double donorsClicks = 0.00;
-		Double clicksOpens = 0.00;
-		List<Data> alldata = datarepo.findAll();
-		if (emaildata == null) {
-			esum = erepo.sums(id, committee_id);
-			System.out.println("esum:" + esum);
-			eaverage = erepo.averages(id, committee_id);
-			donationscount = erepo.donationscount(id, committee_id);
-			donorscount = erepo.donorscount(id, committee_id);
-			//aggregate functions
-			if (email.getBounces() != null) {
-				//variables for aggregate functions
-				Double unsubs = (double) email.getUnsubscribers();
-				Double receps = (double) email.getRecipients();
-				Double clicks = (double) email.getClicks();
-				Double opens = (double) email.getOpeners();
-				Double bounces = (double) email.getBounces();
-				//functions
-				unsubscribeRate = unsubs/receps;
-				openRate = opens/receps;
-				clickRate = clicks/receps;
-				bounceRate = bounces/receps;
-				clicksOpens = clicks/opens;
-				donationsOpens = donationscount/opens;
-				donationsClicks = donationscount/clicks;
-				donorsOpens = donorscount/opens;
-				donorsClicks = donorscount/clicks;
-			}
-			//recurring functions
-			recurringDonorCount = erepo.RecurringDonorCount(id, committee_id);
-			recurringDonationCount = erepo.RecurringDonationCount(id, committee_id);
-			recurringRevenue = erepo.RecurringDonationSum(id, committee_id);
-			//set recurring functions
-			if (recurringRevenue == null) {
-				System.out.println("recurringRevenue: " + "null");
-				recurringRevenue = 0.0;
-			}
-			else {
-				System.out.println("recurringRevenue: " + recurringRevenue);
-			}
-			email.setRecurringDonorCount(recurringDonorCount);
-			email.setRecurringDonationCount(recurringDonationCount);
-			email.setRecurringRevenue(recurringRevenue);
-			erepo.save(email);
-			emaildata = new Data(eaverage, esum, donationscount, donorscount, unsubscribeRate, clickRate, 
-					openRate, bounceRate, donationsOpens, donationsClicks, clicksOpens, donorsOpens, donorsClicks, email);
-			datarepo.save(emaildata);
-			if (email.getEmailgroup() != null) {
-				egservice.getEmailGroupData(email.getEmailgroup(), committee_id);
-			}
-			return datarepo.save(emaildata);
-		}
-		else {
-			for (int i = 0; i < alldata.size(); i++) {
-				if (id == alldata.get(i).getDataEmail().getId()) {
-					Long edid = emaildata.getId();
-					edid = alldata.get(i).getId();
-					emaildata = datarepo.findById(edid).orElse(null);
-					System.out.println("find esum: ");
-					esum = erepo.sums(id, committee_id);
-					System.out.println("after find esum: ");
-					eaverage = erepo.averages(id, committee_id);
-					System.out.println("don count: ");
-					donationscount = erepo.donationscount(id, committee_id);
-					System.out.println("after don count: ");
-					donorscount = erepo.donorscount(id, committee_id);
-					System.out.println("after donors count: ");
-					emaildata.setEmailsum(esum);
-					emaildata.setDonationcount(donationscount);
-					emaildata.setDonorcount(donorscount);
-					emaildata.setEmailAverage(eaverage);
-					//aggregate functions
-					if (email.getBounces() != null) {
-						//variables for aggregate functions
-						Double unsubs = (double) email.getUnsubscribers();
-						Double receps = (double) email.getRecipients();
-						Double clicks = (double) email.getClicks();
-						Double opens = (double) email.getOpeners();
-						Double bounces = (double) email.getBounces();
-						//functions
-						unsubscribeRate = unsubs/receps;
-						openRate = opens/receps;
-						clickRate = clicks/receps;
-						bounceRate = bounces/receps;
-						clicksOpens = clicks/opens;
-						donationsOpens = donationscount/opens;
-						donationsClicks = donationscount/clicks;
-						donorsOpens = donorscount/opens;
-						donorsClicks = donorscount/clicks;
+	
+	public List<Emails> PredicateCreator(Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
+			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
+		System.out.println("pred create");
+		System.out.println("operand: " +operand);
+		System.out.println("operands size in pred first " + operands.size());
+		
+        CriteriaBuilder cb = entitymanager.getCriteriaBuilder();
+        CriteriaQuery<Emails> query = cb.createQuery(Emails.class);
+        Root<Emails> emails = query.from(Emails.class);
+        emails.alias("emails");
+        Path<String> groupPath = emails.get("emailName");
+        
+		//date/committee preds
+    	enddateD = enddateD + " 23:59:59";
+		Date start = new SimpleDateFormat("yyyy-MM-dd").parse(startdateD);
+		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(enddateD);
+        Predicate committeePredicate = cb.equal(emails.get("committee"), committee);
+        Predicate datePredicate =  cb.between(emails.<Date>get("Emaildate"), start, end);
+        
+        if (operator.contentEquals("Select") || type.contentEquals("Select")) {
+        	System.out.println("select");
+        	predicates.add(datePredicate);
+        	predicates.add(committeePredicate);
+        	
+			if (categories != null && categories.size() > 0 && categories.size() < 5) {
+				groupPath = emails.get("emailCategory");
+				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
+		        List<Predicate> categorypreds = new ArrayList<>();
+				if (categories.size() > 1) {
+					for (int i = 0; i <categories.size(); i++) {
+						categoryPredicate = cb.equal(groupPath, categories.get(i));
+						if (categories.get(i).contentEquals("Other")) {
+							List<Predicate> otherPreds = new ArrayList<>();
+							categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Petition");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Survey");
+							otherPreds.add(categoryPredicate);	
+							Predicate other
+							  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+							categoryPredicate = cb.and(other);
+						}
+						categorypreds.add(categoryPredicate);
+						System.out.println("CONTAINS OR");
+						if (i == categories.size() -1) {
+							Predicate orPredicate
+								  = cb.or(categorypreds.toArray(new Predicate[categorypreds.size()]));
+								
+					
+							 Predicate finalP = cb.and(orPredicate);
+
+								predicates.add(finalP);
+						}
 					}
-					//setting aggregate functions
-					emaildata.setUnsubscribeRate(unsubscribeRate);
-					emaildata.setOpenRate(openRate);
-					emaildata.setClickRate(clickRate);
-					emaildata.setBounceRate(bounceRate);
-					emaildata.setClicksOpens(clicksOpens);
-					emaildata.setDonationsOpens(donationsOpens);
-					emaildata.setDonationsClicks(donationsClicks);
-					emaildata.setDonorsOpens(donorsOpens);
-					emaildata.setDonorsClicks(donorsClicks);
-					//recurring functions
-					recurringDonorCount = erepo.RecurringDonorCount(id, committee_id);
-					recurringDonationCount = erepo.RecurringDonationCount(id, committee_id);
-					recurringRevenue = erepo.RecurringDonationSum(id, committee_id);
-					if (recurringRevenue == null) {
-						System.out.println("recurringRevenue: " + "null");
-						recurringRevenue  = 0.0;
+				}
+				else {
+					if (categories.get(0).contentEquals("Other")) {
+						List<Predicate> otherPreds = new ArrayList<>();
+						categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Petition");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Survey");
+						otherPreds.add(categoryPredicate);	
+						Predicate other
+						  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+						categoryPredicate= cb.and(other);
 					}
-					else {
-						System.out.println("recurringRevenue: " + recurringRevenue);
-					}
-					//set recurring functions
-					email.setRecurringDonorCount(recurringDonorCount);
-					email.setRecurringDonationCount(recurringDonationCount);
-					email.setRecurringRevenue(recurringRevenue);
-					erepo.save(email);
-					datarepo.save(emaildata);
-					if (email.getEmailgroup() != null) {
-						egservice.getEmailGroupData(email.getEmailgroup(), committee_id);
-					}
-					return datarepo.save(emaildata);
+					predicates.add(categoryPredicate);
+					System.out.println("preds after else  " + predicates.size());
 				}
 			}
-			datarepo.save(emaildata);
-			if (email.getEmailgroup() != null) {
-				egservice.getEmailGroupData(email.getEmailgroup(), committee_id);
+			List<Emails> emaillist = erc.PredPlugin(predicates);
+        	return emaillist;
+        }
+        
+        if (predicates.size() == 0 && operand != null 
+        		&& !operand.isEmpty() && operands.size() == 0) {
+        	System.out.println("predicates:   " + predicates.size());
+        	System.out.println("operands:   " + operands.size());
+        	System.out.println("operand:   " + operand);
+        	queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+        }
+        
+		if (operands.size() > 0 && !operands.get(0).isEmpty() 
+				&& !operands.get(0).contentEquals(" ")) {
+	    	System.out.println("type:   " + type);
+	    	System.out.println("operator:   " + operator);
+	    	
+	    	System.out.println("operands size:   " + operands.size());
+
+	    
+	       
+	        if (type.contentEquals("Refcode 1")) {
+	        	System.out.println("emailRefcode1");
+	        	groupPath = emails.get("emailRefcode1");
+	        }
+	        if (type.contentEquals("Refcode 2")) {
+	        	System.out.println("emailRefcode2");
+	        	groupPath = emails.get("emailRefcode2");
+	        }
+	        if (type.contentEquals("Title")) {
+	        	System.out.println("emailgroupName");
+	        	groupPath = emails.get("emailName");
+	        }
+	        if (type.contentEquals("Category")) {
+	        	System.out.println("emailCategory");
+	        	groupPath = emails.get("emailCategory");
+	        }
+	        if (type.contentEquals("Subject")) {
+	        	System.out.println("subjectLine");
+	        	groupPath = emails.get("subjectLine");
+	        }
+	        if (type.contentEquals("Sender")) {
+	        	System.out.println("sender");
+	        	groupPath = emails.get("sender");
+	        }
+	        if (type.contentEquals("Testing")) {
+	        	System.out.println("testing");
+	        	groupPath = emails.get("testing");
+	        }
+	        if (type.contentEquals("Link")) {
+	        	System.out.println("link");
+	        	groupPath = emails.get("link");
+	        }
+	        if (type.contentEquals("Content")) {
+	        	System.out.println("content");
+	        	groupPath = emails.get("content");
+	        }
+	       
+	        List<Predicate> finalPredicates = new ArrayList<>();
+	        List<Predicate> temppreds = new ArrayList<>();
+	        Predicate finalP = cb.equal(emails.get("committee"), committee);
+			Predicate orPredicate = cb.or(predicates.toArray(new Predicate[predicates.size()]));
+			// String finaloperand = "%" + operands.get(0) + "%";
+	        for (int i = 0; i < operands.size(); i++) {
+	        	operandsList.add(operands.get(i));
+	        	String finaloperand = operands.get(i);
+	        	Predicate temppredicate = cb.equal(groupPath, finaloperand);
+	        	/*if (i > 0) {
+	        		finaloperand = finaloperand + " && " + "%" + operands.get(i) + "%";
+	        	}*/
+	        	System.out.println("finaloperand" + finaloperand +".");
+	        	System.out.println("operands size in pred  " + operands.size());
+	        	//System.out.println("emailPath  " + emailPath);
+				if (operator.contentEquals("Equals")) {
+					System.out.println("operator " + operator);
+					temppredicate = cb.equal(groupPath, finaloperand);
+					System.out.println("preds   " + predicates.size());
+					if (operands.size() > 1) {
+						temppreds.add(temppredicate);
+						System.out.println("CONTAINS OR");
+						if (i == operands.size() -1) {
+								orPredicate
+								  = cb.or(temppreds.toArray(new Predicate[temppreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+								finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
+					}
+					else {
+						predicates.add(temppredicate);
+						System.out.println("preds after else  " + predicates.size());
+					}
+				}
+				else if (operator.contentEquals("Contains")) {
+					System.out.println("operator contain " + operator);
+					finaloperand = "%" + operands.get(i) + "%";
+					temppredicate = cb.like(groupPath, finaloperand);
+					System.out.println("temp pred alias " + temppredicate.getAlias());
+					System.out.println("temp pred expression " + temppredicate.getExpressions());
+					System.out.println("final op " + finaloperand);
+					if (operands.size() > 1) {
+						temppreds.add(temppredicate);
+						System.out.println("CONTAINS OR");
+						if (i == operands.size() -1) {
+							System.out.println("last op filed " + finaloperand);
+							System.out.println("temp size " + temppreds.size());
+								orPredicate
+								  = cb.or(temppreds.toArray(new Predicate[temppreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+								finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
+					}
+					else {
+						predicates.add(temppredicate);
+					}
+					System.out.println("preds   " + predicates.size());
+				}
+				else if (operator.contentEquals("Is blank")) {
+					System.out.println("operator blank " + operator);
+					predicates.add(cb.isNull(groupPath));
+					System.out.println("preds   " + predicates.size());
+				}
+				else {
+					System.out.println("operator else " + operator);
+					System.out.println("preds   " + predicates.size());
+				}
 			}
-			return datarepo.save(emaildata);
+			if (operand != null && !operand.contentEquals(" ") && !operand.isEmpty()) { 
+				System.out.println("preds before reload operands " + predicates.size());
+				System.out.println("operand:" + operand +".");
+				queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+				return null;
+			}
+			else {
+				operand = null;
+				queryservice.GetOperands(field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operand);
+				return null;
+			}
 		}
-	}*/
+		else {
+			//categoryPredicate
+			if (categories != null && categories.size() > 0 && categories.size() < 5) {
+				groupPath = emails.get("emailCategory");
+				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
+		        List<Predicate> categorypreds = new ArrayList<>();
+				if (categories.size() > 1) {
+					for (int i = 0; i <categories.size(); i++) {
+						categoryPredicate = cb.equal(groupPath, categories.get(i));
+						if (categories.get(i).contentEquals("Other")) {
+							List<Predicate> otherPreds = new ArrayList<>();
+							categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Petition");
+							otherPreds.add(categoryPredicate);
+							categoryPredicate = cb.notEqual(groupPath, "Survey");
+							otherPreds.add(categoryPredicate);	
+							Predicate other
+							  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+							categoryPredicate = cb.and(other);
+						}
+						categorypreds.add(categoryPredicate);
+						System.out.println("CONTAINS OR");
+						if (i == categories.size() -1) {
+							Predicate orPredicate
+								  = cb.or(categorypreds.toArray(new Predicate[categorypreds.size()]));
+								
+								//finalPredicates.add(equalPredicate);
+							 Predicate finalP = cb.and(orPredicate);
+								//predicates = finalPredicates;
+								predicates.add(finalP);
+						}
+					}
+				}
+				else {
+					if (categories.get(0).contentEquals("Other")) {
+						List<Predicate> otherPreds = new ArrayList<>();
+						categoryPredicate = cb.notEqual(groupPath, "Fundraiser");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Petition");
+						otherPreds.add(categoryPredicate);
+						categoryPredicate = cb.notEqual(groupPath, "Survey");
+						otherPreds.add(categoryPredicate);	
+						Predicate other
+						  = cb.and(otherPreds.toArray(new Predicate[categorypreds.size()]));
+						categoryPredicate= cb.and(other);
+					}
+					predicates.add(categoryPredicate);
+					System.out.println("preds after else  " + predicates.size());
+				}
+			}
+			predicates.add(committeePredicate);
+			predicates.add(datePredicate);
+			System.out.println("********FINAL PREDS:   " + predicates.size());
+			List<Emails> emaillist = erc.PredPlugin(predicates);
+			System.out.println("Emails size in custom " + emaillist.size());
+			System.out.println("operands list " + operandsList);
+			return emaillist;
+		}
+	}
+
 	//sorting
 	//date/time
 	public List<Emails> EmailTest(@Param("startdateE") @DateTimeFormat(pattern ="yyyy-MM-dd") String startdateE, @Param("enddateE") 
