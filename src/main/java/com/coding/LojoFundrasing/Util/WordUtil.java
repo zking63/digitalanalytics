@@ -197,7 +197,8 @@ public class WordUtil {
 			String fullsend = "";
 			if (emailgroups.get(i).getFullsendvariant() == null 
 					&& emailgroups.get(i).getFullsendvariantdonors() == null 
-					&& emailgroups.get(i).getFullsendvariantprospects() == null) {
+					&& emailgroups.get(i).getFullsendvariantprospects() == null 
+					&& emailgroups.get(i).getFullsendemail() == null && emailgroups.get(i).getGroupemailcount() > 1) {
 				fullsend = " (didn't full send)";
 			}
 			
@@ -293,6 +294,10 @@ public class WordUtil {
 			String winningsubject = "";
 			String losingsender = "";
 			String losingsubject = "";
+			String prospectsender = null;
+			String prospectsubject = null;
+			
+				
 			
         		if (emailgroups.get(i).getGroupTest() != null && emailgroups.get(i).getGroupTest().contentEquals("SENDER")) {
         			System.out.println("tested sender");
@@ -312,8 +317,8 @@ public class WordUtil {
                             		}
                 				}
                 				else {
-                    				winningsender = "Donors: " + emailgroups.get(i).getFullsendvariantdonors() 
-                    						+ "\n" + "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
+                    				winningsender = "Donors: " + emailgroups.get(i).getFullsendvariantdonors(); 
+                    				prospectsender = "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
                 				}
                 				
                 			}
@@ -368,8 +373,8 @@ public class WordUtil {
                             		}
                 				}
                 				else {
-                					winningsubject = "Donors: " + emailgroups.get(i).getFullsendvariantdonors() 
-                    						+ "\n" + "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
+                					winningsubject = "Donors: " + emailgroups.get(i).getFullsendvariantdonors(); 
+                					prospectsubject = "Prospects: " + emailgroups.get(i).getFullsendvariantprospects();
                 				}
                 				
                 			}
@@ -413,8 +418,13 @@ public class WordUtil {
     			emailsenderrun.setText(winningsender);
     			emailsenderrun.addBreak();
     			emailsenderrun.addBreak();
-            	emaillosingsenderrun.setBold(false);
-    			emaillosingsenderrun.setText(losingsender);
+    			if (prospectsender != null) {
+    				emaillosingsenderrun.setBold(true);
+        			emaillosingsenderrun.setText(prospectsender);
+    			}else {
+                	emaillosingsenderrun.setBold(false);
+        			emaillosingsenderrun.setText(losingsender);
+    			}
     			emailsubjectrun.setBold(true);
         		if (fullsend.contains("didn't full send")) {
         			emailsubjectrun.setBold(false);
@@ -422,8 +432,13 @@ public class WordUtil {
 			emailsubjectrun.setText(winningsubject);
 			emailsubjectrun.addBreak();
 			emailsubjectrun.addBreak();
-			emaillosingsubjectrun.setBold(false);
-			emaillosingsubjectrun.setText(losingsubject);
+			if (prospectsubject != null) {
+				emaillosingsubjectrun.setBold(true);
+				emaillosingsubjectrun.setText(prospectsubject);
+			}else {
+				emaillosingsubjectrun.setBold(false);
+				emaillosingsubjectrun.setText(losingsubject);
+			}
 			emaildaterun.setText(emailgroups.get(i).getDateFormatted());
 			emailrevenuerun.setText(getRevenueFormatted(emailgroups.get(i).getGroupsum()));
 			emaildonationsrun.setText(String.valueOf(emailgroups.get(i).getGroupdonationcount()));
