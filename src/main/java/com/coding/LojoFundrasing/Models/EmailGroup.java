@@ -58,6 +58,7 @@ public class EmailGroup {
 	private String fullsendvariant;
 	private String fullsendvariantdonors;
 	private String fullsendvariantprospects;
+	private Long fullsendemail;
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
@@ -349,5 +350,11 @@ public class EmailGroup {
     	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     	return df.format(this.date);
     }
+	public Long getFullsendemail() {
+		return fullsendemail;
+	}
+	public void setFullsendemail(Long fullsendemail) {
+		this.fullsendemail = fullsendemail;
+	}
 	
 }

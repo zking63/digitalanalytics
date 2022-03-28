@@ -88,7 +88,7 @@ public class QueryService {
 			if (operand.contains("/")) {
 				if (operand.contains("('")) {
 				    try {
-				    	index = operand.indexOf("('")-1;
+				    	index = operand.indexOf("('");
 				      } catch (Exception e) {
 				        System.out.println("error with parenthesis ");
 				      }
