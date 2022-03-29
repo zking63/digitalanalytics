@@ -247,8 +247,16 @@
 						<tbody>
 				        <tr>
 						<td>
+						<c:choose>
+				        <c:when test="${operand != NULL}">
+					        <label for="operand"></label>
+									<textarea name="operand" placeholder="${operand }">${operand }</textarea>
+						</c:when>
+						<c:otherwise>
 					        <label for="operand"></label>
 									<textarea name="operand" placeholder="${operand }"></textarea>
+						</c:otherwise>
+						</c:choose>
 </td>
 </tr>
 <tr>
