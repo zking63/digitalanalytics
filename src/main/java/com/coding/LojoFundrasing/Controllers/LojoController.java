@@ -271,6 +271,7 @@ public class LojoController {
     	System.out.println("Commmittee: " + committee_id);
     	System.out.println("type: " + type);
     	System.out.println("operator: " + operator);
+    	System.out.println("operand: " + operand);
     	System.out.println("*************categories 1: " + categories);
     	 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
     	
@@ -362,12 +363,18 @@ public class LojoController {
     	
     	//lists
     	
-    	System.out.println("type: " + type);
-    	 System.out.println("categories: " + categories);
+	    	System.out.println("Start: " + startdateE);
+	    	System.out.println("End: " + enddateE);
+	    	System.out.println("Commmittee: " + committee_id);
+	    	System.out.println("type: " + type);
+	    	System.out.println("operator: " + operator);
+	    	System.out.println("operand: " + operand);
+	    	System.out.println("*************categories 1: " + categories);
     	
 		 if (operator.contentEquals("Select") && !type.contentEquals("Select")
 				 && !type.contentEquals("All")) {
 			 String message = "Please select an operator";
+			 System.out.println("msg: " + message);
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateE", startdateE);
 			 model.addAttribute("type", type);
@@ -381,9 +388,11 @@ public class LojoController {
 			 model.addAttribute("direction", direction);
 			 return "emails.jsp";
 		 }
-		 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !type.contentEquals("All") && !operator.contentEquals("Is blank")
+		 System.out.println("Email Groups");
+		 if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !type.contentEquals("All") && !operator.contentEquals("Is blank")
 				 && (operand == null || operand.isEmpty() || operand.contentEquals("Operand"))) {
 			 String message = "Please select an operand";
+			 System.out.println("msg: " + message);
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateE", startdateE);
 			 model.addAttribute("type", type);
@@ -397,18 +406,21 @@ public class LojoController {
 			 model.addAttribute("direction", direction);
 			 return "emails.jsp";
 		 }
-		 else if (operand != null && !operand.isEmpty() && 
+		 System.out.println("Email Groups");
+		if (operand != null && !operand.isEmpty() && 
 				 !operand.contentEquals("Operand") && (type.contentEquals("Select") || operator.contentEquals("Select") 
-						 || !type.contentEquals("All")) ) {
+						 || type.contentEquals("All")) ) {
 			 String message = null;
 			 if (type.contentEquals("Select")) {
-				 message = "Please select a search factor";
+				 message = "Please select a search factor to find emails with operand.";
 				 if (operator.contentEquals("Select") ) {
-					 message = "Please select a search factor and operator";
+					 message = "Please select a search factor and operator to find emails with operand.";
 				 }
+				 System.out.println("msg: " + message);
 			 }
 			 else if (operator.contentEquals("Select")){
 				message = "Please select an operator";
+				System.out.println("msg: " + message);
 			 }
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateE", startdateE);
@@ -423,9 +435,11 @@ public class LojoController {
 			 model.addAttribute("direction", direction);
 			 return "emails.jsp";
 		 }
-		 else if (!operator.contentEquals("Is blank") && operand != null && !operand.isEmpty() && 
+		System.out.println("Email Groups");
+		if (!operator.contentEquals("Is blank") && operand != null && !operand.isEmpty() && 
 				 !operand.contentEquals("Operand") && !operand.contains("'")){
 			 String message = "Please put singular quote marks around each of your operands. E.g. 'operand'";
+			 System.out.println("msg: " + message);
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateE", startdateE);
 			 model.addAttribute("type", type);
@@ -458,9 +472,6 @@ public class LojoController {
 	    	System.out.println("Emailgroup size in controller " + emailgroups.size());
 	    	 model.addAttribute("operandsList", operandsList);
 	    	 model.addAttribute("email", emailgroups);
-		 
-
-
 			 model.addAttribute("startdateE", startdateE);
 			 model.addAttribute("type", type);
 			 model.addAttribute("enddateE", enddateE);
@@ -935,13 +946,13 @@ public class LojoController {
 		 Long committee_id = (Long)session.getAttribute("committee_id");
 		 Committees committee = cservice.findbyId(committee_id);
 		 model.addAttribute("committee", committee);
-		 if (committee == this.eservice.findEmailbyId(id).getCommittee()) {
+		// if (committee == this.egservice.findEmailGroupbyId(user_id, committee_id).getCommittee()) {
 			 model.addAttribute("user", user);
-			 model.addAttribute("emails", this.eservice.findEmailbyId(id));
-		 }
+			 model.addAttribute("emailgroup", this.egservice.findEmailGroupbyId(id, committee_id));
+		/* }
 		 else {
 			 return "redirect:/committees/select";
-		 }
+		 }*/
 		 return "/emails/showemail.jsp";
 	 }
 	 @RequestMapping("/home")
@@ -1472,7 +1483,7 @@ public class LojoController {
 			 model.addAttribute("committee", committee);
 			model.addAttribute("committees", committees);
 			 if (startdateD == null) {
-				 startdateD = dateFormat();
+				 startdateD =dateFormat7daysAgo();
 			 }
 			 if (enddateD == null) {
 				 enddateD = dateFormat();
@@ -1521,7 +1532,7 @@ public class LojoController {
 			 model.addAttribute("committee", committee);
 			model.addAttribute("committees", committees);
 			 if (startdateD == null) {
-				 startdateD = dateFormat();
+				 startdateD = dateFormat7daysAgo();
 			 }
 			 if (enddateD == null) {
 				 enddateD = dateFormat();
@@ -1649,12 +1660,12 @@ public class LojoController {
 			 }
 			 else if (operand != null && !operand.isEmpty() && 
 					 !operand.contentEquals("Operand") && (type.contentEquals("Select") 
-							 || operator.contentEquals("Select") || !type.contentEquals("All")) ) {
+							 || operator.contentEquals("Select") || type.contentEquals("All")) ) {
 				 String message = null;
 				 if (type.contentEquals("Select")) {
-					 message = "Please select a search factor";
+					 message = "Please select a search factor to find emails with operand.";
 					 if (operator.contentEquals("Select") ) {
-						 message = "Please select a search factor and operator";
+						 message = "Please select a search factor and operator to find emails with operand.";
 					 }
 				 }
 				 else if (operator.contentEquals("Select")){

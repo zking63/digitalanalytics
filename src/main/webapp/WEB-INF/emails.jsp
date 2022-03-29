@@ -130,6 +130,7 @@
   <p>${type }</p>
    <p>${operator }</p>
     <p>${operand }</p>
+    <p>${message }</p>
          	<c:if test="${ message != null }">
 				<p style="margin-left:470px;width:500px;text-align:center;"><b><span style="color:#FF0000;"><c:out value="${ message }" /></span></b></p>					
 	</c:if>
@@ -542,7 +543,7 @@
 			<c:forEach items="${ email }" var="e">
 				<tr>
 					<td>${e.getDateFormatted()}</td>
-					<td>${ e.emailgroupName }</td>
+					<td><a href="/emails/${e.id}">${ e.emailgroupName }</a></td>
 					<td>${e.getdonationsOpensFormatted()}</td>
 					<td>${e.groupdonationcount}</td>
 					<td>$${e.getGroupSumFormatted()}</td>

@@ -31,29 +31,95 @@
 	</div>
 	<div class="wrapper">
 		<div class="table table-hover">
-			<h1><b>Email:</b> ${ emails.emailName }.</h1>
-			<h2>Totals</h2>
+			<h1><b>Email:</b> ${ emailgroup.emailgroupName }.</h1>
+			<h2>Properties</h2>
 			<table class="table table-hover">
 			    <thead>
 			        <tr>
-			            <th>Total number of donors</th>
 			            <th>Send date</th>
+			            <th>Subject line</th>
+			            <th>Sender</th>
+			            <th>Testing</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					<tr>
+						<td>${ emailgroup.getDateFormatted() }</td>
+						<td><c:choose>
+				        				<c:when test="${emailgroup.getGroupTest() == 'SUBJECT'}">
+				        					<p><b>${ emailgroup.fullsendvariant }</b></p>
+				        					<c:choose>
+				        					<c:when test="${emailgroup.variantA == emailgroup.fullsendvariant}">
+				        						<p>${ emailgroup.variantB}</p>
+				        					</c:when>
+				        					<c:otherwise>
+				        						<p>${ emailgroup.variantB}</p>
+				        					</c:otherwise>
+				        					</c:choose>
+				        				</c:when>
+				        				<c:otherwise>
+											<p>emailgroup.getEmails().get(0).getSubjectLine()</p>
+				        				</c:otherwise>
+				        				</c:choose>
+				        </td>
+						<td><c:choose>
+				        				<c:when test="${emailgroup.getGroupTest() == 'SENDER'}">
+				        					<p><b>${ emailgroup.fullsendvariant }</b></p>
+				        					<c:choose>
+				        					<c:when test="${emailgroup.variantA == emailgroup.fullsendvariant}">
+				        						<p>${ emailgroup.variantB}</p>
+				        					</c:when>
+				        					<c:otherwise>
+				        						<p>${ emailgroup.variantB}</p>
+				        					</c:otherwise>
+				        					</c:choose>
+				        				</c:when>
+				        				<c:otherwise>
+											<p>${ emailgroup.getEmails().get(0).getSender()}</p>
+				        				</c:otherwise>
+				        				</c:choose>
+				        </td>
+						<td>${ emailgroup.groupTest}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h2>Fundraising data</h2>
+			<table class="table table-hover">
+			    <thead>
+			        <tr>
+			            <th>Total number of donations</th>
 			            <th>Total Revenue</th>
 			            <th>Average donation</th>
 			        </tr>
 			    </thead>
 				<tbody>
 					<tr>
-						<td>${emails.emaildonationcount}</td>
-						<td>${ emails.getEmailDateFormatted() }</td>
-						<td>$${ emails.emaildonationsum }</td>
-						<td>$${ emails.emaildonationaverage }</td>
+						<td>${emailgroup.groupdonationcount}</td>
+						<td>$${ emailgroup.getGroupSumFormatted() }</td>
+						<td>$${ emailgroup.getAverageFormatted()}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h2>Performance data</h2>
+			<table class="table table-hover">
+			    <thead>
+			        <tr>
+			            <th>Total number of donations</th>
+			            <th>Total Revenue</th>
+			            <th>Average donation</th>
+			        </tr>
+			    </thead>
+				<tbody>
+					<tr>
+						<td>${emailgroup.groupdonationcount}</td>
+						<td>$${ emailgroup.getGroupSumFormatted() }</td>
+						<td>$${ emailgroup.getAverageFormatted()}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-					<table><tbody><tr><td> 
-			${emails.content} 
+					<table><tbody><tr><td style="text-align:center;margin-left:300px;"> 
+			${emailgroup.getEmails().get(0).content} 
 			</td></tr></tbody></table>
 	</div> 
 </body>
