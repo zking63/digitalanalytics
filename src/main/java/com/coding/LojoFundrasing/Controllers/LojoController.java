@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -191,6 +193,236 @@ public class LojoController {
 		cservice.createCommittee(committees);
 		return "home.jsp";
 	}
+	///query pages
+	@GetMapping("/emails/go")
+    public String EmailPage(HttpSession session, Model model, HttpServletRequest request,  
+			 HttpServletResponse response, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
+			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE) throws IOException, ParseException {
+		 Long user_id = (Long)session.getAttribute("user_id");
+		 if (user_id == null) {
+			 return "redirect:/";
+		 }
+		 String type = "Select";
+		 String operator = "Select";
+		 String operand = "Operand";
+		 String sort = "date";
+		 String direction = "asc";
+		 Integer field = 0;
+		 List<String> categories = new ArrayList<String>();
+		 
+		 if (startdateE == null) {
+			 startdateE = dateFormat7daysAgo();
+		 }
+		 if (enddateE == null) {
+			 enddateE = dateFormat();
+		 }
+		 
+		 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
+	    	List<Predicate> predicates = new ArrayList<Predicate>();
+	    	List<String> operands = new ArrayList<String>();
+	    	List<String> operandsList = new ArrayList<String>();
+		 
+	    	System.out.println("Start: " + startdateE);
+	    	System.out.println("End: " + enddateE);
+	    	System.out.println("type: " + type);
+	    	System.out.println("operator: " + operator);
+	    	System.out.println("operand in quuery: " + operand);
+		 User user = uservice.findUserbyId(user_id);
+		 model.addAttribute("user", user);
+		 Long committee_id = (Long)session.getAttribute("committee_id");
+		 String pagename = request.getRequestURL().toString();
+		 System.out.println("page: " + pagename);
+		 session.setAttribute("page", pagename);
+		 System.out.println("type: " + type);
+		 Committees committee = cservice.findbyId(committee_id);
+		List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
+		 model.addAttribute("committee", committee);
+		model.addAttribute("committees", committees);
+		 String message = "";
+		
+		emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, 
+	    			predicates, startdateE, enddateE, committee, type, operator, operands, operand);
+		 model.addAttribute("message", message);
+		 model.addAttribute("email", emailgroups);
+		 model.addAttribute("startdateE", startdateE);
+		 model.addAttribute("type", type);
+		 model.addAttribute("enddateE", enddateE);
+		 model.addAttribute("user", user);
+		 model.addAttribute("operator", operator);
+		 model.addAttribute("operand", operand);
+		 model.addAttribute("sort", sort);
+		 model.addAttribute("direction", direction);
+        return "emails.jsp";
+    } 
+    @GetMapping("/emails")
+    public String EmailQuery(@RequestParam(value = "category", required = false) List<String> categories, Model model, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
+			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE, 
+			 HttpSession session, @Param("type") String type, @Param("operator") String operator, 
+			 @Param("operand") String operand, @Param("sort") String sort, @Param("direction") String direction,
+			 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
+		Long user_id = (Long)session.getAttribute("user_id");
+    	Long committee_id = (Long)session.getAttribute("committee_id");
+    	Committees committee = cservice.findbyId(committee_id);
+    	User user = uservice.findUserbyId(user_id);
+		 String pagename = request.getRequestURL().toString();
+		 System.out.println("page in query: " + pagename);
+    	System.out.println("Start: " + startdateE);
+    	System.out.println("End: " + enddateE);
+    	System.out.println("Commmittee: " + committee_id);
+    	System.out.println("type: " + type);
+    	System.out.println("operator: " + operator);
+    	 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
+    	
+    	List<Predicate> predicates = new ArrayList<Predicate>();
+    	List<String> operands = new ArrayList<String>();		  
+    	
+		 if (type == null) {
+			 type = "Select";
+		 }
+		 if (operator == null) {
+			 operator = "Select";
+		 }
+		 if (type.contentEquals("All")) {
+			 type = "Select";
+			 operator = "Select";
+			 operand = null;
+		 }
+		 if (operand == null) {
+			 operand = "Operand";
+		 }
+		 if (sort == null) {
+			 sort = "date";
+		 }
+		 if (direction == null) {
+			 direction = "desc";
+		 }
+
+		 Integer field = 0;
+
+		 
+		 if (startdateE == null) {
+			 startdateE = dateFormat7daysAgo();
+		 }
+		 if (enddateE == null) {
+			 enddateE = dateFormat();
+		 }
+
+		 List<String> operandsList = new ArrayList<String>();
+
+    	
+    	//lists
+    	
+    	System.out.println("type: " + type);
+    	 System.out.println("categories: " + categories);
+    	
+		 if (operator.contentEquals("Select") && !type.contentEquals("Select")) {
+			 String message = "Please select an operator";
+			 model.addAttribute("message", message);
+			 model.addAttribute("startdateE", startdateE);
+			 model.addAttribute("type", type);
+			 model.addAttribute("enddateE", enddateE);
+			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+			 model.addAttribute("category", categories);
+			 model.addAttribute("email", emailgroups);
+			 model.addAttribute("sort", sort);
+			 model.addAttribute("direction", direction);
+			 return "emails.jsp";
+		 }
+		 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !operator.contentEquals("Is blank")
+				 && (operand == null || operand.isEmpty() || operand.contentEquals("Operand"))) {
+			 String message = "Please select an operand";
+			 model.addAttribute("message", message);
+			 model.addAttribute("startdateE", startdateE);
+			 model.addAttribute("type", type);
+			 model.addAttribute("enddateE", enddateE);
+			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+			 model.addAttribute("category", categories);
+			 model.addAttribute("email", emailgroups);
+			 model.addAttribute("sort", sort);
+			 model.addAttribute("direction", direction);
+			 return "emails.jsp";
+		 }
+		 else if (operand != null && !operand.isEmpty() && 
+				 !operand.contentEquals("Operand") && (type.contentEquals("Select") || operator.contentEquals("Select")) ) {
+			 String message = null;
+			 if (type.contentEquals("Select")) {
+				 message = "Please select a search factor";
+				 if (operator.contentEquals("Select") ) {
+					 message = "Please select a search factor and operator";
+				 }
+			 }
+			 else if (operator.contentEquals("Select")){
+				message = "Please select an operator";
+			 }
+			 model.addAttribute("message", message);
+			 model.addAttribute("startdateE", startdateE);
+			 model.addAttribute("type", type);
+			 model.addAttribute("enddateE", enddateE);
+			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+			 model.addAttribute("category", categories);
+			 model.addAttribute("email", emailgroups);
+			 model.addAttribute("sort", sort);
+			 model.addAttribute("direction", direction);
+			 return "emails.jsp";
+		 }
+		 else if (!operator.contentEquals("Is blank") && operand != null && !operand.isEmpty() && 
+				 !operand.contentEquals("Operand") && !operand.contains("'")){
+			 String message = "Please put singular quote marks around each of your operands. E.g. 'operand'";
+			 model.addAttribute("message", message);
+			 model.addAttribute("startdateE", startdateE);
+			 model.addAttribute("type", type);
+			 model.addAttribute("enddateE", enddateE);
+			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+			 model.addAttribute("category", categories);
+			 model.addAttribute("email", emailgroups);
+			 model.addAttribute("sort", sort);
+			 model.addAttribute("direction", direction);
+			 return "emails.jsp";
+			 
+	 }
+
+
+			 System.out.println("Email Groups");
+			//egservice.SortEmailsandEmailGroupsId(startdateD, enddateD, committee_id);
+			 //List<String> types = egservice.SortEmailsandEmailGroupsCategory(committee_id);
+			// System.out.println("Emails Groups size " + map.size());
+			// for (int i = 0; i < map.size(); i++) {
+				 //System.out.println("id: " + map.get(i));
+				 
+			 //}
+
+			//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
+	    	
+	    	emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, 
+	    			predicates, startdateE, enddateE, committee, type, operator, operands, operand);
+	    	System.out.println("Emailgroup size in controller " + emailgroups.size());
+	    	 model.addAttribute("operandsList", operandsList);
+	    	 model.addAttribute("email", emailgroups);
+		 
+
+
+			 model.addAttribute("startdateE", startdateE);
+			 model.addAttribute("type", type);
+			 model.addAttribute("enddateE", enddateE);
+			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+			 model.addAttribute("category", categories);
+			 model.addAttribute("sort", sort);
+			 model.addAttribute("direction", direction);
+			 return "emails.jsp";
+    } 
+	
+	
+	
 	 @RequestMapping("/newdonor")
 	 public String newDonorPage(@ModelAttribute("donor") Donor donor, Model model, HttpSession session) {
 		 Long user_id = (Long)session.getAttribute("user_id");
@@ -393,7 +625,7 @@ public class LojoController {
 		 return "redirect:/emails";
 	 }
 	 @RequestMapping("/query")
-	 public String Emailpage(Model model, HttpSession session,
+	 public String Querypage(Model model, HttpSession session,
 			 @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
 			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE, HttpServletRequest request, 
 			 @Param("field") String field) {

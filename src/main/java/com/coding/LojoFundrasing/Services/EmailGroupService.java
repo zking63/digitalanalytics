@@ -822,6 +822,8 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
 		System.out.println("pred create");
 		System.out.println("operand: " +operand);
+		System.out.println("sort: " +sort);
+		System.out.println("direction: " +direction);
 		System.out.println("operands size in pred first " + operands.size());
 		
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -939,7 +941,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					System.out.println("preds after else  " + predicates.size());
 				}
 			}
-			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(sort, direction, predicates);
         	return emailgroups;
         }
         
@@ -1100,7 +1102,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			predicates.add(committeePredicate);
 			predicates.add(datePredicate);
 			System.out.println("********FINAL PREDS:   " + predicates.size());
-			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(predicates);
+			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(sort, direction, predicates);
 			System.out.println("Emailgroup size in custom " + emailgroups.size());
 			System.out.println("operands list " + operandsList);
 			return emailgroups;

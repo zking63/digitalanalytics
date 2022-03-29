@@ -30,7 +30,7 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
     private EntityManager entityManager;
 
     @Override
-    public List<EmailGroup> PredPlugin(List<Predicate>predicates){
+    public List<EmailGroup> PredPlugin(String sort, String direction, List<Predicate>predicates){
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
         Root<EmailGroup> groups = query.from(EmailGroup.class);
@@ -38,11 +38,23 @@ public class EmailGroupRepositoryCustomImpl implements EmailGroupRepositoryCusto
         Join<EmailGroup, Emails> emails = groups.join("Emails");
         emails.alias("emails");
         
-		query
-        .select(groups)
-        .where(predicates.toArray(new Predicate[] {}))
-        .orderBy(cb.asc(groups.get("date")))
-        .distinct(true);
+		System.out.println("sort: " +sort);
+		System.out.println("direction: " +direction);
+        
+        if (direction.contentEquals("desc")) {
+			query
+	        .select(groups)
+	        .where(predicates.toArray(new Predicate[] {}))
+	        .orderBy(cb.desc(groups.get(sort)))
+	        .distinct(true);
+        }
+        else {
+			query
+	        .select(groups)
+	        .where(predicates.toArray(new Predicate[] {}))
+	        .orderBy(cb.asc(groups.get(sort)))
+	        .distinct(true);
+        }
 		
 		return entityManager.createQuery(query).getResultList();
     }
