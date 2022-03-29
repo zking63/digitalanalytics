@@ -123,7 +123,10 @@
 					<input type="hidden" name="direction" value="${ direction}">
 				    
 <div class="online-body-operators">
- <p>${category }</p>
+ <p>${fundraiser }</p>
+ <p>${survey }</p>
+ <p>${petition }</p>
+ <p>${other }</p>
   <p>${type }</p>
    <p>${operator }</p>
     <p>${operand }</p>
@@ -149,16 +152,54 @@
 							        <div style="display:inline-block;max-width:400px;margin-bottom: 10px;margin-top: 0px;margin-left: 0px;"id="online-parameter-choices">
 					       <p style="margin: 0px;vertical-align: top;"> <label for="category">Select category:</label></p>
 					        <div style="display:inline-block;max-width:200px; max-length:20px; margin: 3px; margin-top: 0px; vertical-align: top;">
-				        				<input type="checkbox" id="input" name="category" value="Fundraiser">
-										<label for="input">Fundraiser</label><br>
-										<input type="checkbox" id="input" name="category" value="Survey">
-										<label for="input">Survey</label><br>
-										</div>
-										<div style="display:inline-block;max-width:200px; max-length:10px; margin: 3px; margin-top: 0px; vertical-align: top;">
-										<input type="checkbox" id="input" name="category" value="Petition">
-										<label for="input">Petition</label><br>
-										<input type="checkbox" id="input" name="category" value="Other">
-										<label for="input">Other</label><br>
+				        	
+				        		
+				        				<c:choose>
+				        				<c:when test="${fundraiser == 1}">
+				        					<input type="checkbox" id="input" name="category" value="Fundraiser" checked = "checked">
+											<label for="input">Fundraiser</label><br>
+				        				</c:when>
+				        				<c:otherwise>
+				        					<input type="checkbox" id="input" name="category" value="Fundraiser">
+											<label for="input">Fundraiser</label><br>
+				        				</c:otherwise>
+				        				</c:choose>
+				        				
+				        				<c:choose>
+				        				<c:when test="${survey== 1}">
+				        					<input type="checkbox" id="input" name="category" value="Survey" checked = "checked">
+											<label for="input">Survey</label><br>
+				        				</c:when>
+				        				<c:otherwise>
+				        					<input type="checkbox" id="input" name="category" value="Survey">
+											<label for="input">Survey</label><br>
+				        				</c:otherwise>
+				        				</c:choose>
+				        				
+				        				<c:choose>
+				        				<c:when test="${petition== 1}">
+				        					<input type="checkbox" id="input" name="category" value="Petition" checked = "checked">
+											<label for="input">Petition</label><br>
+				        				</c:when>
+				        				<c:otherwise>
+				        					<input type="checkbox" id="input" name="category" value="Petition">
+											<label for="input">Petition</label><br>
+				        				</c:otherwise>
+				        				</c:choose>
+				        				
+				        				<c:choose>
+				        				<c:when test="${other== 1}">
+				        					<input type="checkbox" id="input" name="category" value="Other" checked = "checked">
+											<label for="input">Other</label><br>
+				        				</c:when>
+				        				<c:otherwise>
+				        					<input type="checkbox" id="input" name="category" value="Other">
+											<label for="input">Other</label><br>
+				        				</c:otherwise>
+				        				</c:choose>
+				  
+
+							
 										</div>
 			
 				        </div>
@@ -240,6 +281,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>^</button>
 					</form>
 					<form class="pointer" method="GET" action="/emails">
@@ -251,6 +296,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>v</button>
 					</form>
 				</th>
@@ -264,6 +313,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>^</button>
 					</form>
 					<form class="pointer" method="GET" action="/emails">
@@ -275,6 +328,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>v</button>
 					</form>
 	            </th>
@@ -288,6 +345,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>^</button>
 					</form>
 					<form class="pointer" method="GET" action="/emails">
@@ -299,6 +360,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>v</button>
 					</form>
 	            </th>
@@ -312,6 +377,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>^</button>
 					</form>
 					<form class="pointer" method="GET" action="/emails">
@@ -323,6 +392,10 @@
 						<input type="hidden" name="startdateE" value="${ startdateE}">
 						<input type="hidden" name="enddateE" value="${ enddateE}">
 						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
 						<button>v</button>
 					</form>
 	            </th>

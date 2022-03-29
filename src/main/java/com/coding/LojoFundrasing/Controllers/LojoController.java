@@ -255,10 +255,10 @@ public class LojoController {
         return "emails.jsp";
     } 
     @GetMapping("/emails")
-    public String EmailQuery(@RequestParam(value = "category", required = false) List<String> categories, Model model, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
+    public String EmailQuery(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
 			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE, 
 			 HttpSession session, @Param("type") String type, @Param("operator") String operator, 
-			 @Param("operand") String operand, @Param("sort") String sort, @Param("direction") String direction,
+			 @Param("operand") String operand, @Param("sort") String sort, @Param("direction") String direction, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 			 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 		Long user_id = (Long)session.getAttribute("user_id");
     	Long committee_id = (Long)session.getAttribute("committee_id");
@@ -271,6 +271,7 @@ public class LojoController {
     	System.out.println("Commmittee: " + committee_id);
     	System.out.println("type: " + type);
     	System.out.println("operator: " + operator);
+    	System.out.println("*************categories 1: " + categories);
     	 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
     	
     	List<Predicate> predicates = new ArrayList<Predicate>();
@@ -296,6 +297,55 @@ public class LojoController {
 		 if (direction == null) {
 			 direction = "desc";
 		 }
+		 if (fundraiser == null) {
+			 fundraiser = 0;
+		 }
+		 if (survey == null) {
+			 survey = 0;
+		 }
+		 if (petition == null) {
+			 petition = 0;
+		 }
+		 if (other == null) {
+			 other = 0;
+		 }
+		 if (categories == null || categories.isEmpty() || categories.size() == 0) {
+			 categories = new ArrayList<String>();
+			 if (fundraiser == 1) {
+				 categories.add("Fundraiser");
+			 }
+			 if (survey == 1) {
+				 categories.add("Survey");
+			 }
+			 if (petition == 1) {
+				 categories.add("Petition");
+			 }
+			 if (other == 1) {
+				 categories.add("Other");
+			 }
+		 }
+		 if (categories != null && !categories.isEmpty() && categories.size() > 0) {
+				 if (categories.contains("Fundraiser")) {
+					 fundraiser = 1;
+					 System.out.println("fundraiser: " + fundraiser);
+				 }
+				 if (categories.contains("Survey")) {
+					 survey = 1;
+					 System.out.println("survey: " + survey);
+				 }
+				 if (categories.contains("Petition")) {
+					 petition = 1;
+					 System.out.println("petition: " + petition);
+				 }
+				 if (categories.contains("Other")) {
+					 other = 1;
+					 System.out.println("other: " + other);
+				 }
+		 }
+		model.addAttribute("fundraiser", fundraiser);
+		model.addAttribute("survey", survey);
+		model.addAttribute("petition", petition);
+		model.addAttribute("other", other);
 
 		 Integer field = 0;
 
@@ -324,7 +374,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
-			 model.addAttribute("category", categories);
+			 //model.addAttribute("category", categories);
 			 model.addAttribute("email", emailgroups);
 			 model.addAttribute("sort", sort);
 			 model.addAttribute("direction", direction);
@@ -340,7 +390,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
-			 model.addAttribute("category", categories);
+			// model.addAttribute("category", categories);
 			 model.addAttribute("email", emailgroups);
 			 model.addAttribute("sort", sort);
 			 model.addAttribute("direction", direction);
@@ -365,7 +415,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
-			 model.addAttribute("category", categories);
+			// model.addAttribute("category", categories);
 			 model.addAttribute("email", emailgroups);
 			 model.addAttribute("sort", sort);
 			 model.addAttribute("direction", direction);
@@ -381,7 +431,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
-			 model.addAttribute("category", categories);
+			// model.addAttribute("category", categories);
 			 model.addAttribute("email", emailgroups);
 			 model.addAttribute("sort", sort);
 			 model.addAttribute("direction", direction);
@@ -415,7 +465,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
-			 model.addAttribute("category", categories);
+			 //model.addAttribute("category", categories);
 			 model.addAttribute("sort", sort);
 			 model.addAttribute("direction", direction);
 			 return "emails.jsp";
