@@ -284,12 +284,12 @@ public class LojoController {
 			 operator = "Select";
 		 }
 		 if (type.contentEquals("All")) {
-			 type = "Select";
+			 type = "All";
 			 operator = "Select";
 			 operand = null;
 		 }
-		 if (operand == null) {
-			 operand = "Operand";
+		 if (operand == null || operand.isEmpty()) {
+			 operand = null;
 		 }
 		 if (sort == null) {
 			 sort = "date";
@@ -365,7 +365,8 @@ public class LojoController {
     	System.out.println("type: " + type);
     	 System.out.println("categories: " + categories);
     	
-		 if (operator.contentEquals("Select") && !type.contentEquals("Select")) {
+		 if (operator.contentEquals("Select") && !type.contentEquals("Select")
+				 && !type.contentEquals("All")) {
 			 String message = "Please select an operator";
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateE", startdateE);
@@ -380,7 +381,7 @@ public class LojoController {
 			 model.addAttribute("direction", direction);
 			 return "emails.jsp";
 		 }
-		 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !operator.contentEquals("Is blank")
+		 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !type.contentEquals("All") && !operator.contentEquals("Is blank")
 				 && (operand == null || operand.isEmpty() || operand.contentEquals("Operand"))) {
 			 String message = "Please select an operand";
 			 model.addAttribute("message", message);
@@ -397,7 +398,8 @@ public class LojoController {
 			 return "emails.jsp";
 		 }
 		 else if (operand != null && !operand.isEmpty() && 
-				 !operand.contentEquals("Operand") && (type.contentEquals("Select") || operator.contentEquals("Select")) ) {
+				 !operand.contentEquals("Operand") && (type.contentEquals("Select") || operator.contentEquals("Select") 
+						 || !type.contentEquals("All")) ) {
 			 String message = null;
 			 if (type.contentEquals("Select")) {
 				 message = "Please select a search factor";

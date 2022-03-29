@@ -882,6 +882,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
         }
         
         if (operator.contentEquals("Select") || type.contentEquals("Select") 
+        		|| type.contentEquals("All") 
         		|| operator.contentEquals("Is blank") ) {
 			if (operator.contentEquals("Is blank")) {
 				System.out.println("operator blank " + operator);

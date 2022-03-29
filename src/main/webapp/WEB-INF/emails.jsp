@@ -130,6 +130,9 @@
   <p>${type }</p>
    <p>${operator }</p>
     <p>${operand }</p>
+         	<c:if test="${ message != null }">
+				<p style="margin-left:470px;width:500px;text-align:center;"><b><span style="color:#FF0000;"><c:out value="${ message }" /></span></b></p>					
+	</c:if>
     					    	<div id="online-parameter-choices">
     					  
 						    	
@@ -220,7 +223,7 @@
 											<option value="Testing">Testing</option>
 											<option value="Link">Link</option>
 											<option value="Content">Content</option>
-											<option value="All emails">All emails</option>
+											<option value="All">All emails</option>
 						</select>
 						</p>
 						</td>
@@ -250,11 +253,11 @@
 						<c:choose>
 				        <c:when test="${operand != NULL}">
 					        <label for="operand"></label>
-									<textarea name="operand" placeholder="${operand }">${operand }</textarea>
+									<textarea name="operand">${operand }</textarea>
 						</c:when>
 						<c:otherwise>
 					        <label for="operand"></label>
-									<textarea name="operand" placeholder="${operand }"></textarea>
+									<textarea name="operand" placeholder="Operand"></textarea>
 						</c:otherwise>
 						</c:choose>
 </td>
