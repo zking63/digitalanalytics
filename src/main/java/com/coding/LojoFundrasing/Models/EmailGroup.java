@@ -1,5 +1,6 @@
 package com.coding.LojoFundrasing.Models;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -350,6 +351,67 @@ public class EmailGroup {
     	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     	return df.format(this.date);
     }
+	public Double getAverageFormatted() {
+		Double number = this.getGroupaverage();
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		return number;
+	}
+	public String getdonationsOpensFormatted() {
+		Double number = this.groupdonationsOpens;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getclicksOpensFormatted() {
+		Double number = this.getGroupclicksOpens();
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getOpenRateFormatted() {
+		Double number = this.groupopenRate;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public Double getGroupSumFormatted() {
+		Double number = this.groupsum;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		return number;
+	}
 	public Long getFullsendemail() {
 		return fullsendemail;
 	}
