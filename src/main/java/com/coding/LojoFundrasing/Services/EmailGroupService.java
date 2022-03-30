@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -817,6 +818,181 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			return;
 		}
 	}*/
+	
+	public HashMap<String, String> GroupWinnerAndLoser(EmailGroup emailgroup) {
+		HashMap<String, String> map = new HashMap<>();
+		String winningsender = "";
+		String winningsubject = "";
+		String losingsender = "";
+		String losingsubject = "";
+		String prospectsender = null;
+		String prospectsubject = null;
+		String nofullsend = null;
+		
+		if (emailgroup.getFullsendvariant() == null 
+				&& emailgroup.getFullsendvariantdonors() == null 
+				&& emailgroup.getFullsendvariantprospects() == null 
+				&& emailgroup.getFullsendemail() == null && emailgroup.getGroupemailcount() > 1) {
+			nofullsend = " (didn't full send)";
+			map.put("nofullsend", nofullsend);
+		}
+
+    		if (emailgroup.getGroupTest() != null && emailgroup.getGroupTest().contentEquals("SENDER")) {
+    			System.out.println("tested sender");
+            	if (emailgroup.getFullsendvariant() == null) {
+            		if (emailgroup.getFullsendvariantdonors() != null) {
+            			if (emailgroup.getFullsendvariantprospects() != null) {
+            				//if winner for prospects and donors is the same
+            				//set winner and loser, if different just set winner
+            				if (emailgroup.getFullsendvariantdonors().contentEquals(emailgroup.getFullsendvariantprospects())) {
+                        		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariantdonors())) {
+                        			winningsender = emailgroup.getVariantA(); 
+                        			losingsender = " " + emailgroup.getVariantB(); 
+                        			map.put("winningsender", winningsender);
+                        			map.put("losingsender", losingsender);
+                        		}
+                        		else {
+                        			winningsender = emailgroup.getVariantB(); 
+                        			losingsender = " " + emailgroup.getVariantA(); 
+                        			map.put("winningsender", winningsender);
+                        			map.put("losingsender", losingsender);
+                        		}
+            				}
+            				else {
+                				winningsender = "Donors: " + emailgroup.getFullsendvariantdonors(); 
+                				prospectsender = "Prospects: " + emailgroup.getFullsendvariantprospects();
+                    			map.put("winningsender", winningsender);
+                    			map.put("prospectsender", prospectsender);
+            				}
+            				
+            			}
+            			else {
+            				winningsender = emailgroup.getFullsendvariantdonors();
+                    		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariantdonors())) {
+                    		
+                    			losingsender = " " + emailgroup.getVariantB(); 
+                    			map.put("losingsender", losingsender);
+                    		}
+                    		else {
+                    		
+                    			losingsender = " " + emailgroup.getVariantA(); 
+                    			map.put("losingsender", losingsender);
+                    		}
+            				
+            			}
+            			
+            		}
+            		else { 
+            			winningsender = emailgroup.getVariantA();
+            			losingsender = emailgroup.getVariantB();
+            			map.put("winningsender", winningsender);
+            			map.put("losingsender", losingsender);
+            		}
+            	}
+            	else {
+            		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariant())) {
+            			winningsender = emailgroup.getFullsendvariant(); 
+            			losingsender = " " + emailgroup.getVariantB(); 
+            			map.put("winningsender", winningsender);
+            			map.put("losingsender", losingsender);
+            		}
+            		else {
+            			winningsender = emailgroup.getFullsendvariant(); 
+            			losingsender = " " + emailgroup.getVariantA(); 
+            			map.put("winningsender", winningsender);
+            			map.put("losingsender", losingsender);
+            		}
+            	}
+    		}
+    		else {
+    			winningsender = emailgroup.getEmails().get(0).getSender();
+    			map.put("winningsender", winningsender);
+    		}
+    		if (emailgroup.getGroupTest() != null && emailgroup.getGroupTest().contentEquals("SUBJECT")) {
+    			System.out.println("tested subject");
+            	if (emailgroup.getFullsendvariant() == null) {
+            		if (emailgroup.getFullsendvariantdonors() != null) {
+            			if (emailgroup.getFullsendvariantprospects() != null) {
+            				//if winner for prospects and donors is the same
+            				//set winner and loser, if different just set winner
+            				if (emailgroup.getFullsendvariantdonors().contentEquals(emailgroup.getFullsendvariantprospects())) {
+                        		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariantdonors())) {
+                        			winningsubject = emailgroup.getVariantA(); 
+                        			losingsubject = " " + emailgroup.getVariantB(); 
+                        			map.put("winningsubject", winningsubject);
+                        			map.put("losingsubject", losingsubject);
+                        		}
+                        		else {
+                        			winningsubject = emailgroup.getVariantB(); 
+                        			losingsubject = " " + emailgroup.getVariantA(); 
+                        			map.put("winningsubject", winningsubject);
+                        			map.put("losingsubject", losingsubject);
+                        		}
+            				}
+            				else {
+            					winningsubject = "Donors: " + emailgroup.getFullsendvariantdonors(); 
+            					prospectsubject = "Prospects: " + emailgroup.getFullsendvariantprospects();
+                    			map.put("winningsubject", winningsubject);
+                    			map.put("prospectsubject", prospectsubject);
+            				}
+            				
+            			}
+            			else {
+            				winningsubject = emailgroup.getFullsendvariantdonors();
+                    		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariantdonors())) {
+                        		
+                    			losingsubject = " " + emailgroup.getVariantB();
+                    			map.put("losingsubject", losingsubject);
+                    		}
+                    		else {
+                    		
+                    			losingsubject = " " + emailgroup.getVariantA(); 
+                    			map.put("losingsubject", losingsubject);
+                    		}
+            			}
+            			
+            		}
+            		else { 
+            			winningsubject = emailgroup.getVariantA(); 
+            			losingsubject = emailgroup.getVariantB();
+            			map.put("winningsubject", winningsubject);
+            			map.put("losingsubject", losingsubject);
+            		}
+            	}
+            	else {
+            		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariant())) {
+            			winningsubject = emailgroup.getFullsendvariant(); 
+            			losingsubject = " " + emailgroup.getVariantB(); 
+            			map.put("winningsubject", winningsubject);
+            			map.put("losingsubject", losingsubject);
+            		}
+            		else {
+            			winningsubject = emailgroup.getFullsendvariant(); 
+            			losingsubject = " " + emailgroup.getVariantA(); 
+            			map.put("winningsubject", winningsubject);
+            			map.put("losingsubject", losingsubject);
+            		}
+            	}
+    		}
+    		else {
+    			winningsubject = emailgroup.getEmails().get(0).getSubjectLine();
+    			map.put("winningsubject", winningsubject);
+    			
+    		}
+    		 System.out.println("Mapping of HashMap hm2 are : "
+                     + map);
+   		 System.out.println("nofullsend " + nofullsend);
+   		 System.out.println("winningsender " + winningsender);
+   		System.out.println("winningsender from map " + map.get("winningsender"));
+   		 System.out.println("losingsender " + losingsender);
+   		 System.out.println("prospectsender " + prospectsender);
+   		System.out.println("prospectsubject from map " + map.get("prospectsubject"));
+   		 System.out.println("winningsubject " + winningsubject);
+   		 System.out.println("losingsubject " + losingsubject);
+   		 System.out.println("prospectsubject " + prospectsubject);
+   		 System.out.println("service end ");
+    		return map;
+	}
 	
 	public List<EmailGroup> PredicateCreator(String sort, String direction, Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
 			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {

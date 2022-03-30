@@ -1,6 +1,7 @@
 package com.coding.LojoFundrasing.Models;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -357,13 +358,26 @@ public class EmailGroup {
 			number = 0.0;
 		}
 		double number1 = (double) number;
-		DecimalFormat df = new DecimalFormat("0.000");
+		DecimalFormat df = new DecimalFormat("0.00");
 		String numberfinal = df.format(number1); 
 		number = Double.valueOf(numberfinal);
 		return number;
 	}
 	public String getdonationsOpensFormatted() {
 		Double number = this.groupdonationsOpens;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getdonationsClicksFormatted() {
+		Double number = this.groupdonationsClicks;
 		if (number == null) {
 			number = 0.0;
 		}
@@ -388,6 +402,32 @@ public class EmailGroup {
 		percent = percent + "%";
 		return percent;
 	}
+	public String getunsubscribeRateFormatted() {
+		Double number = this.groupunsubscribeRate;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getbounceRateFormatted() {
+		Double number = this.groupbounceRate;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
 	public String getOpenRateFormatted() {
 		Double number = this.groupopenRate;
 		if (number == null) {
@@ -401,7 +441,7 @@ public class EmailGroup {
 		percent = percent + "%";
 		return percent;
 	}
-	public Double getGroupSumFormatted() {
+	public String getGroupSumFormatted() {
 		Double number = this.groupsum;
 		if (number == null) {
 			number = 0.0;
@@ -410,7 +450,44 @@ public class EmailGroup {
 		DecimalFormat df = new DecimalFormat("0.000");
 		String numberfinal = df.format(number1); 
 		number = Double.valueOf(numberfinal);
-		return number;
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
+	public String getTandemRevenueFormatted() {
+		Double number = this.tandemrevenue;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
+	public String getGroupOpenersFormatted() {
+		Long number = this.groupOpeners;
+		if (number == null) {
+			number = (long) 0;
+		}
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
+	public String getGroupClicksFormatted() {
+		Long number = this.groupClicks;
+		if (number == null) {
+			number = (long) 0;
+		}
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
 	}
 	public Long getFullsendemail() {
 		return fullsendemail;

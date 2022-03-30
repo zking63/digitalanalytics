@@ -123,16 +123,11 @@
 					<input type="hidden" name="direction" value="${ direction}">
 				    
 <div class="online-body-operators">
- <p>${fundraiser }</p>
- <p>${survey }</p>
- <p>${petition }</p>
- <p>${other }</p>
-  <p>${type }</p>
-   <p>${operator }</p>
-    <p>${operand }</p>
-    <p>${message }</p>
          	<c:if test="${ message != null }">
 				<p style="margin-left:470px;width:500px;text-align:center;"><b><span style="color:#FF0000;"><c:out value="${ message }" /></span></b></p>					
+	</c:if>
+	<c:if test="${ operandsList != null }">
+				<p style="margin-left:470px;width:500px;text-align:center;"><b>Not what you were looking for? Make sure your operand syntax was correct. Here are your operands: <c:out value="${ operandsList }" /></b></p>					
 	</c:if>
     					    	<div id="online-parameter-choices">
     					  
@@ -282,7 +277,7 @@
 	<table class="table table-hover">
 	    <thead>
 	        <tr>
-	            <th>Send date</br> 		
+	            <th>Date </br> 		
 		            <form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="date">
 						<input type="hidden" name="direction" value="asc">
@@ -314,7 +309,7 @@
 						<button>v</button>
 					</form>
 				</th>
-				<th>Name<br />
+				<th>Email <br />
 				<form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="emailgroupName">
 						<input type="hidden" name="direction" value="asc">
@@ -346,7 +341,7 @@
 						<button>v</button>
 					</form>
 				</th>
-				<th>Gifts/opens</br>
+				<th>Donations/opens </br>
 				<form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="groupdonationsOpens">
 						<input type="hidden" name="direction" value="asc">
@@ -378,7 +373,39 @@
 						<button>v</button>
 					</form>
 				</th>
-				<th>Number of donations</br> 
+				<th>Donations/clicks </br>
+				<form class="pointer" method="GET" action="/emails">
+						<input type="hidden" name="sort" value="groupdonationsClicks">
+						<input type="hidden" name="direction" value="asc">
+						<input type="hidden" name="type" value="${ type}">
+						<input type="hidden" name="operator" value="${ operator}">
+						<input type="hidden" name="operand" value="${ operand}">
+						<input type="hidden" name="startdateE" value="${ startdateE}">
+						<input type="hidden" name="enddateE" value="${ enddateE}">
+						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
+						<button>^</button>
+					</form>
+					<form class="pointer" method="GET" action="/emails">
+						<input type="hidden" name="sort" value="groupdonationsClicks">
+						<input type="hidden" name="direction" value="desc">
+						<input type="hidden" name="type" value="${ type}">
+						<input type="hidden" name="operator" value="${ operator}">
+						<input type="hidden" name="operand" value="${ operand}">
+						<input type="hidden" name="startdateE" value="${ startdateE}">
+						<input type="hidden" name="enddateE" value="${ enddateE}">
+						<input type="hidden" name="category" value="${ category}">
+						<input type="hidden" name="fundraiser" value="${ fundraiser}">
+						<input type="hidden" name="survey" value="${ survey}">
+						<input type="hidden" name="petition" value="${ petition}">
+						<input type="hidden" name="other" value="${ other}">
+						<button>v</button>
+					</form>
+				</th>
+				<th>Donations </br> 
 	                <form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="groupdonationcount">
 						<input type="hidden" name="direction" value="asc">
@@ -410,7 +437,7 @@
 						<button>v</button>
 					</form>
 	            </th>
-	            <th>Revenue</br> 
+	            <th>Revenue </br> 
 	            	 <form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="groupsum">
 						<input type="hidden" name="direction" value="asc">
@@ -442,7 +469,7 @@
 						<button>v</button>
 					</form>
 	            </th>
-	            <th>Average Donation</br> 
+	            <th>Average donation </br> 
 	            	<form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="groupaverage">
 						<input type="hidden" name="direction" value="asc">
@@ -474,7 +501,7 @@
 						<button>v</button>
 					</form>
 	            </th>
-	            <th>Open rate<br />
+	            <th>Open rate <br />
 	            <form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="groupopenRate">
 						<input type="hidden" name="direction" value="asc">
@@ -506,7 +533,7 @@
 						<button>v</button>
 					</form>
 				</th>
-	            <th>Clicks/opens<br />
+	            <th>Clicks/opens <br />
 	            <form class="pointer" method="GET" action="/emails">
 						<input type="hidden" name="sort" value="groupclicksOpens">
 						<input type="hidden" name="direction" value="asc">
@@ -544,6 +571,7 @@
 				<tr>
 					<td>${e.getDateFormatted()}</td>
 					<td><a href="/emails/${e.id}">${ e.emailgroupName }</a></td>
+					<td>${e.getdonationsClicksFormatted()}</td>
 					<td>${e.getdonationsOpensFormatted()}</td>
 					<td>${e.groupdonationcount}</td>
 					<td>$${e.getGroupSumFormatted()}</td>

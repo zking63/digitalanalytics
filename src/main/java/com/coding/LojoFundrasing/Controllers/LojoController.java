@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -194,66 +195,6 @@ public class LojoController {
 		return "home.jsp";
 	}
 	///query pages
-	@GetMapping("/emails/go")
-    public String EmailPage(HttpSession session, Model model, HttpServletRequest request,  
-			 HttpServletResponse response, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
-			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE) throws IOException, ParseException {
-		 Long user_id = (Long)session.getAttribute("user_id");
-		 if (user_id == null) {
-			 return "redirect:/";
-		 }
-		 String type = "Select";
-		 String operator = "Select";
-		 String operand = "Operand";
-		 String sort = "date";
-		 String direction = "asc";
-		 Integer field = 0;
-		 List<String> categories = new ArrayList<String>();
-		 
-		 if (startdateE == null) {
-			 startdateE = dateFormat7daysAgo();
-		 }
-		 if (enddateE == null) {
-			 enddateE = dateFormat();
-		 }
-		 
-		 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
-	    	List<Predicate> predicates = new ArrayList<Predicate>();
-	    	List<String> operands = new ArrayList<String>();
-	    	List<String> operandsList = new ArrayList<String>();
-		 
-	    	System.out.println("Start: " + startdateE);
-	    	System.out.println("End: " + enddateE);
-	    	System.out.println("type: " + type);
-	    	System.out.println("operator: " + operator);
-	    	System.out.println("operand in quuery: " + operand);
-		 User user = uservice.findUserbyId(user_id);
-		 model.addAttribute("user", user);
-		 Long committee_id = (Long)session.getAttribute("committee_id");
-		 String pagename = request.getRequestURL().toString();
-		 System.out.println("page: " + pagename);
-		 session.setAttribute("page", pagename);
-		 System.out.println("type: " + type);
-		 Committees committee = cservice.findbyId(committee_id);
-		List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
-		 model.addAttribute("committee", committee);
-		model.addAttribute("committees", committees);
-		 String message = "";
-		
-		emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, 
-	    			predicates, startdateE, enddateE, committee, type, operator, operands, operand);
-		 model.addAttribute("message", message);
-		 model.addAttribute("email", emailgroups);
-		 model.addAttribute("startdateE", startdateE);
-		 model.addAttribute("type", type);
-		 model.addAttribute("enddateE", enddateE);
-		 model.addAttribute("user", user);
-		 model.addAttribute("operator", operator);
-		 model.addAttribute("operand", operand);
-		 model.addAttribute("sort", sort);
-		 model.addAttribute("direction", direction);
-        return "emails.jsp";
-    } 
     @GetMapping("/emails")
     public String EmailQuery(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateE") @DateTimeFormat(iso = ISO.DATE) String startdateE, 
 			 @Param("enddateE") @DateTimeFormat(iso = ISO.DATE) String enddateE, 
@@ -470,7 +411,10 @@ public class LojoController {
 	    	emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, 
 	    			predicates, startdateE, enddateE, committee, type, operator, operands, operand);
 	    	System.out.println("Emailgroup size in controller " + emailgroups.size());
-	    	 model.addAttribute("operandsList", operandsList);
+	    	System.out.println("operands " + operandsList);
+	    	if (operandsList != null && operandsList.size() > 0) {
+	    		model.addAttribute("operandsList", operandsList);
+	    	}
 	    	 model.addAttribute("email", emailgroups);
 			 model.addAttribute("startdateE", startdateE);
 			 model.addAttribute("type", type);
@@ -946,13 +890,66 @@ public class LojoController {
 		 Long committee_id = (Long)session.getAttribute("committee_id");
 		 Committees committee = cservice.findbyId(committee_id);
 		 model.addAttribute("committee", committee);
-		// if (committee == this.egservice.findEmailGroupbyId(user_id, committee_id).getCommittee()) {
-			 model.addAttribute("user", user);
-			 model.addAttribute("emailgroup", this.egservice.findEmailGroupbyId(id, committee_id));
-		/* }
-		 else {
-			 return "redirect:/committees/select";
-		 }*/
+		 
+		 EmailGroup emailgroup = this.egservice.findEmailGroupbyId(id, committee_id);
+		 
+		 HashMap<String, String> map = egservice.GroupWinnerAndLoser(emailgroup);
+		 
+		 System.out.println("Mapping of HashMap hm2 are : "
+                 + map);
+		 
+			String winningsender = null;
+			String winningsubject = null;
+			String losingsender = null;
+			String losingsubject = null;
+			String prospectsender = null;
+			String prospectsubject = null;
+			String nofullsend = null;
+		 
+		 
+		 model.addAttribute("user", user);
+		 model.addAttribute("emailgroup", emailgroup);
+		 
+		 if (map.containsKey("nofullsend")) {
+			 nofullsend = map.get("nofullsend");
+		 }
+		// if (emailgroup.getGroupTest() != null && emailgroup.getGroupTest().contentEquals("SENDER")) {
+			 if (map.containsKey("winningsender")) {
+				 winningsender = map.get("winningsender");
+			 }
+			 if (map.containsKey("losingsender")) {
+				 losingsender = map.get("losingsender");
+			 }
+			 if (map.containsKey("prospectsender")) {
+				 prospectsender = map.get("prospectsender");
+			 }
+		// }
+		// if (emailgroup.getGroupTest() != null && emailgroup.getGroupTest().contentEquals("SUBJECT")) {
+			 if (map.containsKey("winningsubject")) {
+				 winningsubject= map.get("winningsubject");
+			 }
+			 if (map.containsKey("losingsubject")) {
+				losingsubject = map.get("losingsubject");
+			 }
+			 if (map.containsKey("prospectsubject")) {
+				 prospectsubject =  map.get("prospectsubject");
+			 }
+		// }
+		 System.out.println("nofullsend " + nofullsend);
+		 System.out.println("winningsender " + winningsender);
+		 System.out.println("losingsender " + losingsender);
+		 System.out.println("prospectsender " + prospectsender);
+		 System.out.println("winningsubject " + winningsubject);
+		 System.out.println("losingsubject " + losingsubject);
+		 System.out.println("prospectsubject " + prospectsubject);
+		 
+		 model.addAttribute("nofullsend", nofullsend);
+		 model.addAttribute("winningsender", winningsender);
+		 model.addAttribute("losingsender", losingsender);
+		 model.addAttribute("prospectsender", prospectsender);
+		 model.addAttribute("winningsubject", winningsubject);
+		 model.addAttribute("losingsubject", losingsubject);
+		 model.addAttribute("prospectsubject", prospectsubject );
 		 return "/emails/showemail.jsp";
 	 }
 	 @RequestMapping("/home")
