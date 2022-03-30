@@ -206,6 +206,9 @@ public class LojoController {
     	Committees committee = cservice.findbyId(committee_id);
     	User user = uservice.findUserbyId(user_id);
 		 String pagename = request.getRequestURL().toString();
+			List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
+			 model.addAttribute("committee", committee);
+			model.addAttribute("committees", committees);
 		 System.out.println("page in query: " + pagename);
     	System.out.println("Start: " + startdateE);
     	System.out.println("End: " + enddateE);

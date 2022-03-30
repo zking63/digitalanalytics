@@ -440,11 +440,11 @@ public class WordUtil {
 				emaillosingsubjectrun.setText(losingsubject);
 			}
 			emaildaterun.setText(emailgroups.get(i).getDateFormatted());
-			emailrevenuerun.setText(getRevenueFormatted(emailgroups.get(i).getGroupsum()));
+			emailrevenuerun.setText("$" + emailgroups.get(i).getGroupSumFormatted());
 			emaildonationsrun.setText(String.valueOf(emailgroups.get(i).getGroupdonationcount()));
 			if (emailgroups.get(i).getTandemrevenue() != null && emailgroups.get(i).getTandemrevenue() != 0.0) {
 				emailrevenuerun.addBreak();
-				tandemrevenuerun.setText("Tandem: " + getRevenueFormatted(emailgroups.get(i).getTandemrevenue()));
+				tandemrevenuerun.setText("Tandem: " + "$" + emailgroups.get(i).getTandemRevenueFormatted());
 				
 				emaildonationsrun.addBreak();
 				tandemdonationsrun.setText("Tandem: " + String.valueOf(emailgroups.get(i).getTandemdonations()));

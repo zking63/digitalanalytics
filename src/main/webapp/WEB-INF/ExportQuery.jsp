@@ -384,17 +384,15 @@
 									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
 				        </div>
-				        <div id="export-choices-box">
+				        <div id="export-choices-box" style="margin-bottom-20px;">
 				        <p>
 				        <label for="input">Select data fields:</label>
 				        </p>
 				        			<div id="export-choices">
-				        				<input type="checkbox" id="input" name="input" value="Refcode 1">
-										<label for="input"> Refcode 1</label><br>
-										<input type="checkbox" id="input" name="input" value="Refcode 2">
-										<label for="input"> Refcode 2</label><br>
 										<input type="checkbox" id="input" name="input" value="Recipients">
 										<label for="input"> Recipients</label><br>
+										<input type="checkbox" id="input" name="input" value="Category">
+										<label for="input"> Category</label><br>
 										<input type="checkbox" id="input" name="input" value="link">
 										<label for="input"> Link</label><br>
 										<input type="checkbox" id="input" name="input" value="sender">
@@ -416,13 +414,13 @@
 										<input type="checkbox" id="input" name="input" value="Unsubscribe rate">	
 										<label for="input"> Unsubscribe rate</label><br>	
 										<input type="checkbox" id="input" name="input" value="Bounce rate">
-										<label for="input"> Bounce rate</label><br>	
+										<label for="input"> Bounce rate</label><br>			
+									</div>
+									<div id="export-choices">
 										<input type="checkbox" id="input" name="input" value="Clicks/opens">	
 										<label for="input"> Clicks per open</label><br>	
 										<input type="checkbox" id="input" name="input" value="Revenue">
-										<label for="input"> Revenue</label><br>			
-									</div>
-									<div id="export-choices">
+										<label for="input"> Revenue</label><br>	
 										<input type="checkbox" id="input" name="input" value="Donations">	
 										<label for="input"> Donations</label><br>	
 										<input type="checkbox" id="input" name="input" value="Donations/opens">	
@@ -451,8 +449,6 @@
 										<label for="input"> Variant B</label><br>
 										<input type="checkbox" id="input" name="input" value="parentid">
 										<label for="input"> Parent id</label><br>
-										<input type="checkbox" id="input" name="input" value="donationsforcalculation">
-										<label for="input"> Donations used in calculations</label><br>
 									</div>
 								</div>
 				</c:when>

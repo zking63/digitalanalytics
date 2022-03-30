@@ -326,7 +326,7 @@
 						<button>^</button>
 					</form>
 					<form class="pointer" method="GET" action="/emails">
-						<input type="hidden" name="sort" value="emailgroupNames">
+						<input type="hidden" name="sort" value="emailgroupName">
 						<input type="hidden" name="direction" value="desc">
 						<input type="hidden" name="type" value="${ type}">
 						<input type="hidden" name="operator" value="${ operator}">
@@ -571,8 +571,8 @@
 				<tr>
 					<td>${e.getDateFormatted()}</td>
 					<td><a href="/emails/${e.id}">${ e.emailgroupName }</a></td>
-					<td>${e.getdonationsClicksFormatted()}</td>
 					<td>${e.getdonationsOpensFormatted()}</td>
+					<td>${e.getdonationsClicksFormatted()}</td>
 					<td>${e.groupdonationcount}</td>
 					<td>$${e.getGroupSumFormatted()}</td>
 					<td>$${e.getAverageFormatted()}</td>
