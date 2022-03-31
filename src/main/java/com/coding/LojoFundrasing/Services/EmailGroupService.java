@@ -994,14 +994,25 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
     		return map;
 	}
 	
-	public List<EmailGroup> PredicateCreator(String sort, String direction, Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
+	public List<EmailGroup> PredPlugin(String sort, String direction, Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
+	Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
+		List<Predicate> finalp = PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		return egrcrepo.PredPlugin(sort, direction, predicates);
+	}
+	
+	public List<Predicate> PredicateCreator(String sort, String direction, Integer field, List<String> categories, List<String> operandsList, List<Predicate> predicates, String startdateD, String enddateD, 
 			Committees committee, String type, String operator, List<String> operands, String operand) throws ParseException, IOException {
 		System.out.println("pred create");
 		System.out.println("operand: " +operand);
 		System.out.println("sort: " +sort);
 		System.out.println("direction: " +direction);
 		System.out.println("operands size in pred first " + operands.size());
-		
+		if (operand == null && (operands.size() < 1 || operands.isEmpty() || operands == null)){
+			System.out.println("operand: " +operand);
+			System.out.println("operands: " +operands.size());
+			System.out.println("null in return");
+			return null;
+		}
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
         Root<EmailGroup> groups = query.from(EmailGroup.class);
@@ -1069,7 +1080,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
         	predicates.add(datePredicate);
         	predicates.add(committeePredicate);
         	
-			if (categories != null && categories.size() > 0 && categories.size() < 5) {
+			if (categories != null && categories.size() > 0 && categories.size() < 4) {
 				groupPath = emails.get("emailCategory");
 				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
 		        List<Predicate> categorypreds = new ArrayList<>();
@@ -1118,8 +1129,9 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					System.out.println("preds after else  " + predicates.size());
 				}
 			}
-			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(sort, direction, predicates);
-        	return emailgroups;
+			//List<EmailGroup> emailgroups = egrcrepo.PredPlugin(sort, direction, predicates);
+        	//return egrcrepo.PredPlugin(sort, direction, predicates);
+			return predicates;
         }
         
         if (predicates.size() == 0 && operand != null 
@@ -1185,7 +1197,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 					System.out.println("final op " + finaloperand);
 					if (operands.size() > 1) {
 						temppreds.add(temppredicate);
-						System.out.println("CONTAINS OR");
+						System.out.println("CONTAINS OR in contain");
 						if (i == operands.size() -1) {
 							System.out.println("last op filed " + finaloperand);
 							System.out.println("temp size " + temppreds.size());
@@ -1196,11 +1208,14 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 								finalP = cb.and(orPredicate);
 								//predicates = finalPredicates;
 								predicates.add(finalP);
+								//operands.remove(i);
 						}
 					}
 					else {
 						predicates.add(temppredicate);
+						//operands.remove(i);
 					}
+					
 					System.out.println("preds   " + predicates.size());
 				}
 				else if (operator.contentEquals("Is blank")) {
@@ -1227,7 +1242,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		}
 		else {
 			//categoryPredicate
-			if (categories != null && categories.size() > 0 && categories.size() < 5) {
+			if (categories != null && categories.size() > 0 && categories.size() < 4) {
 				groupPath = emails.get("emailCategory");
 				Predicate categoryPredicate = cb.equal(groupPath, categories.get(0));
 		        List<Predicate> categorypreds = new ArrayList<>();
@@ -1279,10 +1294,12 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 			predicates.add(committeePredicate);
 			predicates.add(datePredicate);
 			System.out.println("********FINAL PREDS:   " + predicates.size());
-			List<EmailGroup> emailgroups = egrcrepo.PredPlugin(sort, direction, predicates);
-			System.out.println("Emailgroup size in custom " + emailgroups.size());
 			System.out.println("operands list " + operandsList);
-			return emailgroups;
+			/*List<EmailGroup> emailgroups = egrcrepo.PredPlugin(sort, direction, predicates);
+			System.out.println("Emailgroup size in custom " + emailgroups.size());
+			System.out.println("operands list " + operandsList);*/
+			//return egrcrepo.PredPlugin(sort, direction, predicates);
+			return predicates;
 		}
 	}
 	

@@ -411,7 +411,7 @@ public class LojoController {
 
 			//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
 	    	
-	    	emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, 
+	    	emailgroups = egservice.PredPlugin(sort, direction, field, categories, operandsList, 
 	    			predicates, startdateE, enddateE, committee, type, operator, operands, operand);
 	    	System.out.println("Emailgroup size in controller " + emailgroups.size());
 	    	System.out.println("operands " + operandsList);
@@ -1704,9 +1704,10 @@ public class LojoController {
 				 excelService.exportToExcel(donors, response);
 			 }
 			 else if (field == 2) {
+				 sort = "linkname";
 				 System.out.println("Links");
-				 List<Donation> donations = donservice.DonTest(startdateD, enddateD, committee_id);
-				 excelService.exportDonationsToExcel(donations, response);
+				 List<Link> links = lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operandsList, operand);
+				 System.out.println("Link size in controller " + links.size());
 			 }
 			 //emails
 			 else if (field == 1) {
@@ -1726,10 +1727,10 @@ public class LojoController {
 				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
 				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
 		    	
-		    	emailgroups = egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-		    	System.out.println("Emailgroup size in controller " + emailgroups.size());
-		    	 model.addAttribute("operandsList", operandsList);
-		    	excelService.exportEmailGroupsToExcel(emailgroups, input, response);
+		    	emailgroups = egservice.PredPlugin(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	//System.out.println("Emailgroup size in controller " + emailgroups.size());
+		    	// model.addAttribute("operandsList", operandsList);
+		    	//excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			 }
 			 else if (field == 5) {
 				 System.out.println("Test");
@@ -2042,7 +2043,7 @@ public class LojoController {
 			    	List<String> inputs = new ArrayList<String>();
 			    	inputs.add("Recipients");
 			    	// System.out.println("op check: " + qservice.operandCheck(operand));
-			    	emailgroups = egservice.PredicateCreator(categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+			    	emailgroups = egservice.PredPlugin(categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 			    	System.out.println("emailgroups: " + emailgroups);
 			    	//System.out.println("Emailgroup size in controller " + emailgroups.size());
 			    	

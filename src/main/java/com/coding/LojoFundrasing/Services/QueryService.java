@@ -47,12 +47,17 @@ public class QueryService {
 				|| operand.contentEquals("()") || operand.contentEquals("(  )")) {
 			System.out.println("DONE");
 			if (operand == null) {
+				//operands = null;
 				if (field == 0) {
 					egservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				else if (field == 1) {
 					eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					return;
+				}
+				else if (field == 2) {
+					lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				return;
@@ -81,6 +86,10 @@ public class QueryService {
 			}
 			else if (field == 1) {
 				eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				return;
+			}
+			else if (field == 2) {
+				lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 		}
@@ -131,6 +140,10 @@ public class QueryService {
 						eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 						return;
 					}
+					else if (field == 2) {
+						lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+						return;
+					}
 				}
 				finalindex = operand.indexOf(sub);
 				if (operand.indexOf(sub) != 0) {
@@ -152,6 +165,10 @@ public class QueryService {
 				}
 				else if (field == 1) {
 					eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					return;
+				}
+				else if (field == 2) {
+					lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
 				//GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
@@ -209,6 +226,10 @@ public class QueryService {
 					eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 					return;
 				}
+				else if (field == 2) {
+					lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+					return;
+				}
 				//GetOperands(predicates, startdate, enddate, committee, type, operator, operand);
 
 			}
@@ -226,6 +247,10 @@ public class QueryService {
 			}
 			else if (field == 1) {
 				eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
+				return;
+			}
+			else if (field == 2) {
+				lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdate, enddate, committee, type, operator, operands, operand);
 				return;
 			}
 			//System.out.println("operands: " +operands);
