@@ -453,10 +453,69 @@
 								</div>
 				</c:when>
 			<c:when test="${ field == 2}">
-			    <input type="checkbox" id="input" name="input" value="Amount">
-				<label for="input"> Amount</label><br>
-				<input type="checkbox" id="input" name="input" value="Date">
-				<label for="input"> Date</label><br>
+					<div style="display:inline-block;max-width:400px;margin-bottom: 10px;margin-top: 0px;margin-left: 200px;"id="parameter-choices">
+					       <p style="margin-bottom: 0px;"> <label for="operator">Select category (used in emails with category):</label></p>
+					        <div style="display:inline-block;max-width:200px; max-length:20px; margin: 3px; margin-top: 0px; vertical-align: top;">
+				        				<input type="checkbox" id="input" name="category" value="Fundraiser">
+										<label for="input">Fundraiser</label><br>
+										<input type="checkbox" id="input" name="category" value="Survey">
+										<label for="input">Survey</label><br>
+										</div>
+										<div style="display:inline-block;max-width:200px; max-length:10px; margin: 3px; margin-top: 0px; vertical-align: top;">
+										<input type="checkbox" id="input" name="category" value="Petition">
+										<label for="input">Petition</label><br>
+										<input type="checkbox" id="input" name="category" value="Other">
+										<label for="input">Other</label><br>
+										</div>
+			
+				        </div>
+					<div id="parameter-choices">
+				        <label for="type">Select search factor:</label>
+				        <select id="type" name="type">
+											<option value="${type}">${type}</option>
+											<option value="URL">URL</option>
+											<option value="Email title">Email title</option>
+											<option value="Email content">Email content</option>
+											<option value="All">All links</option>
+						</select>
+				        </div>
+				        <div id="parameter-choices">
+					        <label for="operator">Select operator:</label>
+							<select id="operator" name="operator">
+							  		<option value="${operator }">${operator }</option>
+									<option value="Equals">Equals</option>
+									<option value="Contains">Contains</option>
+									<option value="Is blank">Is blank</option>
+							</select>
+				        </div>
+				        <div id="parameter-choices">
+					        <label for="operand"></label>
+									<textarea name="operand" placeholder="Operand"></textarea>
+									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
+									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
+						</div>
+				        </div>
+				        <div id="export-choices-box">
+				        <p>
+				        <label for="input">Select data fields:</label>
+				        </p>
+				        			<div id="export-choices">
+				        				<input type="checkbox" id="input" name="input" value="Emails using link">
+										<label for="input"> Emails using link</label><br>
+										<input type="checkbox" id="input" name="input" value="Clicks from emails">
+										<label for="input"> Clicks from emails</label><br>
+				        				<input type="checkbox" id="input" name="input" value="Donations">
+										<label for="input"> Donations</label><br>
+										<input type="checkbox" id="input" name="input" value="Revenue">
+										<label for="input"> Revenue</label><br>
+				        				<input type="checkbox" id="input" name="input" value="Donations/email clicks">
+										<label for="input"> Donations/email clicks</label><br>
+										<input type="checkbox" id="input" name="input" value="Revenue/email clicks">
+										<label for="input"> Revenue/email clicks</label><br>
+										<input type="checkbox" id="input" name="input" value="Recurring donations">
+										<label for="input"> Recurring donations</label><br>
+									</div>
+								</div>
 			</c:when>
 			<c:when test="${ field == 3}">
 			    <input type="checkbox" id="input" name="input" value="FirstName">
