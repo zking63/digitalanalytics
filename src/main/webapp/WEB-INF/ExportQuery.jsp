@@ -8,6 +8,7 @@
 <html>   
 <head>
 	<meta charset="ISO-8859-1">
+	<%@include file="header.jsp" %>
 	    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" 
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
 		crossorigin="anonymous">
@@ -32,91 +33,7 @@
 	</script>
 </head>
 <body>
-     <div class="navbar">
-     <h1 class="titles"><a href="/home">LoJo Fundraising</a></h1>
-	    <form:form method="POST" action="/committees/select" class="p-4">
-	    <input type="hidden" name="page" value="${page}">
-	        <p>
-		        <label for="committee"></label>
-				<select onchange="this.form.submit()" id="committee" name="committee">
-					<option class="currentcommittee" value="${ committee.id }">${ committee.getCommitteeName() }</option>
-				  	<c:forEach items="${ committees }" var="e">
-			        	<option value="${ e.id }">${ e.getCommitteeName() }</option>
-			        </c:forEach>
-				</select>
-	        </p>
-	    </form:form>
-        <ul class="navbarmenu">
-            <li>
-            <button class="btn btn-secondary main">
-			<a href="/home">Home</a>
-			</button>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Donations
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				  	<a class="dropdown-item" href="/home">Donations</a>
-				    <a class="dropdown-item" href="/newdonation">New donation</a>
-				    <a class="dropdown-item" href="/import/donations">Import donations</a>
-				    <a class="dropdown-item" href="/export">Export donations</a>
-				 	</div>
-				</div>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Donors
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				  	<a class="dropdown-item" href="/donors">Donors page</a>
-				    <a class="dropdown-item" href="/newdonor">New donor</a>
-				    <a class="dropdown-item" href="/import/donations">Import donors by donations</a>
-				    <a class="dropdown-item" href="/export">Export donors</a>
-				 	</div>
-				</div>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    Emails
-				  </button>
-				  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-				 	<a class="dropdown-item" href="/emails">Emails</a>
-				    <a class="dropdown-item" href="/newemail">New email</a>
-				    <a class="dropdown-item" href="/import/emails">Import emails</a>
-				    <a class="dropdown-item" href="/export">Export</a>
-				 	</div>
-				</div>
-            </li>
-            <li>
-           		<div class="dropdown">
-				  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				    <img src="/images/usericon.png" alt="User">
-				  </button>
-				  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-				  	<p>${ user.firstName } ${ user.lastName }</p>
-					<form:form method="POST" action="/committees/select" class="dropdown-item formclass">
-				    <input type="hidden" name="page" value="${page}">
-				        <p>
-					        <label for="committee"></label>
-							<select onchange="this.form.submit()" id="committee" name="committee">
-								<option class="currentcommittee" value="${ committee.id }">${ committee.getCommitteeName() }</option>
-							  	<c:forEach items="${ committees }" var="e">
-						        	<option value="${ e.id }">${ e.getCommitteeName() }</option>
-						        </c:forEach>
-							</select>
-				        </p>
-				    </form:form>
-				    <div class="dropdown-divider"></div>
-				    <a class="dropdown-item" href="/logout">Logout</a>
-				 </div>
-				</div>
-            </li>
-        </ul>
-        </div>
+    
     <form method="get" id="input-form" action="/export/query">
     				<input type="hidden" name="page" value="${page}">
 				    <input type="hidden" name="operator" value="${operator}">
@@ -268,8 +185,10 @@
 									<textarea name="operand" placeholder="Operand"></textarea>
 						</c:otherwise>
 						</c:choose>
-									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
-									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or "support" you'd write 'Biden' + ('approve'/'support')</p>
+									<p style="font-size: 11px;">Place each operand in single quote marks. To include operands where multiple must be true, separate them with a plus sign. 
+									To include operands where any may be true separate them by /. To include both put the OR clause in parenthesis.</p>
+									<p style="font-size: 11px;">To search emails that include "Biden" and either "approve" or 
+									"support" you'd write 'Biden' + ('approve'/'support')</p>
 						</div>
 				        </div>
 				        <div id="export-choices-box">

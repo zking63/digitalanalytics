@@ -953,7 +953,7 @@ public class LojoController {
 		 model.addAttribute("winningsubject", winningsubject);
 		 model.addAttribute("losingsubject", losingsubject);
 		 model.addAttribute("prospectsubject", prospectsubject );
-		 return "/emails/showemail.jsp";
+		 return "showemail.jsp";
 	 }
 	 @RequestMapping("/home")
 	 public String homePage(Model model, HttpSession session, @ModelAttribute("donations")Donation donation,
