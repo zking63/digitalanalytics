@@ -177,7 +177,7 @@ public class LojoController {
 			 return "redirect:/";
 		 }
 		 if (page == null) {
-			 page = "http://localhost:8080/home";
+			 page = "http://localhost:8080/emails";
 		 }
 		 System.out.println("page: " + page);
 		 User user = uservice.findUserbyId(user_id);
@@ -192,7 +192,7 @@ public class LojoController {
 	@PostMapping("/committees/new")
 	public String createCommittee(@ModelAttribute("committees")Committees committees) {
 		cservice.createCommittee(committees);
-		return "home.jsp";
+		return "emails.jsp";
 	}
 	///query pages
     @GetMapping("/emails")
@@ -202,7 +202,10 @@ public class LojoController {
 			 @Param("operand") String operand, @Param("sort") String sort, @Param("direction") String direction, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 			 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 		Long user_id = (Long)session.getAttribute("user_id");
-    	Long committee_id = (Long)session.getAttribute("committee_id");
+		 if (user_id == null) {
+			 return "redirect:/";
+		 }
+		Long committee_id = (Long)session.getAttribute("committee_id");
     	Committees committee = cservice.findbyId(committee_id);
     	User user = uservice.findUserbyId(user_id);
 		 String pagename = request.getRequestURL().toString();
@@ -433,7 +436,7 @@ public class LojoController {
 	
 	
 	
-	 @RequestMapping("/newdonor")
+	/* @RequestMapping("/newdonor")
 	 public String newDonorPage(@ModelAttribute("donor") Donor donor, Model model, HttpSession session) {
 		 Long user_id = (Long)session.getAttribute("user_id");
 		 if (user_id == null) {
@@ -539,7 +542,7 @@ public class LojoController {
 		 dservice.DonorsWithinRange(startdateD, enddateD, committee_id);
 		 model.addAttribute("field",field);
 		 return "donors.jsp";
-	 }
+	 }*/
 	private String dateFormat() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(new Date());
@@ -559,7 +562,7 @@ public class LojoController {
 		SimpleDateFormat df = new SimpleDateFormat("kk:mm");
 		return df.format(new Date());
 	}
-	@RequestMapping("/newdonation")
+	/*@RequestMapping("/newdonation")
 	 public String donationsPage(@ModelAttribute("donation") Donation donation, Model model, HttpSession session) {
 		 Long user_id = (Long)session.getAttribute("user_id");
 		 if (user_id == null) {
@@ -1386,7 +1389,7 @@ public class LojoController {
 			 //excelService.saveFile(file);
 			excelService.readData(user_id, committee, file);
 			return "redirect:/home";
-		}
+		}*/
 		@RequestMapping(value="/import/emails")
 		public String importEmails(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1395,6 +1398,9 @@ public class LojoController {
 			 session.setAttribute("page", pagename);
 			 if (user_id == null) {
 				 return "redirect:/";
+			 }
+			 if (user_id != 2) {
+				 return "redirect:/emails";
 			 }
 			 User user = uservice.findUserbyId(user_id);
 			 Long committee_id = (Long)session.getAttribute("committee_id");
@@ -1411,13 +1417,16 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
+			 if (user_id != 2) {
+				 return "redirect:/emails";
+			 }
 			 Long committee_id = (Long)session.getAttribute("committee_id");
 			 Committees committee = cservice.findbyId(committee_id);
 			 model.addAttribute("committee", committee);
 			excelService.readEmailData(user_id, file, committee);
-			return "redirect:/home";
+			return "redirect:/emails";
 		}
-		@RequestMapping("/tester")
+		/*@RequestMapping("/tester")
 		public String tester(Model model, HttpSession session, HttpServletRequest request) throws ParseException {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 String pagename = request.getRequestURL().toString();
@@ -1462,8 +1471,8 @@ public class LojoController {
 					totalRecordsAdded = true;
 				}
 				recordsArray.add(currentRecord);*/
-		    return emails;
-		}
+		   // return emails;
+		//}
 	    @RequestMapping("/export")
 	    public String exportqueryPage(HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, HttpServletRequest request,   
@@ -1938,7 +1947,7 @@ public class LojoController {
 			 model.addAttribute("user", user);
 			 return "export.jsp";
 	    } */
-		@RequestMapping(value="/import/test")
+	/*	@RequestMapping(value="/import/test")
 		public String importTests(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 String pagename = request.getRequestURL().toString();
@@ -1967,7 +1976,7 @@ public class LojoController {
 			 model.addAttribute("committee", committee);
 			excelService.readTestData(user_id, file, committee);
 			return "redirect:/home";
-		}
+		}*/
 	    @RequestMapping(value="/import/chairreport")
 		public String importchair(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1976,6 +1985,9 @@ public class LojoController {
 			 session.setAttribute("page", pagename);
 			 if (user_id == null) {
 				 return "redirect:/";
+			 }
+			 if (user_id != 2) {
+				 return "redirect:/emails";
 			 }
 			 User user = uservice.findUserbyId(user_id);
 			 Long committee_id = (Long)session.getAttribute("committee_id");
@@ -1992,13 +2004,16 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
+			 if (user_id != 2) {
+				 return "redirect:/emails";
+			 }
 			 Long committee_id = (Long)session.getAttribute("committee_id");
 			 Committees committee = cservice.findbyId(committee_id);
 			 System.out.println("here");
 			excelService.readChairData(file);
-			return "redirect:/home";
+			return "redirect:/emails";
 		}
-	    @RequestMapping(value="/import/digireport")
+	   /* @RequestMapping(value="/import/digireport")
 		public String importdig(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 String pagename = request.getRequestURL().toString();
@@ -2027,7 +2042,7 @@ public class LojoController {
 			 System.out.println("here");
 			excelService.reademaildata(file);
 			return "redirect:/home";
-		}
+		}*/
 	   /* @GetMapping(value="/rundata/test")
 		public void rundataontest(HttpSession session, Model model, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -2042,7 +2057,7 @@ public class LojoController {
 			model.addAttribute("committees", committees);
 			model.addAttribute("user", user);
 		}*/
-		@RequestMapping("/rundata/test")
+		/*@RequestMapping("/rundata/test")
 		public String runtestdata(HttpSession session) {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 if (user_id == null) {
@@ -2096,7 +2111,7 @@ public class LojoController {
 			wservice.exportWord(emailgroups, response);
 			return "redirect:/home";
 		}*/
-		 @RequestMapping("/render/emails/{id}")
+		/* @RequestMapping("/render/emails/{id}")
 		 public String renderEmail(@PathVariable("id") long id, Model model, HttpSession session, 
 				 @ModelAttribute("email")Emails email, HttpServletRequest request) {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -2120,8 +2135,8 @@ public class LojoController {
 				 return "redirect:/committees/select";
 			 }
 			 return "/emails/renderemail.jsp";
-		 }
-			@RequestMapping("/testquery")
+		 }*/
+			/*@RequestMapping("/testquery")
 			public void testquery(HttpSession session, HttpServletRequest request, HttpServletResponse response) throws ParseException, IOException {
 				 Long user_id = (Long)session.getAttribute("user_id");
 				 if (user_id == null) {
@@ -2131,7 +2146,7 @@ public class LojoController {
 				 Committees committee = cservice.findbyId(committee_id);
 				 String type = "Content";
 				 String operator = "Contains";
-				 //String operand = "Biden & President";
+				 String operand = "Biden & President";
 				 System.out.println("resp " + response);
 				 String operand = "'Biden' + 'President' + ('approv'/'grade'/'support')";
 			    	String startdateD = "2022-02-12";
@@ -2147,12 +2162,12 @@ public class LojoController {
 			    	categories.add("Other");
 			    	List<String> inputs = new ArrayList<String>();
 			    	inputs.add("Recipients");
-			    	// System.out.println("op check: " + qservice.operandCheck(operand));
+			    	System.out.println("op check: " + qservice.operandCheck(operand));
 			    	emailgroups = egservice.PredPlugin(categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 			    	System.out.println("emailgroups: " + emailgroups);
-			    	//System.out.println("Emailgroup size in controller " + emailgroups.size());
+			    	System.out.println("Emailgroup size in controller " + emailgroups.size());
 			    	
-			    	/*String operand1 = "Biden & Joe";
+			    	String operand1 = "Biden & Joe";
 				 String operand2 = "approve / grade / support";
 				 String operand3 = "fundraiser";
 				 
@@ -2162,7 +2177,7 @@ public class LojoController {
 			    	List<String> operands3 = new ArrayList<String>();
 			    	if (operand1.contains("&")) {
 			    		operands1 = Arrays.asList(operand1.split("&", -1));
-				    	/*if (operand1.contains("& ")) {
+				    	if (operand1.contains("& ")) {
 				    		operands1 = Arrays.asList(operand1.split("& ", -1));
 				    	}
 				    	else if (operand1.contains("&")) {
@@ -2174,11 +2189,11 @@ public class LojoController {
 			    	}
 			    	System.out.println("operands: " + operands1);
 			    	String startdateD = "2022-02-12";
-			    	String enddateD = "2022-03-13";*/
-				//egservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
-				//eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
-				// String name = "0201, 0202";
-				/*List<String> names = new ArrayList<String>();
+			    	String enddateD = "2022-03-13";
+				egservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+				eservice.CustomEmailListForExport(startdateD, enddateD, committee, type, operator, operands);
+				String name = "0201, 0202";
+				List<String> names = new ArrayList<String>();
 		    	if (name.contains(", ")) {
 		    		names = Arrays.asList(name.split(", ", -1));
 		    	}
@@ -2188,11 +2203,10 @@ public class LojoController {
 		    	else {
 		    		names.add(name);
 		    	}
-				 //names.add("Sotomayor");
-				// names.add("abortion");
+
 				System.out.println("names: " + names);
 				 System.out.println("names size " + names.size());
-				 eservice.findEmailByName(names);*/
+				 eservice.findEmailByName(names);
 			        String page = "";
 			        try {
 
@@ -2214,5 +2228,5 @@ public class LojoController {
 				}
 			    	
 			
-			}	 
+			}	*/ 
 }
