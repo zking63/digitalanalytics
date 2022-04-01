@@ -1816,7 +1816,7 @@ public class LojoController {
 		    	}
 		    	excelService.exportEmailGroupsToExcel(emailgroups, input, response);
 			}
-			 else if (field == 3) {
+			/* else if (field == 3) {
 				 System.out.println("Donors");
 				 dservice.DonorsWithinRange(startdateD, enddateD, committee_id);
 				 List<Donor> donors = dservice.orderbyDonorDesc(startdateD, enddateD, committee_id);
@@ -1827,20 +1827,20 @@ public class LojoController {
 				 System.out.println("Links");
 				 List<Link> links = lservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operandsList, operand);
 				 System.out.println("Link size in controller " + links.size());
-			 }
+			 }*/
 			 //emails
 			 else if (field == 1) {
 				emails = eservice.PredicateCreator(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
 				System.out.println("Emails size in controller " + emails.size());
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
-			 else if (field == 5) {
+			/* else if (field == 5) {
 				 System.out.println("Test");
 			     List<test> tests = tservice.TestExporter(startdateD, enddateD, committee_id, type, operator, operand);
 				 System.out.println("Tests size " + tests.size());
 				 System.out.println("input " + input);
 				 excelService.exportTestToExcel(tests, input, response);
-			 }
+			 }*/
 			 else if (field == 6) {
 				 System.out.println("Report");
 				 List<EmailGroup> top10revenue = egservice.top10byRevenue(startdateD, enddateD, committee_id);

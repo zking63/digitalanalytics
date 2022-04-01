@@ -1007,12 +1007,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		System.out.println("sort: " +sort);
 		System.out.println("direction: " +direction);
 		System.out.println("operands size in pred first " + operands.size());
-		if (operand == null && (operands.size() < 1 || operands.isEmpty() || operands == null)){
-			System.out.println("operand: " +operand);
-			System.out.println("operands: " +operands.size());
-			System.out.println("null in return");
-			return null;
-		}
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<EmailGroup> query = cb.createQuery(EmailGroup.class);
         Root<EmailGroup> groups = query.from(EmailGroup.class);
