@@ -159,12 +159,19 @@ public class LojoController {
 	     // redirect to login page
 		 return "redirect:/";
 	 }
+	 @RequestMapping("/home")
+	 public String Home(HttpSession session) {
+	     // invalidate session
+	     // redirect to login page
+		 return "redirect:/emails";
+	 }
 	 @RequestMapping("/committees/select")
 	 public String selectCommittee(HttpSession session, Model model) {
 		 Long user_id = (Long)session.getAttribute("user_id");
 		 if (user_id == null) {
 			 return "redirect:/";
 		 }
+		 
 		 User user = uservice.findUserbyId(user_id);
 		 model.addAttribute("user", user);
 		 return "selectcommittees.jsp";
@@ -186,11 +193,25 @@ public class LojoController {
 		 return "redirect:" + page;
 	 }
 	@RequestMapping("/committees/new")
-	public String newCommittee(Model model, @ModelAttribute("committees")Committees committees) {
+	public String newCommittee(HttpSession session, Model model, @ModelAttribute("committees")Committees committees) {
+		 Long user_id = (Long)session.getAttribute("user_id");
+		 if (user_id == null) {
+			 return "redirect:/";
+		 }
+		if (user_id != 2) {
+			 return "redirect:/emails";
+		 }
 		return "newcommittee.jsp";
 	}
 	@PostMapping("/committees/new")
-	public String createCommittee(@ModelAttribute("committees")Committees committees) {
+	public String createCommittee(HttpSession session, @ModelAttribute("committees")Committees committees) {
+		 Long user_id = (Long)session.getAttribute("user_id");
+		 if (user_id == null) {
+			 return "redirect:/";
+		 }
+		if (user_id != 2) {
+			 return "redirect:/emails";
+		 }
 		cservice.createCommittee(committees);
 		return "emails.jsp";
 	}
@@ -1518,7 +1539,7 @@ public class LojoController {
 	    @GetMapping("/export/query")
 	    public String exportQueryRange(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, 
-				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @Param("input") ArrayList<String> input, 
+				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @RequestParam("input") ArrayList<String> input, 
 				 @Param("operand") String operand, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1572,6 +1593,10 @@ public class LojoController {
 				 model.addAttribute("operator", operator);
 				 model.addAttribute("operand", operand);
 				 model.addAttribute("categories", categories);
+					model.addAttribute("fundraiser", fundraiser);
+					model.addAttribute("survey", survey);
+					model.addAttribute("petition", petition);
+					model.addAttribute("other", other);
 				 return "ExportQuery.jsp";
 			 }
 
@@ -1595,7 +1620,7 @@ public class LojoController {
 	    @GetMapping("/export/query/excel")
 	    public String exportQueryToExcel(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, 
-				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @Param("input") ArrayList<String> input, 
+				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @RequestParam("input") ArrayList<String> input, 
 				 @Param("operand") String operand, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			Long user_id = (Long)session.getAttribute("user_id");
@@ -1613,10 +1638,11 @@ public class LojoController {
 	    	System.out.println("Start: " + startdateD);
 	    	System.out.println("End: " + enddateD);
 	    	System.out.println("Commmittee: " + committee_id);
-	    	System.out.println("type: " + type);
-	    	System.out.println("operator: " + operator);
-	    	System.out.println("operand: " + operand);
+	    	System.out.println("type in excel: " + type);
+	    	System.out.println("operator in excel: " + operator);
+	    	System.out.println("operand in excel: " + operand);
 	    	System.out.println("*************categories 1: " + categories);
+	    	System.out.println("*************input: " + input);
 	    	 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
 	    	 List<Emails> emails = new ArrayList<Emails>();
 	    	List<Predicate> predicates = new ArrayList<Predicate>();
