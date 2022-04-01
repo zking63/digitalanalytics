@@ -1493,7 +1493,7 @@ public class LojoController {
 			 Integer field = 4;
 			 String type = "Select";
 			 String operator = "Select";
-			 String operand = "Operand";
+			 String operand = null;
 			 List<String> categories = new ArrayList<>();
 			 model.addAttribute("message", message);
 			 model.addAttribute("startdateD", startdateD);
@@ -1507,10 +1507,11 @@ public class LojoController {
 	        return "ExportQuery.jsp";
 	    }
 	    @GetMapping("/export/query")
-	    public String exportQueryRange(@RequestParam(value = "category", required = false) List<String> categories, HttpSession session, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, @RequestParam("operator") String operator, 
-				 @RequestParam("operand") String operand, @RequestParam("type") String type, HttpServletRequest request,  
-				 HttpServletResponse response) throws IOException {
+	    public String exportQueryRange(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, 
+				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @Param("input") ArrayList<String> input, 
+				 @Param("operand") String operand, Integer fundraiser, Integer survey, Integer petition, Integer other, 
+				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			 Long user_id = (Long)session.getAttribute("user_id");
 			 if (user_id == null) {
 				 return "redirect:/";
@@ -1537,7 +1538,20 @@ public class LojoController {
 			 if (enddateD == null) {
 				 enddateD = dateFormat();
 			 }
+			 if (fundraiser == null) {
+				 fundraiser = 0;
+			 }
+			 if (survey == null) {
+				 survey = 0;
+			 }
+			 if (petition == null) {
+				 petition = 0;
+			 }
+			 if (other == null) {
+				 other = 0;
+			 }
 			 String message = "";
+			 operand = null;
 			 if(field == 4) {
 				 message = "Please select a field to export.";
 				 model.addAttribute("message", message);
@@ -1563,34 +1577,45 @@ public class LojoController {
 			 model.addAttribute("operator", operator);
 			 model.addAttribute("operand", operand);
 			 model.addAttribute("categories", categories);
+				model.addAttribute("fundraiser", fundraiser);
+				model.addAttribute("survey", survey);
+				model.addAttribute("petition", petition);
+				model.addAttribute("other", other);
 	        return "ExportQuery.jsp";
 	    } 
 	    @GetMapping("/export/query/excel")
-	    public String exportQueryToExcel(@RequestParam(value = "category", required = false) List<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
-				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, 
-				 HttpSession session, @RequestParam("field") Integer field, @RequestParam("type") String type, @RequestParam("operator") String operator, 
-				 @RequestParam("operand") String operand, @RequestParam(value = "input", required = false) List<String> input, 
+	    public String exportQueryToExcel(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
+				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, 
+				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @Param("input") ArrayList<String> input, 
+				 @Param("operand") String operand, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			Long user_id = (Long)session.getAttribute("user_id");
 	    	Long committee_id = (Long)session.getAttribute("committee_id");
 	    	Committees committee = cservice.findbyId(committee_id);
 	    	User user = uservice.findUserbyId(user_id);
-			 String pagename = request.getRequestURL().toString();
-			 System.out.println("page: " + pagename);
+			 if (user_id == null) {
+				 return "redirect:/";
+			 }
+	    	String pagename = request.getRequestURL().toString();
+				List<Committees> committees = cservice.findAllexcept(committee_id, user_id);
+				 model.addAttribute("committee", committee);
+				model.addAttribute("committees", committees);
+			 System.out.println("page in query: " + pagename);
 	    	System.out.println("Start: " + startdateD);
 	    	System.out.println("End: " + enddateD);
 	    	System.out.println("Commmittee: " + committee_id);
 	    	System.out.println("type: " + type);
 	    	System.out.println("operator: " + operator);
-	    	System.out.println("operand in excel: " + operand);
-	    	System.out.println("field in excel: " + field);
-	    	
+	    	System.out.println("operand: " + operand);
+	    	System.out.println("*************categories 1: " + categories);
+	    	 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
+	    	 List<Emails> emails = new ArrayList<Emails>();
 	    	List<Predicate> predicates = new ArrayList<Predicate>();
-	    	List<String> operands = new ArrayList<String>();		  
+	    	List<String> operands = new ArrayList<String>();	
 	    	
-	    	if (categories !=null) {
-	    		System.out.println("categories: " + categories);
-	    	}
+	    	String sort = "date";
+	    	String direction = "desc";
+	    	
 			 if (type == null) {
 				 type = "Select";
 			 }
@@ -1602,101 +1627,195 @@ public class LojoController {
 				 operator = "Select";
 				 operand = null;
 			 }
-			 String sort = "date";
-			 String direction = "asc";
+			 if (operand == null || operand.isEmpty()) {
+				 operand = null;
+			 }
+			 if (fundraiser == null) {
+				 fundraiser = 0;
+			 }
+			 if (survey == null) {
+				 survey = 0;
+			 }
+			 if (petition == null) {
+				 petition = 0;
+			 }
+			 if (other == null) {
+				 other = 0;
+			 }
+			 if (categories == null || categories.isEmpty() || categories.size() == 0) {
+				 categories = new ArrayList<String>();
+				 if (fundraiser == 1) {
+					 categories.add("Fundraiser");
+				 }
+				 if (survey == 1) {
+					 categories.add("Survey");
+				 }
+				 if (petition == 1) {
+					 categories.add("Petition");
+				 }
+				 if (other == 1) {
+					 categories.add("Other");
+				 }
+			 }
+			 if (categories != null && !categories.isEmpty() && categories.size() > 0) {
+					 if (categories.contains("Fundraiser")) {
+						 fundraiser = 1;
+						 System.out.println("fundraiser: " + fundraiser);
+					 }
+					 if (categories.contains("Survey")) {
+						 survey = 1;
+						 System.out.println("survey: " + survey);
+					 }
+					 if (categories.contains("Petition")) {
+						 petition = 1;
+						 System.out.println("petition: " + petition);
+					 }
+					 if (categories.contains("Other")) {
+						 other = 1;
+						 System.out.println("other: " + other);
+					 }
+			 }
+			model.addAttribute("fundraiser", fundraiser);
+			model.addAttribute("survey", survey);
+			model.addAttribute("petition", petition);
+			model.addAttribute("other", other);
 
-			 List<Emails> emails = new ArrayList<Emails>();
+
+
+			 
+			 if (startdateD == null) {
+				 startdateD = dateFormat7daysAgo();
+			 }
+			 if (enddateD == null) {
+				 enddateD = dateFormat();
+			 }
+
 			 List<String> operandsList = new ArrayList<String>();
-			
+
 	    	
 	    	//lists
 	    	
-	    	System.out.println("type: " + type);
-	    	 System.out.println("categories: " + categories);
+		    	System.out.println("Start: " + startdateD);
+		    	System.out.println("End: " + enddateD);
+		    	System.out.println("Commmittee: " + committee_id);
+		    	System.out.println("type: " + type);
+		    	System.out.println("operator: " + operator);
+		    	System.out.println("operand: " + operand);
+		    	System.out.println("*************categories 1: " + categories);
 	    	
-			 if (field == 4) {
-				 String message = "Please select a field to export.";
-				 model.addAttribute("message", message);
-				 model.addAttribute("startdateD", startdateD);
-				 model.addAttribute("field", field);
-				 model.addAttribute("type", type);
-				 System.out.println("type in range: " + type);
-				 model.addAttribute("enddateD", enddateD);
-				 model.addAttribute("user", user);
-				 model.addAttribute("operator", operator);
-				 model.addAttribute("operand", operand);
-				 model.addAttribute("categories", categories);
-				 return "ExportQuery.jsp";
-			 }
-			 else if (operator.contentEquals("Select") && !type.contentEquals("Select") 
+			 if (operator.contentEquals("Select") && !type.contentEquals("Select")
 					 && !type.contentEquals("All")) {
 				 String message = "Please select an operator";
+				 System.out.println("msg: " + message);
 				 model.addAttribute("message", message);
 				 model.addAttribute("startdateD", startdateD);
-				 model.addAttribute("field", field);
 				 model.addAttribute("type", type);
-				 System.out.println("type in range: " + type);
 				 model.addAttribute("enddateD", enddateD);
 				 model.addAttribute("user", user);
 				 model.addAttribute("operator", operator);
 				 model.addAttribute("operand", operand);
-				 model.addAttribute("categories", categories);
+				 //model.addAttribute("category", categories);
+				 model.addAttribute("email", emailgroups);
+				 model.addAttribute("sort", sort);
+				 model.addAttribute("direction", direction);
+				 model.addAttribute("field", field);
 				 return "ExportQuery.jsp";
 			 }
-			 else if (!operator.contentEquals("Select") && !type.contentEquals("Select") 
-					 && !type.contentEquals("All") && !operator.contentEquals("Is blank")
+			
+			 if (!operator.contentEquals("Select") && !type.contentEquals("Select") && !type.contentEquals("All") && !operator.contentEquals("Is blank")
 					 && (operand == null || operand.isEmpty() || operand.contentEquals("Operand"))) {
 				 String message = "Please select an operand";
+				 System.out.println("msg: " + message);
 				 model.addAttribute("message", message);
 				 model.addAttribute("startdateD", startdateD);
-				 model.addAttribute("field", field);
 				 model.addAttribute("type", type);
 				 model.addAttribute("enddateD", enddateD);
 				 model.addAttribute("user", user);
 				 model.addAttribute("operator", operator);
 				 model.addAttribute("operand", operand);
-				 model.addAttribute("categories", categories);
+				 //model.addAttribute("category", categories);
+				 model.addAttribute("email", emailgroups);
+				 model.addAttribute("sort", sort);
+				 model.addAttribute("direction", direction);
+				 model.addAttribute("field", field);
 				 return "ExportQuery.jsp";
 			 }
-			 else if (operand != null && !operand.isEmpty() && 
-					 !operand.contentEquals("Operand") && (type.contentEquals("Select") 
-							 || operator.contentEquals("Select") || type.contentEquals("All")) ) {
+	
+			if (operand != null && !operand.isEmpty() && 
+					 !operand.contentEquals("Operand") && (type.contentEquals("Select") || operator.contentEquals("Select") 
+							 || type.contentEquals("All")) ) {
 				 String message = null;
 				 if (type.contentEquals("Select")) {
 					 message = "Please select a search factor to find emails with operand.";
 					 if (operator.contentEquals("Select") ) {
 						 message = "Please select a search factor and operator to find emails with operand.";
 					 }
+					 System.out.println("msg: " + message);
 				 }
 				 else if (operator.contentEquals("Select")){
 					message = "Please select an operator";
+					System.out.println("msg: " + message);
 				 }
 				 model.addAttribute("message", message);
-				 model.addAttribute("startdateD", startdateD);
-				 model.addAttribute("field", field);
-				 model.addAttribute("type", type);
-				 model.addAttribute("enddateD", enddateD);
-				 model.addAttribute("user", user);
-				 model.addAttribute("operator", operator);
-				 model.addAttribute("operand", operand);
-				 model.addAttribute("categories", categories);
-				 return "ExportQuery.jsp";
-			 }
-			 else if (!operator.contentEquals("Is blank") && operand != null && !operand.isEmpty() && 
-					 !operand.contentEquals("Operand") && !operand.contains("'")){
-				 String message = "Please put singular quote marks around each of your operands. E.g. 'operand'";
+				 System.out.println("msg: " + message);
 				 model.addAttribute("message", message);
 				 model.addAttribute("startdateD", startdateD);
-				 model.addAttribute("field", field);
 				 model.addAttribute("type", type);
 				 model.addAttribute("enddateD", enddateD);
 				 model.addAttribute("user", user);
 				 model.addAttribute("operator", operator);
 				 model.addAttribute("operand", operand);
-				 model.addAttribute("categories", categories);
+				 //model.addAttribute("category", categories);
+				 model.addAttribute("email", emailgroups);
+				 model.addAttribute("sort", sort);
+				 model.addAttribute("direction", direction);
+				 model.addAttribute("field", field);
+				 return "ExportQuery.jsp";
+			 }
+		
+			if (!operator.contentEquals("Is blank") && operand != null && !operand.isEmpty() && 
+					 !operand.contentEquals("Operand") && !operand.contains("'")){
+				 String message = "Please put singular quote marks around each of your operands. E.g. 'operand'";
+				 System.out.println("msg: " + message);
+				 model.addAttribute("message", message);
+				 model.addAttribute("startdateD", startdateD);
+				 model.addAttribute("type", type);
+				 model.addAttribute("enddateD", enddateD);
+				 model.addAttribute("user", user);
+				 model.addAttribute("operator", operator);
+				 model.addAttribute("operand", operand);
+				 //model.addAttribute("category", categories);
+				 model.addAttribute("email", emailgroups);
+				 model.addAttribute("sort", sort);
+				 model.addAttribute("direction", direction);
+				 model.addAttribute("field", field);
 				 return "ExportQuery.jsp";
 				 
 		 }
+
+			if (field == 0) {
+				
+			
+				 System.out.println("Email Groups");
+				//egservice.SortEmailsandEmailGroupsId(startdateD, enddateD, committee_id);
+				 //List<String> types = egservice.SortEmailsandEmailGroupsCategory(committee_id);
+				// System.out.println("Emails Groups size " + map.size());
+				// for (int i = 0; i < map.size(); i++) {
+					 //System.out.println("id: " + map.get(i));
+					 
+				 //}
+
+				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
+		    	
+		    	emailgroups = egservice.PredPlugin(sort, direction, field, categories, operandsList, 
+		    			predicates, startdateD, enddateD, committee, type, operator, operands, operand);
+		    	System.out.println("Emailgroup size in controller " + emailgroups.size());
+		    	System.out.println("operands " + operandsList);
+		    	if (operandsList != null && operandsList.size() > 0) {
+		    		model.addAttribute("operandsList", operandsList);
+		    	}
+		    	excelService.exportEmailGroupsToExcel(emailgroups, input, response);
+			}
 			 else if (field == 3) {
 				 System.out.println("Donors");
 				 dservice.DonorsWithinRange(startdateD, enddateD, committee_id);
@@ -1715,23 +1834,6 @@ public class LojoController {
 				System.out.println("Emails size in controller " + emails.size());
 				excelService.exportEmailsToExcel(emails, input, response);
 			 }
-			 else if (field == 0) {
-				 System.out.println("Email Groups");
-				//egservice.SortEmailsandEmailGroupsId(startdateD, enddateD, committee_id);
-				 //List<String> types = egservice.SortEmailsandEmailGroupsCategory(committee_id);
-				// System.out.println("Emails Groups size " + map.size());
-				// for (int i = 0; i < map.size(); i++) {
-					 //System.out.println("id: " + map.get(i));
-					 
-				 //}
-				 List <EmailGroup> emailgroups = new ArrayList <EmailGroup>();
-				//emailgroups = egservice.EmailGroupExporter(startdateD, enddateD, committee_id, type, operator, operand);
-		    	
-		    	emailgroups = egservice.PredPlugin(sort, direction, field, categories, operandsList, predicates, startdateD, enddateD, committee, type, operator, operands, operand);
-		    	//System.out.println("Emailgroup size in controller " + emailgroups.size());
-		    	// model.addAttribute("operandsList", operandsList);
-		    	//excelService.exportEmailGroupsToExcel(emailgroups, input, response);
-			 }
 			 else if (field == 5) {
 				 System.out.println("Test");
 			     List<test> tests = tservice.TestExporter(startdateD, enddateD, committee_id, type, operator, operand);
@@ -1748,13 +1850,16 @@ public class LojoController {
 				 wservice.exportWord(top10GO, top10revenue, bottom10GO, bottom10revenue, response);
 			 }
 			 model.addAttribute("startdateD", startdateD);
-			// model.addAttribute("operandsList", operandsList);
-			 model.addAttribute("field", field);
-			 model.addAttribute("operator", operator);
-			 model.addAttribute("operand", operand);
 			 model.addAttribute("type", type);
 			 model.addAttribute("enddateD", enddateD);
 			 model.addAttribute("user", user);
+			 model.addAttribute("operator", operator);
+			 model.addAttribute("operand", operand);
+			 model.addAttribute("field", field);
+			 //model.addAttribute("category", categories);
+			 model.addAttribute("email", emailgroups);
+			 model.addAttribute("sort", sort);
+			 model.addAttribute("direction", direction);
 			 return "ExportQuery.jsp";
 	    } 
 	   /* @GetMapping("/export/excel")
