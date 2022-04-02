@@ -27,6 +27,9 @@ public class User {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+    @Column(name = "verification_code", length = 64, nullable =true)
+    private String verificationCode;
+    private boolean enabled;
 	@NotEmpty(message="First name must not be empty.")
 	private String firstName;
 	@NotEmpty(message="Last name must not be empty.")
@@ -43,9 +46,6 @@ public class User {
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
-    @Column(name = "verification_code", length = 64)
-    private String verificationCode;
-    private boolean enabled;
     @OneToMany(fetch=FetchType.LAZY, mappedBy="uploader")
     private List<Donor> donorsUploaded;
     
@@ -65,8 +65,7 @@ public class User {
 			)
 	private List<Committees> committees;
     public User() {
-        super();
-        this.enabled=false;
+
     }
 
 	public Long getId() {
@@ -183,6 +182,7 @@ public class User {
 		this.verificationCode = verificationCode;
 	}
 
+	
 	public boolean isEnabled() {
 		return enabled;
 	}

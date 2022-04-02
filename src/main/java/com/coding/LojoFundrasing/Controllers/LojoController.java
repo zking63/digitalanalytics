@@ -131,22 +131,54 @@ public class LojoController {
 	public String registerUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result, 
 			HttpSession session, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
 		uvalidation.validate(user, result);
-		String page = request.getRequestURI();
+		String page = "http://localhost:8080/verify";
 		if (result.hasErrors()) {
 			model.addAttribute("committees", this.cservice.findAllCommittees());
 			return "loginreg.jsp";
 		}
 		User newUser = uservice.registerUser(user, page);
+		if (!user.isEnabled()) {
+			System.out.println("user " + user.getId());
+			return "redirect:/verify";
+
+		}
 		session.setAttribute("user_id", newUser.getId());
 		return "redirect:/committees/select";
 	}
+	@RequestMapping("/verfication")
+	public String verification() {
+		System.out.println("verifc: ");
+		return "preverify.jsp";
+	}
 	@GetMapping("/verify")
-	public String verifyUser(@Param("code") String code) {
-	    if (uservice.verify(code)) {
-	        return "verify_success";
+	public String verifyUser(Model model, HttpSession session, HttpServletRequest request,
+			@RequestParam(value="code", required=false) String code, 
+			@RequestParam(value="email", required=false) String email) {
+
+		 /*Long user_id = (Long)session.getAttribute("user_id");
+		 if (user_id == null) {
+			 return "redirect:/";
+		 }*/
+		 String message = "Please check your email for the verification link.";
+		 if (code == null || email == null) {
+			 
+			 model.addAttribute("message", message);
+			 return "verification.jsp";
+			}
+		 System.out.println(code);
+		 System.out.println(email);
+		 //User user = uservice.findUserbyId(user_id);
+		    model.addAttribute("code", code);
+		    model.addAttribute("email", email);
+	    if (uservice.verify(code, email)) {
+			 User u = uservice.findUserbyEmail(email);
+			 session.setAttribute("user_id", u.getId());
+	    	return "redirect:/committees/select";
 	    } else {
-	        return "verify_fail";
+	    	message = "Verification link is incorrect.";
 	    }
+	    model.addAttribute("message", message);
+	    return "verification.jsp";
 	}
 	 @RequestMapping(value="/login", method=RequestMethod.POST)
 	 public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session, RedirectAttributes redirs) {
@@ -155,7 +187,13 @@ public class LojoController {
 		 if(isAuthenticated) {
 			 User u = uservice.findUserbyEmail(email);
 			 session.setAttribute("user_id", u.getId());
-			 return "redirect:/committees/select";
+			 if (u.isEnabled()){
+			 	return "redirect:/committees/select";
+			 }
+			 else {
+				 redirs.addFlashAttribute("error", "Email not verified");
+				 return "redirect:/";
+			 }
 		 }
 	     // else, add error messages and return the login page
 		 else {

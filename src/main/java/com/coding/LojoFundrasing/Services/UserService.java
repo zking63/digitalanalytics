@@ -16,14 +16,21 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
+import javax.persistence.RollbackException;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.hibernate.SessionFactory;
 
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.coding.LojoFundrasing.Models.User;
 import com.coding.LojoFundrasing.Repos.UserRepo;
@@ -36,18 +43,37 @@ public class UserService {
 	private UserRepo urepo;
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private Environment environment;
  
-     
-    public boolean verify(String verificationCode) {
-        User user = urepo.findByVerificationCode(verificationCode);
+    @Transactional(rollbackFor = Exception.class)
+    public boolean verify(String code, String email) {
+		 System.out.println(code);
+		 System.out.println(email);
+        User user = urepo.findByVerificationCode(code, email);
+        System.out.println(user.getId());
          
         if (user == null || user.isEnabled()) {
+        	 System.out.println("enab");
             return false;
         } else {
-            user.setVerificationCode(null);
-            user.setEnabled(true);
-            urepo.save(user);
+        	System.out.println("enabler");
+        	urepo.updateEnabled(code);
+          	 System.out.println("veri");
+          	urepo.updateVerificationCode(code);
+     
              
+
+            try {
+            	
+                urepo.save(user);
+                
+            } catch (RollbackException e) {
+            	e.printStackTrace();
+                }
+  
+
+         System.out.println("return");
             return true;
         }
          
@@ -57,8 +83,6 @@ public class UserService {
     		throws UnsupportedEncodingException, MessagingException {
         Properties props = System.getProperties();
         String host = "smtp.gmail.com";
-        String username = "zingsubs@gmail.com";
-        String password = "Claireforme!63.";
 
         props.setProperty("mail.smtp.ssl.enable", "true");
         props.setProperty("mail.smtp.host", host);
@@ -78,38 +102,12 @@ public class UserService {
         MimeMessage message = new MimeMessage(session);*/
         // set message content here
         
-    	String toAddress = "zoemking63@gmail.com";
-        String fromAddress = "zingsubs@gmail.com";
-        String senderName = "Fundraise";
+    	
+        String fromEmail = "zingsubs@gmail.com";
+        String sender = "Fundraising";
         String subject = "Please verify your registration";
-        String content = "Dear [[name]],<br>"
-                + "Please click the link below to verify your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
-                + "Your company name.";
-         
-      // MimeMessage message = mailSender.createMimeMessage(session);
-       /* MimeMessageHelper helper = new MimeMessageHelper(message);
-         
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo(toAddress);
-        helper.setSubject(subject);
-         
-        content = content.replace("[[name]]", user.getFirstName());
-        String verifyURL = page + "/verify?code=" + user.getVerificationCode();
-         
-        content = content.replace("[[URL]]", verifyURL);
-         
-        helper.setText(content, true);
-        System.out.println("URL: " + verifyURL);*/
-        /**
- 	   Outgoing Mail (SMTP) Server
- 	   requires TLS or SSL: smtp.gmail.com (use authentication)
- 	   Use Authentication: Yes
- 	   Port for TLS/STARTTLS: 587
- 	 */
 
- 		final String toEmail = "zoemking63@gmail.com"; // can be any email id 
+ 		final String toEmail = user.getEmail(); // can be any email id 
  		
  		System.out.println("TLSEmail Start");
  		//Properties props = new Properties();
@@ -122,15 +120,17 @@ public class UserService {
  		Authenticator auth = new Authenticator() {
  			//override the getPasswordAuthentication method
  			protected PasswordAuthentication getPasswordAuthentication() {
- 				return new PasswordAuthentication(fromAddress, password);
+ 				return new PasswordAuthentication(fromEmail, environment.getProperty("mypassword"));
  			}
  		};
  		Session session = Session.getInstance(props, auth);
  		 //MimeMessage message = new MimeMessage(session);
- 		sendEmail(session, toEmail,"TLSEmail Testing Subject", "TLSEmail Testing Body");
+ 		sendEmail(session, toEmail,subject, sender,fromEmail, page + "?code=" + user.getVerificationCode() 
+ 		+ "&email=" + user.getEmail());
  		
  	}
-    public static void sendEmail(Session session, String toEmail, String subject, String body){
+    public static void sendEmail(Session session, String toEmail, String subject, 
+    		String sender, String fromEmail, String body){
 		try
 	    {
 	      MimeMessage msg = new MimeMessage(session);
@@ -139,9 +139,9 @@ public class UserService {
 	      msg.addHeader("format", "flowed");
 	      msg.addHeader("Content-Transfer-Encoding", "8bit");
 
-	      msg.setFrom(new InternetAddress("zingsubs@gmail.com", "NoReply-JD"));
+	      msg.setFrom(new InternetAddress(fromEmail, sender));
 
-	      msg.setReplyTo(InternetAddress.parse("zingsubs@gmail.com", false));
+	      msg.setReplyTo(InternetAddress.parse(fromEmail, false));
 
 	      msg.setSubject(subject, "UTF-8");
 
@@ -159,15 +159,7 @@ public class UserService {
 	      e.printStackTrace();
 	    }
 	}
-
-
-       // System.out.println("message: " + message);
-       // System.out.println("username: " + username);
-       // System.out.println("password: " + password);
-      // Transport.send(message, username, password);
-        //mailSender.send(message);
     
-	
 	//register user
 	public User registerUser(User user, String page) throws UnsupportedEncodingException, MessagingException {
 		String hashed = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
