@@ -1003,6 +1003,30 @@ public class EmailService {
 			return emaillist;
 		}
 	}
+	
+	//variants
+	public Emails findVariantAList(Long groupid, Long committee_id) {
+		return erepo.findVariantAList(groupid, committee_id);
+	}
+	public Emails findVariantB(Long groupid, String list, Long committee_id) {
+		return erepo.findVariantB(groupid, list, committee_id);
+	}
+	public Emails findVariantAprospects(Long groupid, Long committee_id) {
+		return erepo.findVariantAprospects(groupid, committee_id);
+	}
+	public Emails findVariantBprospects(Long groupid, Long committee_id) {
+		return erepo.findVariantBprospects(groupid, committee_id);
+	}
+	public Emails findRemainder(Long groupid, Long committee_id) {
+		return erepo.emailwithremainder(groupid, committee_id);
+	}
+	
+	public Emails emailwithdonornoremainder(Long groupid, Long committee_id) {
+		return erepo.emailwithdonornoremainder(groupid, committee_id);
+	}
+	public Emails emailwithprospectnoremainder(Long groupid, Long committee_id) {
+		return erepo.emailwithprospectnoremainder(groupid, committee_id);
+	}
 
 	//sorting
 	//date/time

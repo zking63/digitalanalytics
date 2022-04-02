@@ -52,7 +52,10 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, EmailRepository
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND email_refcode2 = :emailRefcode2 AND (email_refcode1 IS NULL or email_refcode1 = '' or email_refcode1 = ' ')", nativeQuery = true)
 	Emails findByemailRefcodeTWOandCommittee(String emailRefcode2, Long committee_id);
 	
-
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and (list like '%ull%' OR list like '%onor%') and email_name like '%) A%' ORDER BY testing LIMIT 1", nativeQuery = true)
+	Emails findVariantAList(Long groupid, Long committee_id);
+	
 	//find variant a in email group with no test
 	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and email_name like '%) A%' ORDER BY testing LIMIT 1", nativeQuery = true)
 	Emails findVariantA(Long groupid, Long committee_id);
@@ -60,6 +63,14 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, EmailRepository
 	//find variant a in email group with no test
 	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and list = :list and email_name like '%) B%' ORDER BY testing LIMIT 1", nativeQuery = true)
 	Emails findVariantB(Long groupid, String list, Long committee_id);
+	
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and list like '%rospect%' and email_name like '%) A%' ORDER BY testing LIMIT 1", nativeQuery = true)
+	Emails findVariantAprospects(Long groupid, Long committee_id);
+	
+	//find variant a in email group with no test
+	@Query(value = "select * from emails where committees_id = :committee_id and emailgroup_id = :groupid and list like '%rospect%'  and email_name like '%) B%' ORDER BY testing LIMIT 1", nativeQuery = true)
+	Emails findVariantBprospects(Long groupid, Long committee_id);
 	
 	//find full send emails with group 
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%full%' or list like '%Full%')and email_name LIKE '%) remainder%' LIMIT 1", nativeQuery = true)
@@ -73,6 +84,12 @@ public interface EmailRepo extends CrudRepository<Emails, Long>, EmailRepository
 	
 	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%prospect%' or list like '%Prospect%') and email_name LIKE '%) remainder%' LIMIT 1", nativeQuery = true)
 	Emails emailwithprospectremainder(Long emailgroupid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%donor%' or list like '%Donor%') and email_name NOT LIKE '%) remainder%' LIMIT 1", nativeQuery = true)
+	Emails emailwithdonornoremainder(Long emailgroupid, Long committee_id);
+	
+	@Query(value = "SELECT * FROM emails WHERE committees_id = :committee_id AND emailgroup_id = :emailgroupid AND (list like '%prospect%' or list like '%Prospect%') and email_name NOT LIKE '%) remainder%' LIMIT 1", nativeQuery = true)
+	Emails emailwithprospectnoremainder(Long emailgroupid, Long committee_id);
 	
 	
 	//order emails by date

@@ -120,6 +120,7 @@
 			<table class="table table-hover">
 			    <thead>
 			        <tr>
+			            <th>Recipients </th>
 			            <th>Open rate </th>
 			            <th>Clicks/opens </th>
 			            <th>Unsubscribe rate </th>
@@ -130,6 +131,7 @@
 			    </thead>
 				<tbody>
 					<tr>
+						<td>${emailgroup.getGroupRecipientsFormatted()}</td>
 						<td>${emailgroup.getOpenRateFormatted()}</td>
 						<td>$${emailgroup.getclicksOpensFormatted()}</td>
 						<td>$${emailgroup.getunsubscribeRateFormatted()}</td>
@@ -140,8 +142,63 @@
 				</tbody>
 			</table>
 		</div>
-					<table style="text-align:center;margin-left:225px;"><tbody><tr><td style="text-align:center;margin-left:300px;"> 
-			${emailgroup.getEmails().get(0).content} 
+					<table style="text-align:center;margin-left:225px;">
+					<tbody><tr><td style="text-align:center;margin-left:300px;"> 
+				<c:if test="${ remainder != NULL}">
+					${remainder.content}
+				</c:if>
+				</td>
+				</tr>
+				<tr>
+				<td>
+				<c:forEach items="${ variants }" var="v">
+				<tr>
+				<td>
+					<p><b>${v.emailName}</b></p>
+					<c:if test="${ v.getTesting() != NULL}">
+						<p><b>Variant: </b> ${ v.getVariant()}</p>
+					</c:if>
+					</td>
+					</tr>
+												<tr>
+				<td>					<p>Data</p>
+			<table style="font-size:11px;" class="table">
+			    <thead>
+			        <tr>
+			            <th>Recipients </th>
+			            <th>Donations/opens </th>
+			            <th>Donations </th>
+			            <th>Revenue </th>
+			            <th>Average donation </th>
+			            <th>Open rate </th>
+			            <th>Clicks/opens </th>
+			            <th>Unsubscribe rate </th>
+			           
+			        </tr>
+			    </thead>
+				<tbody>
+					<tr>
+						<td>${v.getRecipientsFormatted()}</td>
+						<td>${v.getdonationsOpensFormatted()}</td>
+						<td>${v.emaildonationcount}</td>
+						<td>$${v.getSumFormatted()}</td>
+						<td>$${v.getEmailAverageFormatted()}</td>
+						<td>${v.getOpenRateFormatted()}</td>
+						<td>${v.getclicksOpensFormatted()}</td>
+						<td>${v.getunsubscribeRateFormatted()}</td>
+						
+					</tr>
+				</tbody>
+			</table>
+								</td>
+					</tr>
+
+					<tr>
+					<td>
+					${v.content}
+					</td>
+					</tr>
+				</c:forEach>
 			</td></tr></tbody></table>
 	</div> 
 </body>

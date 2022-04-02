@@ -489,6 +489,16 @@ public class EmailGroup {
 		String revenue = myFormat.format(number);
 		return revenue;
 	}
+	public String getGroupRecipientsFormatted() {
+		Long number = this.groupRecipients;
+		if (number == null) {
+			number = (long) 0;
+		}
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
 	public Long getFullsendemail() {
 		return fullsendemail;
 	}

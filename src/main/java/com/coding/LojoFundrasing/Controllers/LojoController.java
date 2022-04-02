@@ -970,11 +970,10 @@ public class LojoController {
 		 
 		 EmailGroup emailgroup = this.egservice.findEmailGroupbyId(id, committee_id);
 		 
-		 HashMap<String, String> map = egservice.GroupWinnerAndLoser(emailgroup);
 		 
-		 System.out.println("Mapping of HashMap hm2 are : "
-                 + map);
 		 
+
+		 	List<Emails> variants = new ArrayList<Emails>();
 			String winningsender = null;
 			String winningsubject = null;
 			String losingsender = null;
@@ -982,10 +981,62 @@ public class LojoController {
 			String prospectsender = null;
 			String prospectsubject = null;
 			String nofullsend = null;
-		 
+			Emails variantA = null;
+			
+			Emails variantB = null;
+			
+			Emails variantAprospects = null;
+			Emails variantBprospects = null;
+			Emails remainder = null;
+			if (emailgroup.getEmails().size() == 2 && (emailgroup.getEmails().get(0).getList().contains("onor") ||
+					emailgroup.getEmails().get(0).getList().contains("rospect"))) {
+				variantA = eservice.emailwithdonornoremainder(id, committee_id);
+				variants.add(variantA);
+				variantB = eservice.emailwithprospectnoremainder(id, committee_id);
+				variants.add(variantB);
+			}
+			if (eservice.findVariantAList(id, committee_id) != null) {
+				variantA = eservice.findVariantAList(id, committee_id);
+				variants.add(variantA);
+				 System.out.println("variant A ");
+				if (eservice.findVariantB(id, variantA.getList(), committee_id) != null) {
+					variantB = eservice.findVariantB(id, variantA.getList(), committee_id);
+					System.out.println("variant B ");
+					variants.add(variantB);
+				}
+			}
+			if (variantA.getList().contains("onor")) {
+				if (eservice.findVariantAprospects(id, committee_id) != null){
+					variantAprospects = eservice.findVariantAprospects(id, committee_id);
+					variants.add(variantAprospects);
+				}
+				if (eservice.findVariantBprospects(id, committee_id) != null){
+					variantBprospects = eservice.findVariantBprospects(id, committee_id);
+					variants.add(variantBprospects);
+				}
+			}
+			if (eservice.findRemainder(id, committee_id) != null) {
+				remainder = eservice.findRemainder(id, committee_id);
+			}
+			
+			if (variants == null || variants.isEmpty() || variants.size() < 1) {
+				variantA = emailgroup.getEmails().get(0);
+				variants.add(variantAprospects);
+			}
 		 
 		 model.addAttribute("user", user);
 		 model.addAttribute("emailgroup", emailgroup);
+		 model.addAttribute("variants", variants);
+		 model.addAttribute("remainder", remainder);
+		 if (egservice.GroupWinnerAndLoser(emailgroup) == null) {
+			 winningsender = variantA.getSender();
+			 winningsubject = variantA.getSubjectLine();
+			 model.addAttribute("winningsender", winningsender);
+			 model.addAttribute("winningsubject", winningsubject);
+			 return "showemail.jsp";
+		 }
+		 
+		 HashMap<String, String> map = egservice.GroupWinnerAndLoser(emailgroup);
 		 
 		 if (map.containsKey("nofullsend")) {
 			 nofullsend = map.get("nofullsend");

@@ -1,6 +1,7 @@
 package com.coding.LojoFundrasing.Models;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -512,6 +513,97 @@ public class Emails {
 		this.donationsforcalculation = donationsforcalculation;
 	}
 	
-	
-	
+
+
+	public String getclicksOpensFormatted() {
+		Double number = this.emailclicksOpens;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getunsubscribeRateFormatted() {
+		Double number = this.emailunsubscribeRate;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+
+	public String getOpenRateFormatted() {
+		Double number = this.emailopenRate;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getSumFormatted() {
+		Double number = this.emaildonationsum;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
+	public String getTandemRevenueFormatted() {
+		Double number = this.tandemrevenue;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
+	public String getdonationsOpensFormatted() {
+		Double number = this.emaildonationsOpens;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number*100;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		String percent = String.valueOf(number);
+		percent = percent + "%";
+		return percent;
+	}
+	public String getRecipientsFormatted() {
+		Long number = this.recipients;
+		if (number == null) {
+			number = (long) 0;
+		}
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
 }
