@@ -248,7 +248,7 @@ public class LojoController {
 		 if (user_id == null) {
 			 return "redirect:/";
 		 }
-		if (user_id != 2) {
+		if (user_id != 2 || user_id != 1) {
 			 return "redirect:/emails";
 		 }
 		return "newcommittee.jsp";
@@ -259,9 +259,9 @@ public class LojoController {
 		 if (user_id == null) {
 			 return "redirect:/";
 		 }
-		if (user_id != 2) {
-			 return "redirect:/emails";
-		 }
+			if (user_id != 2 || user_id != 1) {
+				 return "redirect:/emails";
+			 }
 		cservice.createCommittee(committees);
 		return "emails.jsp";
 	}
@@ -1470,9 +1470,9 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
-			 if (user_id != 2) {
-				 return "redirect:/emails";
-			 }
+				if (user_id != 2 || user_id != 1) {
+					 return "redirect:/emails";
+				 }
 			 User user = uservice.findUserbyId(user_id);
 			 Long committee_id = (Long)session.getAttribute("committee_id");
 			 Committees committee = cservice.findbyId(committee_id);
@@ -1488,9 +1488,9 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
-			 if (user_id != 2) {
-				 return "redirect:/emails";
-			 }
+				if (user_id != 2 || user_id != 1) {
+					 return "redirect:/emails";
+				 }
 			 Long committee_id = (Long)session.getAttribute("committee_id");
 			 Committees committee = cservice.findbyId(committee_id);
 			 model.addAttribute("committee", committee);
@@ -2063,9 +2063,9 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
-			 if (user_id != 2) {
-				 return "redirect:/emails";
-			 }
+				if (user_id != 2 || user_id != 1) {
+					 return "redirect:/emails";
+				 }
 			 User user = uservice.findUserbyId(user_id);
 			 Long committee_id = (Long)session.getAttribute("committee_id");
 			 Committees committee = cservice.findbyId(committee_id);
@@ -2081,9 +2081,9 @@ public class LojoController {
 			 if (user_id == null) {
 				 return "redirect:/";
 			 }
-			 if (user_id != 2) {
-				 return "redirect:/emails";
-			 }
+				if (user_id != 2 || user_id != 1) {
+					 return "redirect:/emails";
+				 }
 			 Long committee_id = (Long)session.getAttribute("committee_id");
 			 Committees committee = cservice.findbyId(committee_id);
 			 System.out.println("here");
