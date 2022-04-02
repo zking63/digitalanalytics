@@ -16,4 +16,6 @@ public interface UserRepo extends CrudRepository <User, Long>{
 	List<User> findAll();
 	@Query(value = "SELECT * FROM committees where id != :committee_id", nativeQuery = true)
 	List<Committees> findAllexcept(@Param("committee_id") Long committee_id);
+	   @Query(value="SELECT * FROM users WHERE verification_code = :code", nativeQuery = true)
+	    public User findByVerificationCode(String code);
 }

@@ -43,6 +43,9 @@ public class User {
 	@Column(updatable=false)
 	private Date createdAt;
 	private Date updatedAt;
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+    private boolean enabled;
     @OneToMany(fetch=FetchType.LAZY, mappedBy="uploader")
     private List<Donor> donorsUploaded;
     
@@ -61,10 +64,10 @@ public class User {
 	        inverseJoinColumns = @JoinColumn(name = "committees_id")
 			)
 	private List<Committees> committees;
-	
-	public User() {
-		
-	}
+    public User() {
+        super();
+        this.enabled=false;
+    }
 
 	public Long getId() {
 		return id;
@@ -163,8 +166,6 @@ public class User {
 	public void setCommittees(List<Committees> committees) {
 		this.committees = committees;
 	}
-	
-	
 
 	public List<EmailGroup> getEmailgroups() {
 		return emailgroups;
@@ -172,6 +173,22 @@ public class User {
 
 	public void setEmailgroups(List<EmailGroup> emailgroups) {
 		this.emailgroups = emailgroups;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	@PrePersist

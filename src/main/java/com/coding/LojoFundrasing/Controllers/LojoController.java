@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -126,15 +128,25 @@ public class LojoController {
 		return "loginreg.jsp";
 	}
 	@RequestMapping(value="/", method=RequestMethod.POST)
-	public String registerUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result, HttpSession session) {
+	public String registerUser(Model model, @Valid @ModelAttribute("user") User user, BindingResult result, 
+			HttpSession session, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
 		uvalidation.validate(user, result);
+		String page = request.getRequestURI();
 		if (result.hasErrors()) {
 			model.addAttribute("committees", this.cservice.findAllCommittees());
 			return "loginreg.jsp";
 		}
-		User newUser = uservice.registerUser(user);
+		User newUser = uservice.registerUser(user, page);
 		session.setAttribute("user_id", newUser.getId());
 		return "redirect:/committees/select";
+	}
+	@GetMapping("/verify")
+	public String verifyUser(@Param("code") String code) {
+	    if (uservice.verify(code)) {
+	        return "verify_success";
+	    } else {
+	        return "verify_fail";
+	    }
 	}
 	 @RequestMapping(value="/login", method=RequestMethod.POST)
 	 public String loginUser(@RequestParam("email") String email, @RequestParam("password") String password, HttpSession session, RedirectAttributes redirs) {
@@ -906,7 +918,7 @@ public class LojoController {
 		 else {
 			 return "redirect:/committees/select";
 		 }
-	 }
+	 }*/
 	 @RequestMapping("/emails/{id}")
 	 public String showEmail(@PathVariable("id") long id, Model model, HttpSession session, @ModelAttribute("email")Emails email) {
 		 Long user_id = (Long)session.getAttribute("user_id");
@@ -979,7 +991,7 @@ public class LojoController {
 		 model.addAttribute("prospectsubject", prospectsubject );
 		 return "showemail.jsp";
 	 }
-	 @RequestMapping("/home")
+	 /*@RequestMapping("/home")
 	 public String homePage(Model model, HttpSession session, @ModelAttribute("donations")Donation donation,
 			 @Param("startdate") @DateTimeFormat(iso = ISO.DATE) String startdate, 
 			 @Param("enddate") @DateTimeFormat(iso = ISO.DATE) String enddate, HttpServletRequest request) {
@@ -1539,7 +1551,7 @@ public class LojoController {
 	    @GetMapping("/export/query")
 	    public String exportQueryRange(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, 
-				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @RequestParam("input") ArrayList<String> input, 
+				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @Param("input") ArrayList<String> input, 
 				 @Param("operand") String operand, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			 Long user_id = (Long)session.getAttribute("user_id");
@@ -1620,7 +1632,7 @@ public class LojoController {
 	    @GetMapping("/export/query/excel")
 	    public String exportQueryToExcel(@RequestParam(value = "category", required = false) ArrayList<String> categories, Model model, @Param("startdateD") @DateTimeFormat(iso = ISO.DATE) String startdateD, 
 				 @Param("enddateD") @DateTimeFormat(iso = ISO.DATE) String enddateD, @RequestParam("field") Integer field, 
-				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @RequestParam("input") ArrayList<String> input, 
+				 HttpSession session, @Param("type") String type, @Param("operator") String operator, @RequestParam(value="input", required = false) ArrayList<String> input, 
 				 @Param("operand") String operand, Integer fundraiser, Integer survey, Integer petition, Integer other, 
 				 HttpServletResponse response, HttpServletRequest request) throws IOException, InvalidFormatException, ParseException {
 			Long user_id = (Long)session.getAttribute("user_id");
@@ -1643,6 +1655,7 @@ public class LojoController {
 	    	System.out.println("operand in excel: " + operand);
 	    	System.out.println("*************categories 1: " + categories);
 	    	System.out.println("*************input: " + input);
+	    	System.out.println("*************field " + field);
 	    	 List<EmailGroup> emailgroups = new ArrayList<EmailGroup>();
 	    	 List<Emails> emails = new ArrayList<Emails>();
 	    	List<Predicate> predicates = new ArrayList<Predicate>();
