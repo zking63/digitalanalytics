@@ -820,7 +820,6 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 	}*/
 	
 	public HashMap<String, String> GroupWinnerAndLoser(EmailGroup emailgroup) {
-		System.out.println("literally dying");
 		HashMap<String, String> map = new HashMap<>();
 		String winningsender = "";
 		String winningsubject = "";
@@ -830,12 +829,10 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
 		String prospectsubject = null;
 		String nofullsend = null;
 		if (emailgroup.getEmails().size() < 2) {
-			System.out.println("            dying");
 			return null;
 		}
 		if (emailgroup.getEmails().size() == 2 && (emailgroup.getEmails().get(0).getList().contains("onor") ||
 				emailgroup.getEmails().get(0).getList().contains("rospect"))) {
-			System.out.println("dying");
 			return null;
 		}
 		if (emailgroup.getFullsendvariant() == null 
@@ -877,6 +874,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
             			}
             			else {
             				winningsender = emailgroup.getFullsendvariantdonors();
+            				map.put("winningsender", winningsender);
                     		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariantdonors())) {
                     		
                     			losingsender = " " + emailgroup.getVariantB(); 
@@ -948,6 +946,7 @@ public void getEmailGroupTesting(Long emailGroupId, Long committee_id) {
             			}
             			else {
             				winningsubject = emailgroup.getFullsendvariantdonors();
+            				map.put("winningsubject", winningsubject);
                     		if (emailgroup.getVariantA().contentEquals(emailgroup.getFullsendvariantdonors())) {
                         		
                     			losingsubject = " " + emailgroup.getVariantB();

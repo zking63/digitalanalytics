@@ -151,6 +151,7 @@
 				</tr>
 				<tr>
 				<td>
+				<c:if test="${ variants != NULL}">
 				<c:forEach items="${ variants }" var="v">
 				<tr>
 				<td>
@@ -199,6 +200,7 @@
 					</td>
 					</tr>
 				</c:forEach>
+				</c:if>
 			</td></tr></tbody></table>
 	</div> 
 </body>

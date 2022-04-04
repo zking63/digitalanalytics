@@ -30,6 +30,7 @@ public class User {
     @Column(name = "verification_code", length = 64, nullable =true)
     private String verificationCode;
     private boolean enabled;
+    private boolean approved;
 	@NotEmpty(message="First name must not be empty.")
 	private String firstName;
 	@NotEmpty(message="Last name must not be empty.")
@@ -189,6 +190,14 @@ public class User {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
 	}
 
 	@PrePersist

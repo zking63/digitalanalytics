@@ -87,20 +87,6 @@ public class UserService {
         props.setProperty("mail.smtp.ssl.enable", "true");
         props.setProperty("mail.smtp.host", host);
         props.setProperty("mail.transport.protocol", "smtp");
-        // set any other needed mail.smtp.* properties here
-        //Session session = Session.getInstance(props);
-      
-        // set the message content here
-        
-       /* props.setProperty("mail.smtp.auth", "true");
-        props.setProperty("mail.imap.ssl.enable", "true");
- 
-        props.setProperty("mail.smtp.socketFactory.port", "25");
-       // props.setProperty("mail.transport.protocol", "smtp");
-        props.setProperty("mail.smtp.host", "localhost");
-        Session session = Session.getDefaultInstance(props);
-        MimeMessage message = new MimeMessage(session);*/
-        // set message content here
         
     	
         String fromEmail = "zingsubs@gmail.com";

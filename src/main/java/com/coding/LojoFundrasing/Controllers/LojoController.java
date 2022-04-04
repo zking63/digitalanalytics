@@ -153,7 +153,7 @@ public class LojoController {
 	@GetMapping("/verify")
 	public String verifyUser(Model model, HttpSession session, HttpServletRequest request,
 			@RequestParam(value="code", required=false) String code, 
-			@RequestParam(value="email", required=false) String email) {
+			@RequestParam(value="email", required=false) String email, RedirectAttributes redirs) {
 
 		 /*Long user_id = (Long)session.getAttribute("user_id");
 		 if (user_id == null) {
@@ -173,7 +173,11 @@ public class LojoController {
 	    if (uservice.verify(code, email)) {
 			 User u = uservice.findUserbyEmail(email);
 			 session.setAttribute("user_id", u.getId());
-	    	return "redirect:/committees/select";
+			 if (u.isApproved()) {
+				 return "redirect:/committees/select";
+			 }
+			 redirs.addFlashAttribute("error", "Your email is verified but user is not yet approved by committee. Once approved, please retry logging in.");
+			 return "redirect:/";
 	    } else {
 	    	message = "Verification link is incorrect.";
 	    }
@@ -188,16 +192,20 @@ public class LojoController {
 			 User u = uservice.findUserbyEmail(email);
 			 session.setAttribute("user_id", u.getId());
 			 if (u.isEnabled()){
-			 	return "redirect:/committees/select";
+				 if (u.isApproved()) {
+					 return "redirect:/committees/select";
+				 }
+				 redirs.addFlashAttribute("error", "User is not yet approved by committee.");
+				 return "redirect:/";
 			 }
 			 else {
-				 redirs.addFlashAttribute("error", "Email not verified");
+				 redirs.addFlashAttribute("error", "Email not verified.");
 				 return "redirect:/";
 			 }
 		 }
 	     // else, add error messages and return the login page
 		 else {
-			 redirs.addFlashAttribute("error", "Invalid Email/Password");
+			 redirs.addFlashAttribute("error", "Invalid Email/Password.");
 			 return "redirect:/";
 		 }
 	 }
@@ -973,7 +981,7 @@ public class LojoController {
 		 
 		 
 
-		 	List<Emails> variants = new ArrayList<Emails>();
+		 	List<Emails> variants = emailgroup.getEmails();
 			String winningsender = null;
 			String winningsubject = null;
 			String losingsender = null;
@@ -988,7 +996,11 @@ public class LojoController {
 			Emails variantAprospects = null;
 			Emails variantBprospects = null;
 			Emails remainder = null;
-			if (emailgroup.getEmails().size() == 2 && (emailgroup.getEmails().get(0).getList().contains("onor") ||
+			if (emailgroup.getEmails().size() == 1) {
+				remainder = emailgroup.getEmails().get(0);
+				variants = null;
+			}
+			/*if (emailgroup.getEmails().size() == 2 && (emailgroup.getEmails().get(0).getList().contains("onor") ||
 					emailgroup.getEmails().get(0).getList().contains("rospect"))) {
 				variantA = eservice.emailwithdonornoremainder(id, committee_id);
 				variants.add(variantA);
@@ -1005,7 +1017,7 @@ public class LojoController {
 					variants.add(variantB);
 				}
 			}
-			if (variantA.getList().contains("onor")) {
+			if (variantA != null && variantA.getList().contains("onor")) {
 				if (eservice.findVariantAprospects(id, committee_id) != null){
 					variantAprospects = eservice.findVariantAprospects(id, committee_id);
 					variants.add(variantAprospects);
@@ -1014,23 +1026,23 @@ public class LojoController {
 					variantBprospects = eservice.findVariantBprospects(id, committee_id);
 					variants.add(variantBprospects);
 				}
-			}
+			}*/
 			if (eservice.findRemainder(id, committee_id) != null) {
 				remainder = eservice.findRemainder(id, committee_id);
 			}
 			
-			if (variants == null || variants.isEmpty() || variants.size() < 1) {
+			/*if ((variants == null || variants.isEmpty() || variants.size() < 1) && emailgroup.getEmails().size() > 1) {
 				variantA = emailgroup.getEmails().get(0);
-				variants.add(variantAprospects);
-			}
+				variants.add(variantA);
+			}*/
 		 
 		 model.addAttribute("user", user);
 		 model.addAttribute("emailgroup", emailgroup);
 		 model.addAttribute("variants", variants);
 		 model.addAttribute("remainder", remainder);
 		 if (egservice.GroupWinnerAndLoser(emailgroup) == null) {
-			 winningsender = variantA.getSender();
-			 winningsubject = variantA.getSubjectLine();
+			 winningsender = emailgroup.getEmails().get(0).getSender();
+			 winningsubject = emailgroup.getEmails().get(0).getSubjectLine();
 			 model.addAttribute("winningsender", winningsender);
 			 model.addAttribute("winningsubject", winningsubject);
 			 return "showemail.jsp";
@@ -1041,7 +1053,6 @@ public class LojoController {
 		 if (map.containsKey("nofullsend")) {
 			 nofullsend = map.get("nofullsend");
 		 }
-		// if (emailgroup.getGroupTest() != null && emailgroup.getGroupTest().contentEquals("SENDER")) {
 			 if (map.containsKey("winningsender")) {
 				 winningsender = map.get("winningsender");
 			 }
@@ -1051,8 +1062,6 @@ public class LojoController {
 			 if (map.containsKey("prospectsender")) {
 				 prospectsender = map.get("prospectsender");
 			 }
-		// }
-		// if (emailgroup.getGroupTest() != null && emailgroup.getGroupTest().contentEquals("SUBJECT")) {
 			 if (map.containsKey("winningsubject")) {
 				 winningsubject= map.get("winningsubject");
 			 }
@@ -1062,7 +1071,6 @@ public class LojoController {
 			 if (map.containsKey("prospectsubject")) {
 				 prospectsubject =  map.get("prospectsubject");
 			 }
-		// }
 		 System.out.println("nofullsend " + nofullsend);
 		 System.out.println("winningsender " + winningsender);
 		 System.out.println("losingsender " + losingsender);

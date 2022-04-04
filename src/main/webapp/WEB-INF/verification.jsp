@@ -14,6 +14,8 @@
     <title>Verification</title>
 </head>
 <h2 style="margin: 500px;margin-top: 100px;">${message}</h2> 
+<c:if test="${login != null }"><p><a href="/">${login}</a></p>
+</c:if>
 
 	    <form method="GET" action="/verify">
 	    				<input type="hidden" name="petition" value="${code}">

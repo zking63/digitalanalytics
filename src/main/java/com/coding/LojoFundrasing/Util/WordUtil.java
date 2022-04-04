@@ -17,6 +17,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -62,12 +63,16 @@ import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Services.CommitteeService;
 import com.coding.LojoFundrasing.Services.DonationService;
 import com.coding.LojoFundrasing.Services.DonorService;
+import com.coding.LojoFundrasing.Services.EmailGroupService;
 import com.coding.LojoFundrasing.Services.EmailService;
 import com.coding.LojoFundrasing.Services.TestService;
 import com.coding.LojoFundrasing.Services.UserService;
 
 @Component
 public class WordUtil {
+	@Autowired
+	private EmailGroupService egservice;
+	
 	public String getRateFormatted(Double number) {
 		if (number == null) {
 			number = 0.0;
@@ -195,12 +200,46 @@ public class WordUtil {
 			int count = 1;
 		for (int i = 0; i <emailgroups.size(); i++) {
 			String fullsend = "";
-			if (emailgroups.get(i).getFullsendvariant() == null 
+			String winningsender = "";
+			String winningsubject = "";
+			String losingsender = "";
+			String losingsubject = "";
+			String prospectsender = null;
+			String prospectsubject = null;
+			/*if (emailgroups.get(i).getFullsendvariant() == null 
 					&& emailgroups.get(i).getFullsendvariantdonors() == null 
 					&& emailgroups.get(i).getFullsendvariantprospects() == null 
 					&& emailgroups.get(i).getFullsendemail() == null && emailgroups.get(i).getGroupemailcount() > 1) {
 				fullsend = " (didn't full send)";
-			}
+			}*/
+			 if (egservice.GroupWinnerAndLoser(emailgroups.get(i)) == null) {
+				 winningsender = emailgroups.get(i).getEmails().get(0).getSender();
+				 winningsubject = emailgroups.get(i).getEmails().get(0).getSubjectLine();
+			 }
+			 else {
+			HashMap<String, String> map = egservice.GroupWinnerAndLoser(emailgroups.get(i));
+			 if (map.containsKey("nofullsend")) {
+				 fullsend = map.get("nofullsend");
+			 }
+				 if (map.containsKey("winningsender")) {
+					 winningsender = map.get("winningsender");
+				 }
+				 if (map.containsKey("losingsender")) {
+					 losingsender = map.get("losingsender");
+				 }
+				 if (map.containsKey("prospectsender")) {
+					 prospectsender = map.get("prospectsender");
+				 }
+				 if (map.containsKey("winningsubject")) {
+					 winningsubject= map.get("winningsubject");
+				 }
+				 if (map.containsKey("losingsubject")) {
+					losingsubject = map.get("losingsubject");
+				 }
+				 if (map.containsKey("prospectsubject")) {
+					 prospectsubject =  map.get("prospectsubject");
+				 }
+			 }
 			
 			String counter = String.valueOf(count);
 			
@@ -290,16 +329,11 @@ public class WordUtil {
 			XWPFRun emaildonationsopensrun = emaildonationsopens.createRun();
 			XWPFRun emailaveragerun = emailaverage.createRun();
 			
-			String winningsender = "";
-			String winningsubject = "";
-			String losingsender = "";
-			String losingsubject = "";
-			String prospectsender = null;
-			String prospectsubject = null;
+
 			
 				
 			
-        		if (emailgroups.get(i).getGroupTest() != null && emailgroups.get(i).getGroupTest().contentEquals("SENDER")) {
+        		/*if (emailgroups.get(i).getGroupTest() != null && emailgroups.get(i).getGroupTest().contentEquals("SENDER")) {
         			System.out.println("tested sender");
                 	if (emailgroups.get(i).getFullsendvariant() == null) {
                 		if (emailgroups.get(i).getFullsendvariantdonors() != null) {
@@ -409,7 +443,16 @@ public class WordUtil {
         		}
         		else {
         			winningsubject = emailgroups.get(i).getEmails().get(0).getSubjectLine();
-        		}
+        		}*/
+			
+			 System.out.println("**************** in export nofullsend " + fullsend);
+			 System.out.println("winningsender " + winningsender);
+			 System.out.println("losingsender " + losingsender);
+			 System.out.println("prospectsender " + prospectsender);
+			 System.out.println("winningsubject " + winningsubject);
+			 System.out.println("losingsubject " + losingsubject);
+			 System.out.println("prospectsubject " + prospectsubject);
+
 			//write title text
             	emailsenderrun.setBold(true);
             	if (fullsend.contains("didn't full send")) {
