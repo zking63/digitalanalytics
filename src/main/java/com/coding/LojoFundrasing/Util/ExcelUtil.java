@@ -12,6 +12,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +49,7 @@ import com.coding.LojoFundrasing.Models.test;
 import com.coding.LojoFundrasing.Services.CommitteeService;
 import com.coding.LojoFundrasing.Services.DonationService;
 import com.coding.LojoFundrasing.Services.DonorService;
+import com.coding.LojoFundrasing.Services.EmailGroupService;
 import com.coding.LojoFundrasing.Services.EmailService;
 import com.coding.LojoFundrasing.Services.TestService;
 import com.coding.LojoFundrasing.Services.UserService;
@@ -66,6 +68,8 @@ public class ExcelUtil {
 	private TestService tservice;
 	@Autowired 
 	private CommitteeService cservice;
+	@Autowired
+	private EmailGroupService egservice;
 	
 	public Double getRateFormatted(Double number) {
 		if (number == null) {
@@ -2482,6 +2486,7 @@ public class ExcelUtil {
     	int DonClickCol = -1;
     	int DonRecurCol = -1;
     	int RevRecurCol = -1;
+    	int categoryCol = -1;
     	
     	int variantACol = -1;
     	int variantBCol = -1;
@@ -2536,6 +2541,10 @@ public class ExcelUtil {
                 	if (input.get(i).equals("Recipients")) {
                         recipientsCol = columnCount;
                         createCell(row, columnCount++, "Recipients", style); 
+                	}
+                	if (input.get(i).equals("Category")) {
+                        categoryCol = columnCount;
+                        createCell(row, columnCount++, "Category", style); 
                 	}
                 	if (input.get(i).equals("link")) {
                 		linkCol = columnCount;
@@ -2661,90 +2670,68 @@ public class ExcelUtil {
         bodyfont.setBold(false);
         bodyfont.setFontHeight(14);
         bodyStyle.setFont(bodyfont);
+        bodyStyle.setWrapText(true);
         
-        String fullsend = null;
-        String sender = null;
-        String subject = null;
+        CellStyle bodyStylebold = workbook.createCellStyle();
+        XSSFFont bodyfontbold = workbook.createFont();
+        bodyfontbold.setBold(true);
+        bodyfontbold.setFontHeight(14);
+        bodyStylebold.setFont(bodyfontbold);
+        bodyStylebold.setWrapText(true);
+        
                  
         for (int i = 0; i < emailgroup.size(); i++) {
+    		String fullsend = null;
+    		String winningsender = "";
+    		String winningsubject = "";
+    		String losingsender = null;
+    		String losingsubject = null;
+    		String prospectsender = null;
+    		String prospectsubject = null;
         	fullsend = null;
-            sender = emailgroup.get(i).getEmails().get(0).getSender();
-            subject = emailgroup.get(i).getEmails().get(0).getSubjectLine();
-        	if (input.contains("fullsendvariant")) {
-            	if (emailgroup.get(i).getFullsendvariant() == null) {
-            		if (emailgroup.get(i).getFullsendvariantdonors() != null) {
-            			if (emailgroup.get(i).getFullsendvariantprospects() != null) {
-            				fullsend = "Donors: " + emailgroup.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroup.get(i).getFullsendvariantprospects();
-            				System.out.println("fullsend" + fullsend);
-            			}
-            			else {
-            				fullsend = emailgroup.get(i).getFullsendvariantdonors();
-            			}
-            			
-            		}
-            	}
-            	else {
-            		fullsend = emailgroup.get(i).getFullsendvariant(); 
-            	}
-        	}
-        	if (input.contains("sender")) {
-        		if (emailgroup.get(i).getGroupTest() != null && emailgroup.get(i).getGroupTest().contentEquals("SENDER")) {
-        			System.out.println("tested sender");
-                	/*if (emailgroup.get(i).getFullsendvariant() == null) {
-                		if (emailgroup.get(i).getFullsendvariantdonors() != null) {
-                			if (emailgroup.get(i).getFullsendvariantprospects() != null) {
-                				sender = "Donors: " + emailgroup.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroup.get(i).getFullsendvariantprospects();
-                				System.out.println("fullsend" + fullsend);
-                			}
-                			else {
-                				sender = emailgroup.get(i).getFullsendvariantdonors();
-                			}
-                			
-                		}
-                		else { 
-                			sender = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
-                		}
-                	}*/
-        			if (emailgroup.get(i).getVariantA() != null && 
-        					emailgroup.get(i).getVariantB() != null ) {
-        				sender = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
-        			}
-                	else {
-                		sender = emailgroup.get(i).getFullsendvariant(); 
-                	}
-        		}
-        		else {
-        			sender = emailgroup.get(i).getEmails().get(0).getSender();
-        		}
-        	}
-        	if (input.contains("subject")) {
-        		if (emailgroup.get(i).getGroupTest() != null && emailgroup.get(i).getGroupTest().contentEquals("SUBJECT")) {
-        			System.out.println("tested subject");
-                	/*if (emailgroup.get(i).getFullsendvariant() == null) {
-                		if (emailgroup.get(i).getFullsendvariantdonors() != null) {
-                			if (emailgroup.get(i).getFullsendvariantprospects() != null) {
-                				subject = "Donors: " + emailgroup.get(i).getFullsendvariantdonors() + "\n" + "Prospects: " + emailgroup.get(i).getFullsendvariantprospects();
-                				System.out.println("Sl" + subject);
-                			}
-                			else {
-                				subject = emailgroup.get(i).getFullsendvariantdonors();
-                			}
-                			
-                		}
-                		else { 
-                			subject = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
-                		}
-                	}*/
-        			if (emailgroup.get(i).getVariantA() != null && 
-        					emailgroup.get(i).getVariantB() != null ) {
-        				subject = "A: " + emailgroup.get(i).getVariantA() + "\n" + "B: " + emailgroup.get(i).getVariantB();
-        			}
-                	else {
-                		subject = emailgroup.get(i).getFullsendvariant(); 
-                	}
-        		}
-        		else {
-        			subject = emailgroup.get(i).getEmails().get(0).getSubjectLine();
+        	if (input != null && (input.contains("sender") || input.contains("subject"))) {
+        		if (emailgroup.get(i).getGroupTest() != null && (emailgroup.get(i).getGroupTest().contentEquals("SENDER") 
+        				|| emailgroup.get(i).getGroupTest().contentEquals("SUBJECT")) ) {
+       			 if (egservice.GroupWinnerAndLoser(emailgroup.get(i)) == null) {
+    				 winningsender = emailgroup.get(i).getEmails().get(0).getSender();
+    				 winningsubject = emailgroup.get(i).getEmails().get(0).getSubjectLine();
+    			 }
+    			 else {
+    			HashMap<String, String> map = egservice.GroupWinnerAndLoser(emailgroup.get(i));
+    			 if (map.containsKey("nofullsend")) {
+    				 fullsend = map.get("nofullsend");
+    			 }
+    				 if (map.containsKey("winningsender")) {
+    					 winningsender = map.get("winningsender");
+    					if (emailgroup.get(i).getGroupTest().contentEquals("SENDER")) {
+    						 fullsend = winningsender;
+    					 }
+    				 }
+    				 if (map.containsKey("losingsender")) {
+    					 losingsender = map.get("losingsender");
+    				 }
+    				 if (map.containsKey("prospectsender")) {
+    					 prospectsender = map.get("prospectsender");
+     					if (emailgroup.get(i).getGroupTest().contentEquals("SENDER")) {
+   						 fullsend = winningsender + "\n" + prospectsender;
+     					}
+    				 }
+    				 if (map.containsKey("winningsubject")) {
+    					 winningsubject= map.get("winningsubject");
+     					if (emailgroup.get(i).getGroupTest().contentEquals("SUBJECT")) {
+   						 fullsend = winningsubject;
+     					}
+    				 }
+    				 if (map.containsKey("losingsubject")) {
+    					losingsubject = map.get("losingsubject");
+    				 }
+    				 if (map.containsKey("prospectsubject")) {
+    					 prospectsubject =  map.get("prospectsubject");
+      					if (emailgroup.get(i).getGroupTest().contentEquals("SUBJECT")) {
+      						 fullsend = winningsubject + "\n" + prospectsubject;
+        					}
+    				 }
+    			 }
         		}
         	}
             row = sheet.createRow(rowCount++);
@@ -2763,14 +2750,38 @@ public class ExcelUtil {
             if (columnCount == recipientsCol) {
             	createCell(row, columnCount++, emailgroup.get(i).getGroupRecipients(), bodyStyle);
             }
+            if (columnCount == categoryCol) {
+            	if (emailgroup.get(i).getGroupCategory() == null ) {
+            		createCell(row, columnCount++, emailgroup.get(i).getEmails().get(0).getEmailCategory(), bodyStyle);
+            	}
+            	else {
+            		createCell(row, columnCount++, emailgroup.get(i).getGroupCategory(), bodyStyle);
+            	}
+            }
             if (columnCount == linkCol) {
             	createCell(row, columnCount++, emailgroup.get(i).getLink(), bodyStyle);
             }
             if (columnCount == senderCol) {
-            	createCell(row, columnCount++, sender, bodyStyle);
+            	if (losingsender != null) {
+            		createCell(row, columnCount++, winningsender + "\n" + losingsender, bodyStyle);
+            	}
+            	else if (prospectsender != null) {
+            		createCell(row, columnCount++, winningsender + "\n" + prospectsender, bodyStyle);
+            	}
+            	else {
+            		createCell(row, columnCount++, winningsender, bodyStyle);
+            	}
             }
             if (columnCount == subjectCol) {
-            	createCell(row, columnCount++, subject, bodyStyle);
+            	if (losingsubject != null) {
+            		createCell(row, columnCount++, winningsubject + "\n" + losingsubject, bodyStyle);
+            	}
+            	else if (prospectsubject != null) {
+            		createCell(row, columnCount++, winningsubject + "\n" + prospectsubject, bodyStyle);
+            	}
+            	else {
+            		createCell(row, columnCount++, winningsubject, bodyStyle);
+            	}
             }
             
             if (columnCount == ClickCol) {
