@@ -22,8 +22,8 @@
 				<p>Didn't fully send</p>
 			</c:if>
 			<h2>Properties</h2>
-			<table class="table table-hover">
-			    <thead>
+			<table class="table">
+			    <thead style="font-size:12px;">
 			        <tr>
 			            <th>Send date </th>
 			            <th>Subject line </th>
@@ -84,8 +84,8 @@
 				</tbody>
 			</table>
 			<h2>Fundraising data</h2>
-			<table class="table table-hover">
-			    <thead>
+			<table class="table">
+			    <thead style="font-size:12px;">
 			        <tr>
 			        	<th>Donations/opens </th>
 			        	<th>Donations/clicks </th>
@@ -97,6 +97,12 @@
 						</c:if>
 						<c:if test="${ emailgroup.getTandemdonations() != 0}">
 								<th>Tandem donations</th>
+						</c:if>
+						<c:if test="${ emailgroup.getGroupRecurringRevenue() != 0.0}">
+								<th>Recurring revenue</th>
+						</c:if>
+						<c:if test="${ emailgroup.getGroupRecurringDonationCount() != 0}">
+								<th>Recurring donations</th>
 						</c:if>
 			        </tr>
 			    </thead>
@@ -113,12 +119,18 @@
 						<c:if test="${ emailgroup.getTandemdonations() != 0}">
 								<td>${emailgroup.getTandemdonations() }</td>
 						</c:if>
+						<c:if test="${ emailgroup.getGroupRecurringRevenue() != 0.0}">
+								<td>$${emailgroup.getRecurringRevenueFormatted()}</td>
+						</c:if>
+						<c:if test="${ emailgroup.getGroupRecurringDonationCount() != 0}">
+								<td>${emailgroup.getGroupRecurringDonationCount() }</td>
+						</c:if>
 					</tr>
 				</tbody>
 			</table>
 			<h2>Performance data</h2>
-			<table class="table table-hover">
-			    <thead>
+			<table class="table">
+			    <thead style="font-size:12px;">
 			        <tr>
 			            <th>Recipients </th>
 			            <th>Open rate </th>

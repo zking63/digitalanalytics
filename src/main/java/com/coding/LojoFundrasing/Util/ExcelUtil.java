@@ -2682,8 +2682,8 @@ public class ExcelUtil {
                  
         for (int i = 0; i < emailgroup.size(); i++) {
     		String fullsend = null;
-    		String winningsender = "";
-    		String winningsubject = "";
+    		String winningsender = emailgroup.get(i).getEmails().get(0).getSender();
+    		String winningsubject = emailgroup.get(i).getEmails().get(0).getSubjectLine();
     		String losingsender = null;
     		String losingsubject = null;
     		String prospectsender = null;
@@ -2698,9 +2698,6 @@ public class ExcelUtil {
     			 }
     			 else {
     			HashMap<String, String> map = egservice.GroupWinnerAndLoser(emailgroup.get(i));
-    			 if (map.containsKey("nofullsend")) {
-    				 fullsend = map.get("nofullsend");
-    			 }
     				 if (map.containsKey("winningsender")) {
     					 winningsender = map.get("winningsender");
     					if (emailgroup.get(i).getGroupTest().contentEquals("SENDER")) {
@@ -2731,6 +2728,9 @@ public class ExcelUtil {
       						 fullsend = winningsubject + "\n" + prospectsubject;
         					}
     				 }
+        			 if (map.containsKey("nofullsend")) {
+        				 fullsend = map.get("nofullsend");
+        			 }
     			 }
         		}
         	}

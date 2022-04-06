@@ -469,6 +469,20 @@ public class EmailGroup {
 		String revenue = myFormat.format(number);
 		return revenue;
 	}
+	public String getRecurringRevenueFormatted() {
+		Double number = this.groupRecurringRevenue;
+		if (number == null) {
+			number = 0.0;
+		}
+		double number1 = (double) number;
+		DecimalFormat df = new DecimalFormat("0.000");
+		String numberfinal = df.format(number1); 
+		number = Double.valueOf(numberfinal);
+		NumberFormat myFormat = NumberFormat.getInstance();
+		myFormat.setGroupingUsed(true);
+		String revenue = myFormat.format(number);
+		return revenue;
+	}
 	public String getGroupOpenersFormatted() {
 		Long number = this.groupOpeners;
 		if (number == null) {
