@@ -1,0 +1,337 @@
+body{
+	background-color: #90a4ae;
+	padding-top: 0px;
+	color: #263238;
+}
+body button{
+	border: 0px;
+	background-color: #455a64;
+	opacity: 50%;
+	color: white;
+}
+body button:hover{
+	background-color: white;
+	color: #455a64;
+}
+
+.container {
+	margin-left: 94px;
+	margin-top: 10px;
+}
+.user-form {
+	display: inline-block;
+	width: 45%;
+	vertical-align: middle;
+	margin: 20px;
+	border: 1px solid white;
+	padding: 15px;
+	color: white;
+}
+
+.table-hover a{
+	color: white;
+	font-style: bold;
+	font-size: 17px;
+}
+.table-hover {
+	max-width: 85%;
+	margin-top: 20px;
+	margin-left: 100px;
+}
+.table-hover th{
+	min-width: 70px;
+}
+.navbar {
+    background-color: #455a64;
+    margin-bottom: 15px;
+    padding: 0px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    opacity: 50%;
+}
+.navbar img{
+	width: 30px;
+	margin-bottom: 3px;
+}
+.titles{
+	margin: 10px;
+	margin-bottom: 60px;
+	vertical-align: middle;
+	color: white;
+}
+.navbar select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+.titles h1{
+	color: white;
+}
+
+.titles a{
+	color: white;
+}
+.titles a:hover{
+	color: white;
+	opacity: 50%
+}
+
+.p-4{
+	margin-left: -111px;
+	margin-bottom: 21px;
+	vertical-align: middle;
+	color: white;
+	padding: 0px;
+}
+.dropdown-menu p{
+	font-size: 25px;
+	margin-left: 25px;
+	margin-bottom: 0px;
+}
+
+.p-4 select{
+	background: transparent;
+	border: 0px;
+	font-size: 20px;
+}
+
+.formclass select{
+	background: transparent;
+	border: 0px;
+	color: white;
+	margin-left: -33px;
+}
+.formclass select:hover{
+	background: transparent;
+	border: 0px;
+	color: #424b52;
+	margin-left: -33px;
+}
+
+.currentcommittee{
+	background: transparent;
+	border: 0px;
+	font-style: bold;
+	font-size: 25px;
+	color: white;
+}
+
+.navbarmenu {
+    width: auto;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+.navbarmenu li {
+	padding: 0px;
+	font-size: 10px;
+    vertical-align: middle;
+    list-style: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.navbarmenu li a {
+	color: white;
+	font-style: bold;
+	font-size: 24px;
+}
+.main {
+	margin-left: 0px;
+}
+.subset li{
+	padding: 0px;
+	margin: 0px;
+	opacity: 0%;
+}
+.btn-secondary{
+	opacity: 100%;
+	background-color: #455a64;
+	color: white;
+	border: 0px;
+	font-style: bold;
+	font-size: 24px;
+}
+.btn-secondary:hover{
+	opacity: 70%;
+	border: 0px;
+}
+.dropdown-menu{
+	opacity: 100%;
+	background-color: #455a64;
+	color: white;
+	border: 0px;
+	font-size: 10px;
+}
+.wrapper{
+	width: 1000px;
+	margin-left: 10%;
+}
+.buttons1{
+	margin-left:30%;
+}
+.user-form{
+	margin-left: 25%;
+	width: 50%;
+}
+.date-form{
+	margin-left: 30%;
+	margin-bottom: 10px;
+	width: 50%;
+	padding-left: 65px;
+}
+#date-choices{
+	width: 88%;
+}
+#export-date-choices{
+	width: 88%;
+	display: inline-block;
+	margin-top: -50px;
+}
+.pointer{
+	width: 20px;
+	display: inline-block;
+}
+#export-form{
+	display: inline-block;
+	background-color:#e71d2c;
+}
+#export-form button{
+	margin-left: 0px;
+	margin-top: 10px;
+}
+#export-choices{
+	display: inline-block;
+	width: 250px;
+	height: 400px;
+	padding: 0px;
+	margin-bottom: -10px;
+	margin-top: 0px;
+	vertical-align: top;
+}
+#export-choices p{
+	display: inline-block;
+	width: 250px;
+	height: 400px;
+	padding: 10px;
+	padding-bottom: -10px;
+	margin-bottom: -10px;
+	margin-top: -10px;
+}
+#export-choices-box{
+	display: inline-block;
+	max-width: 100%;
+	max-height: 570px;
+	margin-left: 0px;
+	margin-top: 0px;
+	padding-left: 0px;
+	margin-bottom: 10px;
+	vertical-align: top;
+}
+#export-choices-box p{
+	margin-bottom:-1px;
+}
+#parameter-choices{
+	display: block;
+	max-width: 400px;
+	max-height: 100px;
+	padding: 5px;
+	margin: 0px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	margin-left: 200px;
+	vertical-align: top;
+}
+#parameter-choices textarea{
+	display: inline-block;
+	max-width: 300px;
+	max-height: 50px;
+	padding: 0px;
+	margin: 0px;
+	margin-top: 0px;
+	margin-bottom: 00px;
+}
+.date-form label{
+	display: inline-block;
+}
+.export-body {
+	display: inline-block;
+	max-width: 90%;
+	margin-left: 70px;
+}
+.export-body-operators{
+	display: inline-block;
+	max-width: 50%;
+	margin: 0px;
+	margin-bottom: 10px;
+	margin-left: 40px;
+}
+.export-body button {
+	display: block;
+	width: 170px;
+	margin-left: 535px;
+	margin-right: 200px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-style: bold;
+}
+#date-choice{
+	width: 190px;
+	display: inline;
+	padding: 0px;
+	margin: 0px;
+	margin-bottom: 10px;
+}
+#input-form{
+	margin: 0px;
+	display: inline-block;
+}
+#export-first-question {
+	display: inline-block;
+	margin-left: 550px;
+	margin-bottom: 10px;
+	width: 500px;
+}
+.online-body {
+	display: inline-block;
+	max-width: 95%;
+	margin-left: 140px;
+}
+.online-body-operators{
+	display: inline;
+	max-width: 100%;
+	margin: 0px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+}
+.online-body button {
+	display: block;
+	width: 150px;
+	margin-left: 480px;
+	margin-right: 200px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-style: bold;
+}
+#online-parameter-choices{
+	display: inline;
+	max-width: 400px;
+	max-height: 100px;
+	padding: 5px;
+	margin: 0px;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	margin-left: 10px;
+	vertical-align: top;
+}
+#online-parameter-choices textarea{
+	display: inline;
+	max-width: 300px;
+	max-height: 50px;
+	padding: 0px;
+	margin: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
