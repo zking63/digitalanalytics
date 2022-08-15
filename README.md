@@ -1,4 +1,4 @@
-# Digital Analytics
+# Event Management API
 This is an end-to-end RestFul API application designed to help organizers create events and manage participants. This project demonstrates a mastery of concepts like microservices, REST, and Spring Data REST. 
 
 ## Author
